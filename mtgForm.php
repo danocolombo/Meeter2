@@ -154,6 +154,12 @@ $aosConfig->loadConfigFromDB();
 
 <script src="js/jquery/jquery-3.3.1.js" type="text/javascript"></script>
 <script src="js/jquery/jquery-ui.js" type="text/javascript"></script>
+<!-- 
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+ -->
+
+
 
 <!-- Javascript -->
 <script type="text/javascript">
@@ -165,9 +171,12 @@ $aosConfig->loadConfigFromDB();
 //                    return false;
 //                 }
 //         	});
-
+			$( function() {
+    			$( "#mtgDatePicker" ).datepicker();
+  			} );
 			function validateMtgForm(){
 				// start with validating the date value
+				$( "#mtgDate" ).datepicker();
 				var tmpString = "";
 				var m_Date = $( "#mtgDate" ).datepicker('getDate');
 				var m_NewDate = $("#mtgDate").datepicker({ dateFormat: 'yyyy,mm,dd'}).val();
@@ -326,18 +335,20 @@ $aosConfig->loadConfigFromDB();
 		</nav>
 		<article>
 			<?php
-if ($edit) {
-    echo "<form id=\"mtgForm\" action=\"mtgAction.php?Action=Update&MID=$mtgID\" method=\"post\">";
-    echo "<h2 id=\"formTitle\">Meeting Entry</h2>";
-} else {
-    echo "<form id=\"mtgForm\" action=\"mtgAction.php?Action=New\" method=\"post\">";
-    echo "<h2 id=\"formTitle\">New Meeting Entry</h2>";
-}
-?>
+            if ($edit) {
+                echo "<form id=\"mtgForm\" action=\"mtgAction.php?Action=Update&MID=$mtgID\" method=\"post\">";
+                echo "<h2 id=\"formTitle\">Meeting Entry</h2>";
+            } else {
+                echo "<form id=\"mtgForm\" action=\"mtgAction.php?Action=New\" method=\"post\">";
+                echo "<h2 id=\"formTitle\">New Meeting Entry</h2>";
+            }
+            ?>
 					<table id="formTable">
 				<tr>
 					<td colspan="2">
 						<table>
+							<tr><td></td><td></td></tr>
+							<tr><td>TESTING:</td><td><input type="text" id="mtgDatePicker"></td></tr>
 							<tr>
 								<td width="150px;" align="right"><div class="mtgLabels">Date:</div></td>
 								<td><input type="text" id="mtgDate" name="mtgDate"></td>
@@ -1168,71 +1179,80 @@ if ($edit) {
 			<!-- ########################### -->
 			<!-- STARTING OPEN SHARE SECTION -->
 			<!-- ########################### -->
-			<?php 
-			// we want to get all the groups that are associated with this meeting #
-			mysqli_report(MYSQLI_REPORT_STRICT);
-			// Check connection
-			$connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-			if ($connection->connect_error) {
-			    die("Connection failed: " . $connection->connect_error);
-			}
-			$query = $connection->prepare("SELECT groups.ID, groups.Gender, groups.Title, fac.FName as fFName, fac.LName as fLName, cofac.FName as cFName, cofac.LName as clName, groups.Location, groups.Attendance FROM groups INNER JOIN people fac ON groups.FacID = fac.ID INNER JOIN people cofac ON groups.CoFacID = cofac.ID WHERE groups.MtgID = ? ORDER BY groups.Gender, groups.Title DESC");
-			$query->bind_param("s", $MID);
-			$query->execute();
-// 			$query->bind_result($Setting);
-			
-			while($query->fetch()){
-			    $meetings[] = array($row['ID'], $row['Gender'], $row['Title'], $row['fFName'], $row['fLName'], $row['cFName'], $row['cLName'], $row['Location'], $row['Attendance']);
-			    
-			}
-			//--------------------------------------------------------------------------
-			// if we have any meetings returned display them, or display button to add
-			//--------------------------------------------------------------------------
-			echo "<div style='float:right'><a href='grpForm.php?ID=" . $ID . "&MID=" . $MID . "&Action=New'>New Group</a></div>";
-			if (sizeof($meetings) > 0) {
-			    
-			    echo "<div><br/><table border='1'>";
-			    echo "<tr><th></th><th>Title</th><th>Facilitator</th><th>Co-Facilitator</th><th>Location</th><th>#</th></tr>";
-			    for($cnt=0;$cnt<sizeof($meetings);$cnt++){
-			        echo "<tr><td valign='center' style='padding:5px'><a href='grpForm.php?GID=" . $meetings[$cnt][0] . "&MID=" . $MID . "&Action=Edit'><img src='images/btnEdit.gif'></img></a></td>";
-			        echo "<td style='padding:5px'>";
-			        switch ($meetings[$cnt][1]) {
-			            case "0":
-			                echo "Men's ";
-			                break;
-			            case "1":
-			                echo "Women's ";
-			                break;
-			            default:
-			                echo "";
-			                break;
-			        }
-			        
-			        echo $meetings[$cnt][2] . "</td><td style='padding:10px; text-align:center;'>";
-			        echo $meetings[$cnt][3] . /*" " . $meetings[$cnt][4] .*/ "</td><td style='padding:10px; text-align:center;'>";
-			        echo $meetings[$cnt][5] . /*" " . $meetings[$cnt][6] .*/ "</td><td>";
-			        echo $meetings[$cnt][7] . "</td><td align='center' style='left-padding:5px;right-padding:5px;'>" . $meetings[$cnt][8] . "</td>";
-			        echo "<td width=15px; alight='right'>
-                <a href='mtgAction.php?Action=DeleteGroup&MID=". $MID . "&GID=" . $meetings[$cnt][0] . "'><img src='images/minusbutton.gif'></img></a></td></tr>";
-			    }
-			    echo "</table></div>";
-			}else{
-			    /*--------------------------------------------------------------------
-			     * no groups loaded for this week. Offer ability to copy from last week
-			     *-------------------------------------------------------------------*/
-			    /* echo "<div><b><i>cnt:</i></b>" . sizeof($meetings) . "</div>"; */
-			    /* THERE ARE NO GROUPS TO DISPLAY */
-			    
-			    echo "<br/><br/><a href='mtgAction.php?Action=PreLoadGroups&MID=" . $MID. "'><img src='images/btnGetLastWeek.png'></img></a>";
-			    
-			}
-			
-			$query->close();
-			$connection->close();
-			return $returnValue;
-			
-			
-			?>
+			<?php
+// we want to get all the groups that are associated with this meeting #
+mysqli_report(MYSQLI_REPORT_STRICT);
+// Check connection
+$connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+if ($connection->connect_error) {
+    die("Connection failed: " . $connection->connect_error);
+}
+$query = $connection->prepare("SELECT groups.ID, groups.Gender, groups.Title, fac.FName as fFName, fac.LName as fLName, cofac.FName as cFName, cofac.LName as clName, groups.Location, groups.Attendance FROM groups INNER JOIN people fac ON groups.FacID = fac.ID INNER JOIN people cofac ON groups.CoFacID = cofac.ID WHERE groups.MtgID = ? ORDER BY groups.Gender, groups.Title DESC");
+$query->bind_param("s", $MID);
+$query->execute();
+// $query->bind_result($Setting);
+
+while ($query->fetch()) {
+    $meetings[] = array(
+        $row['ID'],
+        $row['Gender'],
+        $row['Title'],
+        $row['fFName'],
+        $row['fLName'],
+        $row['cFName'],
+        $row['cLName'],
+        $row['Location'],
+        $row['Attendance']
+    );
+}
+// --------------------------------------------------------------------------
+// if we have any meetings returned display them, or display button to add
+// --------------------------------------------------------------------------
+echo "<div style='float:right'><a href='grpForm.php?ID=" . $ID . "&MID=" . $MID . "&Action=New'>New Group</a></div>";
+if (sizeof($meetings) > 0) {
+    
+    echo "<div><br/><table border='1'>";
+    echo "<tr><th></th><th>Title</th><th>Facilitator</th><th>Co-Facilitator</th><th>Location</th><th>#</th></tr>";
+    for ($cnt = 0; $cnt < sizeof($meetings); $cnt ++) {
+        echo "<tr><td valign='center' style='padding:5px'><a href='grpForm.php?GID=" . $meetings[$cnt][0] . "&MID=" . $MID . "&Action=Edit'><img src='images/btnEdit.gif'></img></a></td>";
+        echo "<td style='padding:5px'>";
+        switch ($meetings[$cnt][1]) {
+            case "0":
+                echo "Men's ";
+                break;
+            case "1":
+                echo "Women's ";
+                break;
+            default:
+                echo "";
+                break;
+        }
+        
+        echo $meetings[$cnt][2] . "</td><td style='padding:10px; text-align:center;'>";
+        echo $meetings[$cnt][3] . /*" " . $meetings[$cnt][4] .*/ "</td><td style='padding:10px; text-align:center;'>";
+        echo $meetings[$cnt][5] . /*" " . $meetings[$cnt][6] .*/ "</td><td>";
+        echo $meetings[$cnt][7] . "</td><td align='center' style='left-padding:5px;right-padding:5px;'>" . $meetings[$cnt][8] . "</td>";
+        echo "<td width=15px; alight='right'>
+                <a href='mtgAction.php?Action=DeleteGroup&MID=" . $MID . "&GID=" . $meetings[$cnt][0] . "'><img src='images/minusbutton.gif'></img></a></td></tr>";
+    }
+    echo "</table></div>";
+} else {
+    /*
+     * --------------------------------------------------------------------
+     * no groups loaded for this week. Offer ability to copy from last week
+     * -------------------------------------------------------------------
+     */
+    /* echo "<div><b><i>cnt:</i></b>" . sizeof($meetings) . "</div>"; */
+    /* THERE ARE NO GROUPS TO DISPLAY */
+    
+    echo "<br/><br/><a href='mtgAction.php?Action=PreLoadGroups&MID=" . $MID . "'><img src='images/btnGetLastWeek.png'></img></a>";
+}
+
+$query->close();
+$connection->close();
+return $returnValue;
+
+?>
 			<!-- ########################### -->
 			<!--  ENDING OPEN SHARE SECTION  -->
 			<!-- ########################### -->
@@ -1242,7 +1262,7 @@ if ($edit) {
 	</div>
 	<script type="text/javascript">
          $(function() {
-            $("#mtgDate").datepicker({
+             $("#mtgDate").datepicker({
                 showAnim: "blind",
                 numberOfMonths: 1,
                 showWeek: false,
@@ -1258,13 +1278,14 @@ if ($edit) {
                 $mYear = substr($mtgDate, 0, 4);
                 $mMonth = substr($mtgDate, 5, 2);
                 $mDay = substr($mtgDate, 8, 2);
-                $mYear="2018";
-                $mMonth="09";
-                $mDay="10";
-                echo "$(\"#mtgDate\").datepicker(\"setDate\", new Date(" . $mYear . ", " . $mMonth . " - 1, " . $mDay . "));";
+                $mYear = "2018";
+                $mMonth = "09";
+                $mDay = "10";
+//                 echo "$(\"#mtgDate\").datepicker(\"setDate\", new Date(" . $mYear . ", " . $mMonth . " - 1, " . $mDay . "));";
             } else {
-                echo "$(\"#mtgDate\").datepicker(\"setDate\", new Date());";
+//                 echo "$(\"#mtgDate\").datepicker(\"setDate\", new Date());";
             }
+            echo "$(\"#mtgDate\").datepicker(\"setDate\", new Date());";
             ?>
             // MEETING TYPE
             $( "input[type='radio']" ).checkboxradio();
