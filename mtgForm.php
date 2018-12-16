@@ -1179,80 +1179,18 @@ $aosConfig->loadConfigFromDB();
 			<!-- ########################### -->
 			<!-- STARTING OPEN SHARE SECTION -->
 			<!-- ########################### -->
-			<?php
-// we want to get all the groups that are associated with this meeting #
-mysqli_report(MYSQLI_REPORT_STRICT);
-// Check connection
-$connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-if ($connection->connect_error) {
-    die("Connection failed: " . $connection->connect_error);
-}
-$query = $connection->prepare("SELECT groups.ID, groups.Gender, groups.Title, fac.FName as fFName, fac.LName as fLName, cofac.FName as cFName, cofac.LName as clName, groups.Location, groups.Attendance FROM groups INNER JOIN people fac ON groups.FacID = fac.ID INNER JOIN people cofac ON groups.CoFacID = cofac.ID WHERE groups.MtgID = ? ORDER BY groups.Gender, groups.Title DESC");
-$query->bind_param("s", $MID);
-$query->execute();
-// $query->bind_result($Setting);
+			<script>
+				var group = {
+						"name": "Brad"
+				}
 
-while ($query->fetch()) {
-    $meetings[] = array(
-        $row['ID'],
-        $row['Gender'],
-        $row['Title'],
-        $row['fFName'],
-        $row['fLName'],
-        $row['cFName'],
-        $row['cLName'],
-        $row['Location'],
-        $row['Attendance']
-    );
-}
-// --------------------------------------------------------------------------
-// if we have any meetings returned display them, or display button to add
-// --------------------------------------------------------------------------
-echo "<div style='float:right'><a href='grpForm.php?ID=" . $ID . "&MID=" . $MID . "&Action=New'>New Group</a></div>";
-if (sizeof($meetings) > 0) {
-    
-    echo "<div><br/><table border='1'>";
-    echo "<tr><th></th><th>Title</th><th>Facilitator</th><th>Co-Facilitator</th><th>Location</th><th>#</th></tr>";
-    for ($cnt = 0; $cnt < sizeof($meetings); $cnt ++) {
-        echo "<tr><td valign='center' style='padding:5px'><a href='grpForm.php?GID=" . $meetings[$cnt][0] . "&MID=" . $MID . "&Action=Edit'><img src='images/btnEdit.gif'></img></a></td>";
-        echo "<td style='padding:5px'>";
-        switch ($meetings[$cnt][1]) {
-            case "0":
-                echo "Men's ";
-                break;
-            case "1":
-                echo "Women's ";
-                break;
-            default:
-                echo "";
-                break;
-        }
-        
-        echo $meetings[$cnt][2] . "</td><td style='padding:10px; text-align:center;'>";
-        echo $meetings[$cnt][3] . /*" " . $meetings[$cnt][4] .*/ "</td><td style='padding:10px; text-align:center;'>";
-        echo $meetings[$cnt][5] . /*" " . $meetings[$cnt][6] .*/ "</td><td>";
-        echo $meetings[$cnt][7] . "</td><td align='center' style='left-padding:5px;right-padding:5px;'>" . $meetings[$cnt][8] . "</td>";
-        echo "<td width=15px; alight='right'>
-                <a href='mtgAction.php?Action=DeleteGroup&MID=" . $MID . "&GID=" . $meetings[$cnt][0] . "'><img src='images/minusbutton.gif'></img></a></td></tr>";
-    }
-    echo "</table></div>";
-} else {
-    /*
-     * --------------------------------------------------------------------
-     * no groups loaded for this week. Offer ability to copy from last week
-     * -------------------------------------------------------------------
-     */
-    /* echo "<div><b><i>cnt:</i></b>" . sizeof($meetings) . "</div>"; */
-    /* THERE ARE NO GROUPS TO DISPLAY */
-    
-    echo "<br/><br/><a href='mtgAction.php?Action=PreLoadGroups&MID=" . $MID . "'><img src='images/btnGetLastWeek.png'></img></a>";
-}
+				console.log();
 
-$query->close();
-$connection->close();
-return $returnValue;
 
-?>
+
+			</script>
+			
+			
 			<!-- ########################### -->
 			<!--  ENDING OPEN SHARE SECTION  -->
 			<!-- ########################### -->
