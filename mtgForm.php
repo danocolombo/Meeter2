@@ -30,6 +30,7 @@ $_glabel = getGhostLabel();
 // get data
 // -----------------------------------------------------
 $edit = FALSE;
+$CID="UAT";
 $MID = $_GET["ID"];
 if ($MID > 0) {
     $edit = TRUE;
@@ -1179,15 +1180,33 @@ $aosConfig->loadConfigFromDB();
 			<!-- ########################### -->
 			<!-- STARTING OPEN SHARE SECTION -->
 			<!-- ########################### -->
+			<p id="groupSection">
+			</p>
+			<p>
+				<ul id="groups"></ul>
+			</p>
 			<script>
-				var group = {
-						"name": "Brad"
-				}
+				var xhttp = new XMLHttpRequest();
+		      	xhttp.onreadystatechange = function() {
+		          if (this.readyState == 4 && this.status == 200) {
+		            var response = JSON.parse(xhttp.responseText);
+		            var group = response.groups;
 
-				console.log();
-
-
-
+		            var output = '';  
+		            alert(group.length);
+		            for(var i = 0;i < group.length;i++){
+			          output += '<br/>' + group[i].ID; 
+// 		              output += '<li>'+group[i].ID+'</li>';
+		            }
+		         
+		            document.getElementById('groupSection').innerHTML = output;
+		          }
+		      };
+		      var theAPIURL = "http://recovery.help/meeter/api/json/groups?client=<?php echo($CID);?>&MID=<?php echo($mtgID);?>";
+// 		      theAPIURL = "http://recovery.help/meeter/api/json/groups?client=UAT&MID=182";
+// 		      xhttp.open("GET", "http://recovery.help/meeter/api/json/groups?client=UAT&MID=182", true);
+		      xhttp.open("GET", theAPIURL, true);
+		      xhttp.send();
 			</script>
 			
 			
