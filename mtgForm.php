@@ -1180,26 +1180,25 @@ $aosConfig->loadConfigFromDB();
 			<!-- ########################### -->
 			<!-- STARTING OPEN SHARE SECTION -->
 			<!-- ########################### -->
-			<p id="groupSection">
-			</p>
-			<p>
-				<ul id="groups"></ul>
-			</p>
+			<div id="groupInformationArea"></div>
+				
 			<script>
 				var xhttp = new XMLHttpRequest();
 		      	xhttp.onreadystatechange = function() {
 		          if (this.readyState == 4 && this.status == 200) {
 		            var response = JSON.parse(xhttp.responseText);
-		            var group = response.groups;
+		            var group = response.data;
 
 		            var output = '';  
-		            alert(group.length);
+					if(group.length>0){
+						output += "<table id='groupData'>";
+						output += "<tr><td></td><td>Title</td><td>Facilitator</td><td>Co-Facilitator</td><td>Location</td><td>#</td><td></td></tr>";
+					}
 		            for(var i = 0;i < group.length;i++){
-			          output += '<br/>' + group[i].ID; 
-// 		              output += '<li>'+group[i].ID+'</li>';
+			          output += '<tr><td>BUTTON</td><td>' + group[i].Title + '</td><td>' + group[i].FacID + '</td><td>' + group[i].CoFacID + '</td><td>' + group[i].Location + '</td><td></td><td></td></tr>'; 
 		            }
-		         
-		            document.getElementById('groupSection').innerHTML = output;
+		         	if(group.length>0){output += "</table>";}
+		            document.getElementById('groupInformationArea').innerHTML = output;
 		          }
 		      };
 		      var theAPIURL = "http://recovery.help/meeter/api/json/groups?client=<?php echo($CID);?>&MID=<?php echo($mtgID);?>";
