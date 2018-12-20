@@ -1195,13 +1195,13 @@ $aosConfig->loadConfigFromDB();
 						output += "<tr><td></td><td>Title</td><td>Facilitator</td><td>Co-Facilitator</td><td>Location</td><td>#</td><td></td></tr>";
 					}
 		            for(var i = 0;i < group.length;i++){
-			          output += '<tr><td>BUTTON</td><td>' + group[i].Title + '</td><td>' + group[i].FacID + '</td><td>' + group[i].CoFacID + '</td><td>' + group[i].Location + '</td><td></td><td></td></tr>'; 
+			          output += '<tr><td>BUTTON</td><td>' + group[i].Title + '</td><td>' + group[i].FacFirstName + '</td><td>' + group[i].CoFirstName + '</td><td>' + group[i].Location + '</td><td></td><td></td></tr>'; 
 		            }
 		         	if(group.length>0){output += "</table>";}
 		            document.getElementById('groupInformationArea').innerHTML = output;
 		          }
 		      };
-		      var theAPIURL = "http://recovery.help/meeter/api/json/groups?client=<?php echo($CID);?>&MID=<?php echo($mtgID);?>";
+		      var theAPIURL = "http://recovery.help/meeter/api/json/groups/getGroupsForMtgForm?client=<?php echo($CID);?>&MID=<?php echo($mtgID);?>";
 // 		      theAPIURL = "http://recovery.help/meeter/api/json/groups?client=UAT&MID=182";
 // 		      xhttp.open("GET", "http://recovery.help/meeter/api/json/groups?client=UAT&MID=182", true);
 		      xhttp.open("GET", theAPIURL, true);
