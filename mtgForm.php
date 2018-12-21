@@ -154,7 +154,7 @@ $aosConfig->loadConfigFromDB();
 	href="css/screen_layout_medium.css" />
 <link rel="stylesheet" type="text/css"
 	media="only screen and (min-width:501px) and (max-width:800px)"
-	href="meeterGlobal.css" />
+	href="w3.css" />
 
 <script src="js/jquery/jquery-3.3.1.js" type="text/javascript"></script>
 <script src="js/jquery/jquery-ui.js" type="text/javascript"></script>
@@ -1198,7 +1198,7 @@ $aosConfig->loadConfigFromDB();
 						output += "<tr><td></td><td>Title</td><td>Facilitator</td><td>Co-Facilitator</td><td>Location</td><td>#</td><td></td></tr>";
 					}
 		            for(var i = 0;i < group.length;i++){
-			          output += '<tr><td><a href=\'grpForm.php?GID=' + group[i].ID + '&MID=' + group[i].MtgID + '&Action=Edit\'><img src=\'images/btnEdit.gif\'></img></a></td><td>' + group[i].Title + '</td><td>' + group[i].FacFirstName + '</td><td>' + group[i].CoFirstName + '</td><td>' + group[i].Location + '</td><td></td><td></td></tr>'; 
+			          output += '<tr><td><a href=\'grpForm.php?GID=' + group[i].ID + '&MID=' + group[i].MtgID + '&Action=Edit\'><img src=\'images/btnEdit.gif\'></img></a></td><td  style=\'left-padding:10px;\'>' + group[i].Title + '</td><td>' + group[i].FacFirstName + '</td><td>' + group[i].CoFirstName + '</td><td>' + group[i].Location + '</td><td></td><td></td></tr>'; 
 		            }
 		         	if(group.length>0){output += "</table>";}
 		            document.getElementById('groupInformationArea').innerHTML = output;
