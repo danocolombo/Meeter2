@@ -1189,21 +1189,23 @@ $aosConfig->loadConfigFromDB();
 		            var response = JSON.parse(xhttp.responseText);
 		            var group = response.data;
 
-		            var output = '';  
+		            var output = ''; 
+		            alert(group.length); 
 					if(group.length>0){
 						output += "<table id='groupData'>";
 						output += "<tr><td></td><td>Title</td><td>Facilitator</td><td>Co-Facilitator</td><td>Location</td><td>#</td><td></td></tr>";
 					}
 		            for(var i = 0;i < group.length;i++){
-			          output += '<tr><td>BUTTON</td><td>' + group[i].Title + '</td><td>' + group[i].FacFirstName + '</td><td>' + group[i].CoFirstName + '</td><td>' + group[i].Location + '</td><td></td><td></td></tr>'; 
+			          output += '<tr><td>BTN</td><td>' + group[i].Title + '</td><td>' + group[i].FacFirstName + '</td><td>' + group[i].CoFirstName + '</td><td>' + group[i].Location + '</td><td></td><td></td></tr>'; 
 		            }
 		         	if(group.length>0){output += "</table>";}
 		            document.getElementById('groupInformationArea').innerHTML = output;
+		          }else{
+			          output += "Error:" + this.status;
+			          output += "<h2>no meetings defined for this meeting yet</h2>";
 		          }
 		      };
-		      var theAPIURL = "http://recovery.help/meeter/api/json/groups/getGroupsForMtgForm?client=<?php echo($CID);?>&MID=<?php echo($mtgID);?>";
-// 		      theAPIURL = "http://recovery.help/meeter/api/json/groups?client=UAT&MID=182";
-// 		      xhttp.open("GET", "http://recovery.help/meeter/api/json/groups?client=UAT&MID=182", true);
+		      var theAPIURL = "http://recovery.help/meeter/api/json/groups/getGroupsForMtgForm.php?client=<?php echo($CID);?>&MID=<?php echo($mtgID);?>";
 		      xhttp.open("GET", theAPIURL, true);
 		      xhttp.send();
 			</script>
