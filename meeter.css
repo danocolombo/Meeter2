@@ -247,3 +247,49 @@ background-color:#EAF2D3;
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
 }
+.grps-table, .grps-table-all {
+	border-collapse: collapse;
+	border-spacing: 0;
+	width: 100%;
+	display: table
+}
+
+.grps-table-all {
+	border: 1px solid #ccc
+}
+
+.grps-bordered tr, .grps-table-all tr {
+	border-bottom: 1px solid #ddd
+}
+
+.grps-striped tbody tr:nth-child(even) {
+	background-color: #f1f1f1
+}
+
+.grps-table-all tr:nth-child(odd) {
+	background-color: #fff
+}
+
+.grps-table-all tr:nth-child(even) {
+	background-color: #f1f1f1
+}
+
+.grps-hoverable tbody tr:hover, .grps-ul.w3-hoverable li:hover {
+	background-color: #ccc
+}
+
+.grps-centered tr th, .grps-centered tr td {
+	text-align: center
+}
+
+.grps-table td, .grps-table th, .grps-table-all td, .grps-table-all th {
+	padding: 8px 8px;
+	display: table-cell;
+	text-align: left;
+	vertical-align: top
+}
+
+.grps-table th:first-child, .grps-table td:first-child, .grps-table-all th:first-child,
+	.grps-table-all td:first-child {
+	padding-left: 16px
+}

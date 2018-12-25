@@ -1183,39 +1183,24 @@ $aosConfig->loadConfigFromDB();
 			<!-- ########################### -->
 			<!-- STARTING OPEN SHARE SECTION -->
 			<!-- ########################### -->
-			<div id="groupInformationArea"></div>
+			<div id="groupInformationArea">Initial Render</div>
 				
-			<script>
-				var xhttp = new XMLHttpRequest();
-		      	xhttp.onreadystatechange = function() {
-		          if (this.readyState == 4 && this.status == 200) {
-		            var response = JSON.parse(xhttp.responseText);
-		            var group = response.groups;
+			<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+			<script type="text/javascript">
+//     			$(document).ready();
+//     			function refresh();
 
-		            var output = ''; 
-					if(group.length>0){
-						output += "<table class=\'w3-table-all\'>";
-						output += "<tr><td></td><td>Title</td><td>Facilitator</td><td>Co-Facilitator</td><td>Location</td><td>#</td><td></td></tr>";
-					}
-		            for(var i = 0;i < group.length;i++){
-			          output += '<tr><td><a href=\'grpForm.php?GID=' + group[i].ID + '&MID=' + group[i].MtgID + '&Action=Edit\'><img src=\'images/btnEdit.gif\'></img></a></td><td  style=\'left-padding:10px;\'>' + group[i].Title + '</td><td>' + group[i].FacFirstName + '</td><td>' + group[i].CoFirstName + '</td><td>' + group[i].Location + '</td><td></td><td></td></tr>'; 
-		            }
-		         	if(group.length>0){output += "</table>";}
-		            document.getElementById('groupInformationArea').innerHTML = output;
-		          }else{
-// 					  var m = "We are in the else condition (" + this.readyState + "/" + this.status + ")";
-// 			          alert(m);
-// 			          if (this.readyState == 4 && this.status = 404){
-//     			          output += "Error:" + this.status;
-//     			          output += "<h2>no meetings defined for this meeting yet</h2>";
-    			         
-// 			          }
-		          }
-// 		          document.getElementById('groupInformationArea').innerHTML = output;
-		      };
-		      var theAPIURL = "http://recovery.help/meeter/api/json/groups/getGroupsForMtgForm.php?client=<?php echo($CID);?>&MID=<?php echo($mtgID);?>";
-		      xhttp.open("GET", theAPIURL, true);
-		      xhttp.send();
+//     			function refresh(){
+//         			setTimeout ( function(){
+//             			$('#groupInformationArea').fadeOut('slow').load('mtgForm_GroupSection.php').fadeIn('slow');
+//             			refresh();
+//         			}, 200);
+//     			}
+				$(document).ready(function(){
+					var grpInfo = 'mtgForm_GroupSection.php?MID=' + <?php echo $MID;?>;
+					$("#groupInformationArea").load(grpInfo);
+				});
+
 			</script>
 			
 			
