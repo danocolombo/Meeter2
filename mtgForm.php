@@ -155,14 +155,15 @@ $aosConfig->loadConfigFromDB();
 <link rel="stylesheet" type="text/css"
 	media="only screen and (min-width:501px) and (max-width:800px)"
 	href="w3.css" />
-
+<!-- 
 <script src="js/jquery/jquery-3.3.1.js" type="text/javascript"></script>
 <script src="js/jquery/jquery-ui.js" type="text/javascript"></script>
-<!-- 
+ -->
+<!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
- -->
-
 
 
 <!-- Javascript -->
@@ -175,9 +176,7 @@ $aosConfig->loadConfigFromDB();
 //                    return false;
 //                 }
 //         	});
-			$( function() {
-    			$( "#mtgDatePicker" ).datepicker();
-  			} );
+			
 			function validateMtgForm(){
 				// start with validating the date value
 				$( "#mtgDate" ).datepicker();
@@ -217,7 +216,7 @@ $aosConfig->loadConfigFromDB();
     }
     
     ?>
-
+				
 				if($("#mtgTitle").val().length<3){
 					alert("You need to provide a title longer than 2 characters");
 					$("#mtgTitle").focus();
@@ -322,8 +321,19 @@ $aosConfig->loadConfigFromDB();
 			    return vars;
 			}
         </script>
-<script type="text/javascript"
-	src="js/farinspace/jquery.imgpreload.min.js"></script>
+		<script type="text/javascript" src="js/farinspace/jquery.imgpreload.min.js"></script>
+		<script>
+        	$(function() {
+                $( "#mtgDate" ).datepicker();
+                var meetingID = <?php echo json_encode($MID)?>;
+                if(meetingID != null){
+                    console.log('MID:'+meetingID);
+                	var meetingDate = <?php echo json_encode(date("m-d-Y", strtotime($mtgDate)));?>;
+                }
+                $("#mtgDate").datepicker("setDate", new Date(meetingDate));
+             });
+        	
+		</script>
 </head>
 <body>
 	<div class="page">
@@ -331,12 +341,11 @@ $aosConfig->loadConfigFromDB();
 			<div id="hero"></div>
 			<a class="logo" title="home" href="index.php"><span></span></a>
 		</header>
-		<nav>
-			<a href="meetings.php">Meetings</a> <a href="people.php">People</a> <a
-				href="teams.php">Teams</a> <a href="leadership.php">Leadership</a> <a
-				href="reportlist.php">Reporting</a> <a href="#">ADMIN</a> <a
-				href="logout.php">[ LOGOUT ]</a>
-		</nav>
+		<div id="navBar"></div>
+		<script>
+			$( "#navBar" ).load( "navbar.php" );
+		</script>
+		
 		<article>
 			<?php
             if ($edit) {
@@ -347,22 +356,13 @@ $aosConfig->loadConfigFromDB();
                 echo "<h2 id=\"formTitle\">New Meeting Entry</h2>";
             }
             ?>
-					<table id="formTable">
+				<table id="formTable">
 				<tr>
 					<td colspan="2">
 						<table>
-							<tr><td></td><td></td></tr>
-							<tr><td>TESTING:</td><td><input type="text" id="mtgDatePicker"></td></tr>
 							<tr>
-								<td width="150px;" align="right"><div class="mtgLabels">Date:</div></td>
-								<td><input type="text" id="mtgDate" name="mtgDate"></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2">
-						<table>
+								<td>Meeting Date:&nbsp;<input type="text" id="mtgDate"></td>
+							</tr>	
 							<tr>
 								<td>
 									<fieldset>
@@ -1179,68 +1179,80 @@ $aosConfig->loadConfigFromDB();
 						value="Cancel Button" />&nbsp;&nbsp; <input type="button"
 						id="btnSubmit" value="Commit In" /></td>
 				</tr>
+				<tr>
+					<td colspan="2"><button id = "btnSubmitGroup">A button element</button></td>
+				</tr>
 			</table>
 			<!-- ########################### -->
 			<!-- STARTING OPEN SHARE SECTION -->
 			<!-- ########################### -->
-			<div id="groupInformationArea">Initial Render</div>
-				
-			<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
-			<script type="text/javascript">
-//     			$(document).ready();
-//     			function refresh();
-
-//     			function refresh(){
-//         			setTimeout ( function(){
-//             			$('#groupInformationArea').fadeOut('slow').load('mtgForm_GroupSection.php').fadeIn('slow');
-//             			refresh();
-//         			}, 200);
-//     			}
-				$(document).ready(function(){
-					var grpInfo = 'mtgForm_GroupSection.php?MID=' + <?php echo $MID;?>;
-					$("#groupInformationArea").load(grpInfo);
-				});
-
-			</script>
-			
-			
+			<?php if($MID>0){ 
+			 // don't show groups list if it is a new entry
+			     ?>
+				<fieldset>
+				<legend>Open Share Groups</legend>
+    			<div id="groupInformationArea"></div>
+    			</fieldset>
+    			<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+    			<script>
+    			$(document).ready(function(){
+    				
+    				var theUrl = 'http://recovery.help/meeter/api/json/groups/getGroupsForMtgForm.php?client=UAT&MID='+<?php echo $MID?>;
+    				var output = '';
+        			$.ajax({
+        				url: theUrl,
+        				dataType: 'json',
+        				type: 'get',
+        				cache: false,
+        				success: function(data) {
+            				output += '<table border=1><tr><th></th><th>Title</th><th>Facilitator</th><th>Co-Facilitator</th><th>Location</th><th>#</th></tr>';
+        					$(data.groups).each(function(index, value){
+    //     							console.log(value.Title);
+//         							output += '<tr><td>'+value.Title+'</td></tr>';
+									output += '<tr><td valign=\'center\' style=\'padding: 5px\'>';
+									var editLink = 'grpForm.php?GID='+value.ID+'&MID='+<?php echo $MID; ?>+'&Action=Edit';
+									output += '<a href=\''+editLink+'\'><img src=\'images/btnEdit.gif\'></img></a></td>';
+									output += '<td style=\'padding: 5px\'>'+value.Title+'</td>';
+									output += '<td style=\'padding: 10px; text-align: center;\'>'+value.FacFirstName+'</td>';
+									output += '<td style=\'padding: 10px; text-align: center;\'>'+value.CoFirstName+'</td>';
+									output += '<td>'+value.Location+'</td>';
+									output += '<td align=\'center\' style=\'left-padding: 5px; right-padding: 5px;\'>'+value.Attendance+'</td>';
+									editLink = 'mtgAction.php?Action=DeleteGroup&MID='+<?php echo $MID;?>+'&GID='+value.ID;
+									output += '<td width=15px; alight=\'right\'><a href=\''+editLink+'\'><img src=\'images/minusbutton.gif\'></img></a></td>';
+									output += '</tr>';
+	
+        					});
+        					output += '</table>';
+        					$('#groupInformationArea').append(output);
+    					},
+    					error : function(xhr, ajaxOptions, thrownError){
+    						var createCall = 'mtgAction.php?Action=PreLoadGroups&MID='+<?php echo $MID;?>
+    						
+    						output = '<a href="'+createCall+'"><img src="images/btnGetLastWeek.png"></img></a>';
+    				           $('#groupInformationArea').append(output);
+    			       	}
+    					
+        			});
+    			});
+				</script>	
+			<?php } ?>
 			<!-- ########################### -->
 			<!--  ENDING OPEN SHARE SECTION  -->
 			<!-- ########################### -->
 			</form>
 		</article>
-		<footer> &copy; 2013-2018 Rogue Intelligence </footer>
+		<div id="footerArea"></div>
+		<script>
+			$( "#footerArea" ).load( "footer.php" );
+		</script>
 	</div>
 	<script type="text/javascript">
-         $(function() {
-             $("#mtgDate").datepicker({
-                showAnim: "blind",
-                numberOfMonths: 1,
-                showWeek: false,
-                changeMonth: true,
-                changeYear: true,
-                showButtonPanel: true,
-                minDate: new Date(2013, 1 - 1, 1),
-                maxDate: new Date(2020, 12 - 1, 31)
-            });
-            <?php
-            // date from db is in format: YYYY-MM-DD
-            if (sizeof($mtgDate) > 0) {
-                $mYear = substr($mtgDate, 0, 4);
-                $mMonth = substr($mtgDate, 5, 2);
-                $mDay = substr($mtgDate, 8, 2);
-                $mYear = "2018";
-                $mMonth = "09";
-                $mDay = "10";
-//                 echo "$(\"#mtgDate\").datepicker(\"setDate\", new Date(" . $mYear . ", " . $mMonth . " - 1, " . $mDay . "));";
-            } else {
-//                 echo "$(\"#mtgDate\").datepicker(\"setDate\", new Date());";
-            }
-            echo "$(\"#mtgDate\").datepicker(\"setDate\", new Date());";
-            ?>
+	
+//          $(function() {
+             
             // MEETING TYPE
-            $( "input[type='radio']" ).checkboxradio();
-            $("#radios").buttonset();
+            //$( "input[type='radio']" ).checkboxradio();
+            //$("#radios").buttonset();
 
             //$( "#mtgWorship" ).selectMenu();
             
@@ -1249,23 +1261,23 @@ $aosConfig->loadConfigFromDB();
             //$( "#spnrAttendance" ).spinner("value", x );
 			//$( "#spnrAttendance" ).spinner("value", 5 );
 			
-            // CANCEL BUTTON
-            $( "#btnCancel" ). button({
-                label: "Cancel"
-            });
+//             // CANCEL BUTTON
+//             $( "#btnCancel" ). button({
+//                 label: "Cancel"
+//             });
             //$("#btnCancel").button("option", "label", "Cancel");
 
             // SUBMIT BUTTON
-            $( "#btnSubmit" ).button({
-				label: "Submit",
-            });
-			$( "#btnSubmit").click(function(){
-				validateMtgForm();
-			});
-			$( "#btnCancel").click(function(){
-				cancelMtgForm();
-			});
-         });
+//             $( "#btnSubmit" ).button({
+// 				label: "Submit",
+//             });
+// 			$( "#btnSubmit").click(function(){
+// 				validateMtgForm();
+// 			});
+// 			$( "#btnCancel").click(function(){
+// 				cancelMtgForm();
+// 			});
+//          });
       </script>
 
 </body>
