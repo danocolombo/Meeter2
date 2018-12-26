@@ -155,6 +155,7 @@ $aosConfig->loadConfigFromDB();
 <link rel="stylesheet" type="text/css"
 	media="only screen and (min-width:501px) and (max-width:800px)"
 	href="w3.css" />
+<link rel="stylesheet" type="text/css" href="meeter.css" />
 <!-- 
 <script src="js/jquery/jquery-3.3.1.js" type="text/javascript"></script>
 <script src="js/jquery/jquery-ui.js" type="text/javascript"></script>
@@ -1175,13 +1176,14 @@ $aosConfig->loadConfigFromDB();
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2"><input type="button" id="btnCancel"
-						value="Cancel Button" />&nbsp;&nbsp; <input type="button"
-						id="btnSubmit" value="Commit In" /></td>
+					<td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<button style="font-family:tahoma; font-size:12pt; color:white; background:green; padding: 5px 15px 5px 15px; border-radius:10px;background-image: linear-gradient(to bottom right, #006600, #33cc33);" type="button" onclick="alert('update attempt')">UPDATE</button>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<button style="font-family:tahoma; font-size:12pt; color:white; background:green; padding: 5px 15px 5px 15px; border-radius:10px;background-image: linear-gradient(to bottom right, #cc0000, #ff3300);" type="button" onclick="alert('cancel attempt')">CANCEL</button>
+						<br/><br/>
+					</td>
 				</tr>
-				<tr>
-					<td colspan="2"><button id = "btnSubmitGroup">A button element</button></td>
-				</tr>
+				
 			</table>
 			<!-- ########################### -->
 			<!-- STARTING OPEN SHARE SECTION -->
