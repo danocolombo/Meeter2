@@ -42,10 +42,8 @@ function addMeetingToDB(){
     OR die(mysql_error());
     
     //we are going to check our values:
-    $fDate = $_POST['mtgDate'];
-    $time = strtotime($fDate);
-    $mtgDate = date('Y-m-d',$time);
-    
+
+    $mtgDate = $_POST['mtgDate'];
     $mtgType = $_POST['rdoMtgType'];
     $mtgTitle = $_POST['mtgTitle'];
     
@@ -295,10 +293,8 @@ function updateMeetingInDB(){
     OR die(mysql_error());
     
     //we are going to check our values:
-    $mtgID = $_GET['MID'];
-    $fDate = $_POST['mtgDate'];
-    $time = strtotime($fDate);
-    $mtgDate = date('Y-m-d',$time);
+    $mtgDate = $_POST['mtgDate'];
+    $mtgID = $_GET['ID'];
     $mtgType = $_POST['rdoMtgType'];
     $mtgTitle = $_POST['mtgTitle'];
     
@@ -341,6 +337,11 @@ function updateMeetingInDB(){
     $mtgNotes = $_POST['mtgNotes'];
     
     //DEBUG
+    
+//     echo "\$mtgID: $mtgID<br/>";
+//     echo "\$mtgDate: " . $mtgDate . "<br/>";
+//     echo "\$mtgType: $mtgType<br/>";
+//     echo "\$mtgTitle: $mtgTitle<br/>";
 //     echo "Greeter1: $mtgGreeter1Fac<br/>";
 //     echo "Greeter2: $mtgGreeter2Fac<br/>";
 //     echo "Reader1: $mtgReader1Fac<br/>";
@@ -355,9 +356,11 @@ function updateMeetingInDB(){
     //now add (update) in sections
     //----------------------------------------------------------
     $sql = "UPDATE meetings SET MtgDate = ?, MtgType = ?, MtgTitle = ? WHERE ID = ?";
+//     echo "\$sql: $sql";
+//     exit();
     $stmt = $connection->prepare($sql);
     $stmt->bind_param("sssi",
-        $mtgDate,
+        date("Y-m-d", strtotime($mtgDate)),
         $mtgType,
         $mtgTitle,
         $mtgID);

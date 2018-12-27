@@ -133,13 +133,13 @@ $aosConfig->loadConfigFromDB();
 
 ?>
 <!DOCTYPE HTML>
-<html>
+<html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport"
 	content="width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1" />
-<meta http-equiv="expires" content="Sun, 01 Jan 2014 00:00:00 GMT" />
-<meta http-equiv="pragma" content="no-cache" />
+<!--  <meta http-equiv="expires" content="Sun, 01 Jan 2014 00:00:00 GMT" /> -->
+<!--  <meta http-equiv="pragma" content="no-cache" /> -->
 <title>Meeter Web Application</title>
 <link rel="stylesheet" type="text/css"
 	href="css/vader/jquery-ui-1.8.16.custom.css" />
@@ -168,7 +168,7 @@ $aosConfig->loadConfigFromDB();
 
 
 <!-- Javascript -->
-<script type="text/javascript">
+<script>
 //             $( "#mtgDonations" ).keypress(function() {
 //             	var regex = new RegExp("^[a-zA-Z0-9]+$");
 //                 var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
@@ -210,14 +210,8 @@ $aosConfig->loadConfigFromDB();
 					return false;
 					break;
 				}
-				<?php
-    // we will check if this is a new entry or update
-    if ($MID > 0) {
-        echo "var recordID = getUrlVars()[\"ID\"];";
-    }
-    
-    ?>
 				
+
 				if($("#mtgTitle").val().length<3){
 					alert("You need to provide a title longer than 2 characters");
 					$("#mtgTitle").focus();
@@ -234,14 +228,16 @@ $aosConfig->loadConfigFromDB();
 						$("#mtgDonations").val("");
 					}
 				}
-				var recordID = getUrlVars()["ID"];
-				if(!recordID){
-					var dest = "mtgAction.php?Action=New";
+				//get the Meeting ID if set
+				var mtgID = <?php echo json_encode($MID);?>;
+				if(mtgID == null){
+					document.getElementById("mtgForm").action = "mtgAction.php?Action=New";
+					
 				}else{
-					var dest = "mtgAction.php?Action=Update&ID=" + recordID;
+					var updateAction = "mtgAction.php?Action=Update&ID=" + mtgID;
+					document.getElementById("mtgForm").action = updateAction;
 				}
-				$("#mtgForm").submit();
-// 				window.location.href=dest;
+				document.getElementById("mtgForm").submit();
 			}
 			function cancelMtgForm(){
 				var dest = "meetings.php";
@@ -322,7 +318,7 @@ $aosConfig->loadConfigFromDB();
 			    return vars;
 			}
         </script>
-		<script type="text/javascript" src="js/farinspace/jquery.imgpreload.min.js"></script>
+		<script src="js/farinspace/jquery.imgpreload.min.js"></script>
 		<script>
         	$(function() {
                 $( "#mtgDate" ).datepicker();
@@ -333,7 +329,6 @@ $aosConfig->loadConfigFromDB();
                 }
                 $("#mtgDate").datepicker("setDate", new Date(meetingDate));
              });
-        	
 		</script>
 </head>
 <body>
@@ -362,7 +357,7 @@ $aosConfig->loadConfigFromDB();
 					<td colspan="2">
 						<table>
 							<tr>
-								<td>Meeting Date:&nbsp;<input type="text" id="mtgDate"></td>
+								<td>Meeting Date:&nbsp;<input type="text" id="mtgDate" name="mtgDate"></td>
 							</tr>	
 							<tr>
 								<td>
@@ -404,11 +399,11 @@ $aosConfig->loadConfigFromDB();
                 // BEGINNING TABLE 1
                 echo "<table>";
                 echo "<tr>";
-                echo "<td align=\"right\"><div class=\"mtgLabels\">Title:&nbsp;</div></td>";
-                echo "<td><input id=\"mtgTitle\" name=\"mtgTitle\" size=\"40\" style=\"font-size:14;\" type=\"text\" value=\"$mtgTitle\"/></td>";
+                echo "<td><div class=\"mtgLabels\">Title:&nbsp;</div></td>";
+                echo "<td><input id=\"mtgTitle\" name=\"mtgTitle\" size=\"40\" style=\"font-size:14pt;\" type=\"text\" value=\"$mtgTitle\"/></td>";
                 echo "</tr>";
                 echo "<tr>";
-                echo "<td align=\"right\"><div class=\"mtgLabels\" style=\"float:right\">Host:</div></td>";
+                echo "<td><div class=\"mtgLabels\" style=\"float:right\">Host:</div></td>";
                 echo "<td><select id=\"mtgCoordinator\" name=\"mtgCoordinator\">";
                 $option = getHostsForMeeting();
                 foreach ($option as $id => $name) {
@@ -431,7 +426,7 @@ $aosConfig->loadConfigFromDB();
                 echo "</select></td>";
                 echo "</tr>";
                 echo "<tr>";
-                echo "<td align=\"right\"><div class=\"mtgLabels\" style=\"float:right\">Attendance:</div></td>";
+                echo "<td><div class=\"mtgLabels\" style=\"float:right\">Attendance:</div></td>";
                 echo "<td><select id=\"mtgAttendance\" name=\"mtgAttendance\">";
                 for ($a = 0; $a < 201; $a ++) {
                     if ($a == $mtgAttendance) {
@@ -445,7 +440,7 @@ $aosConfig->loadConfigFromDB();
                 echo "</tr>";
                 if ($aosConfig->getConfig("donations") == "true") {
                     echo "<tr>";
-                    echo "<td align=\"right\"><div class=\"mtgLabels\" style=\"float:right\">Donations:</div></td>";
+                    echo "<td><div class=\"mtgLabels\" style=\"float:right\">Donations:</div></td>";
                     if (sizeof($mtgDonations) > 0) {
                         echo "<td><input id=\"mtgDonations\" name=\"mtgDonations\" size=\"6\" type=\"text\" value=\"$mtgDonations\"/>";
                     } else {
@@ -458,7 +453,7 @@ $aosConfig->loadConfigFromDB();
                     // ================================
                     // WORSHIP IS TRUE = DISPLAY OPTION
                     // ================================
-                    echo "<tr><td align=\"right\"><div class=\"mtgLabels\" style=\"float:right\">" . $aosConfig->getDisplayString("worship") . ":</div></td>";
+                    echo "<tr><td><div class=\"mtgLabels\" style=\"float:right\">" . $aosConfig->getDisplayString("worship") . ":</div></td>";
                     echo "<td><select id=\"mtgWorship\" name=\"mtgWorship\">";
                     $option = getPeepsForService("worship");
                     foreach ($option as $id => $name) {
@@ -479,13 +474,13 @@ $aosConfig->loadConfigFromDB();
                         echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
                     }
                     echo "</select>";
-                    echo "<a href=\"#\" title=\"People on Worship team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\"/></a></td></tr>";
+                    echo "<a href=\"#\" title=\"People on Worship team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a></td></tr>";
                 }
                 if ($aosConfig->getConfig("av") == "true") {
                     // ================================
                     // AV IS TRUE = DISPLAY OPTION
                     // ================================
-                    echo "<tr><td align=\"right\"><div class=\"mtgLabels\" style=\"float:right\">" . $aosConfig->getDisplayString("av") . ":</div></td>";
+                    echo "<tr><td><div class=\"mtgLabels\" style=\"float:right\">" . $aosConfig->getDisplayString("av") . ":</div></td>";
                     echo "<td><select id=\"mtgAV\" name=\"mtgAV\">";
                     $option = getPeepsForService("av");
                     foreach ($option as $id => $name) {
@@ -506,14 +501,14 @@ $aosConfig->loadConfigFromDB();
                         echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
                     }
                     echo "</select>";
-                    echo "<a href=\"#\"  title=\"People on A/V team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\"/></a>";
+                    echo "<a href=\"#\"  title=\"People on A/V team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
                 if ($aosConfig->getConfig("setup") == "true") {
                     // ================================
                     // setup IS TRUE = DISPLAY OPTION
                     // ================================
-                    echo "<tr><td align=\"right\"><div class=\"mtgLabels\" style=\"float:right\">" . $aosConfig->getDisplayString("setup") . ":</div></td>";
+                    echo "<tr><td><div class=\"mtgLabels\" style=\"float:right\">" . $aosConfig->getDisplayString("setup") . ":</div></td>";
                     echo "<td><select id=\"mtgSetup\" name=\"mtgSetup\">";
                     $option = getPeepsForService("setup");
                     foreach ($option as $id => $name) {
@@ -534,14 +529,14 @@ $aosConfig->loadConfigFromDB();
                         echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
                     }
                     echo "</select>";
-                    echo "<a href=\"#\" title=\"People on setup team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\"/></a>";
+                    echo "<a href=\"#\" title=\"People on setup team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
                 if ($aosConfig->getConfig("transportation") == "true") {
                     // ================================
                     // transportation IS TRUE = DISPLAY OPTION
                     // ================================
-                    echo "<tr><td align=\"right\"><div class=\"mtgLabels\" style=\"float:right\">" . $aosConfig->getDisplayString("transportation") . ":</div></td>";
+                    echo "<tr><td><div class=\"mtgLabels\" style=\"float:right\">" . $aosConfig->getDisplayString("transportation") . ":</div></td>";
                     echo "<td><select id=\"mtgTransportation\" name=\"mtgTransportation\">";
                     $option = getPeepsForService("transportation");
                     foreach ($option as $id => $name) {
@@ -562,7 +557,7 @@ $aosConfig->loadConfigFromDB();
                         echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
                     }
                     echo "</select>";
-                    echo "<a href=\"#\" title=\"People on transportation team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\"/></a>";
+                    echo "<a href=\"#\" title=\"People on transportation team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
                 if ($aosConfig->getConfig("greeter") == "true") {
@@ -611,7 +606,7 @@ $aosConfig->loadConfigFromDB();
                         echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
                     }
                     echo "</select>";
-                    echo "<a href=\"#\" title=\"People on Greeting team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\"/></a>";
+                    echo "<a href=\"#\" title=\"People on Greeting team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
                 if ($aosConfig->getConfig("resources") == "true") {
@@ -619,7 +614,7 @@ $aosConfig->loadConfigFromDB();
                     // resources IS TRUE = DISPLAY OPTION
                     // ================================
                     // echo "<tr><td width=\"150px\" align=\"right\"><div class=\"mtgLabels\" style=\"float:right\">" . $aosConfig->getDisplayString("resources") . ":</div></td>";
-                    echo "<tr><td align=\"right\"><div class=\"mtgLabels\" style=\"float:right\">" . $aosConfig->getDisplayString("resources") . ":</div></td>";
+                    echo "<tr><td><div class=\"mtgLabels\" style=\"float:right\">" . $aosConfig->getDisplayString("resources") . ":</div></td>";
                     echo "<td><select id=\"mtgSetup\" name=\"mtgResources\">";
                     $option = getPeepsForService("resources");
                     foreach ($option as $id => $name) {
@@ -640,7 +635,7 @@ $aosConfig->loadConfigFromDB();
                         echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
                     }
                     echo "</select>";
-                    echo "<a href=\"#\" title=\"People on resource team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\"/></a>";
+                    echo "<a href=\"#\" title=\"People on resource team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 } // this ends the if statement for RESOURCES
                   
@@ -656,10 +651,10 @@ $aosConfig->loadConfigFromDB();
                     echo "<fieldset><legend>Meal</legend>";
                     echo "<table>";
                     if ($aosConfig->getConfig("menu") == "true") {
-                        echo "<tr><td colspan=4 align=\"left\"><div class=\"mtgLabels\" style=\"float:left\">Menu:&nbsp;";
-                        echo "<input id=\"mtgMenu\" name=\"mtgMenu\" size=\"40\" style=\"font-size:14;\" type=\"text\" value=\"" . $mtgMenu . "\"/></div></td></tr>";
+                        echo "<tr><td colspan=4><div class=\"mtgLabels\" style=\"float:left\">Menu:&nbsp;";
+                        echo "<input id=\"mtgMenu\" name=\"mtgMenu\" size=\"40\" style=\"font-size:14pt;\" type=\"text\" value=\"" . $mtgMenu . "\"/></div></td></tr>";
                     }
-                    echo "<tr><td align=\"right\"><div class=\"mtgLabels\" style=\"float:right\">Served:&nbsp;</div></td>";
+                    echo "<tr><td><div class=\"mtgLabels\" style=\"float:right\">Served:&nbsp;</div></td>";
                     echo "<td><select id=\"mtgMealCnt\" name=\"mtgMealCnt\">";
                     for ($a = 0; $a < 201; $a ++) {
                         if ($a == $mtgMealCnt) {
@@ -748,7 +743,7 @@ $aosConfig->loadConfigFromDB();
                         echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
                     }
                     echo "</select>";
-                    echo "<a href=\"#\" title=\"People on Reader team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\"/></a>";
+                    echo "<a href=\"#\" title=\"People on Reader team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
                 if ($aosConfig->getConfig("announcements") == "true") {
@@ -778,7 +773,7 @@ $aosConfig->loadConfigFromDB();
                         echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
                     }
                     echo "</select>";
-                    echo "<a href=\"#\" title=\"People on Announcement team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\"/></a>";
+                    echo "<a href=\"#\" title=\"People on Announcement team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
                 if ($aosConfig->getConfig("teaching") == "true") {
@@ -808,7 +803,7 @@ $aosConfig->loadConfigFromDB();
                         echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
                     }
                     echo "</select>";
-                    echo "<a href=\"#\" title=\"People on Teaching team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\"/></a>";
+                    echo "<a href=\"#\" title=\"People on Teaching team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
                 
@@ -858,7 +853,7 @@ $aosConfig->loadConfigFromDB();
                         echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
                     }
                     echo "</select>";
-                    echo "<a href=\"#\" title=\"People on Chips team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\"/></a>";
+                    echo "<a href=\"#\" title=\"People on Chips team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
                 if ($aosConfig->getConfig("newcomers") == "true") {
@@ -907,7 +902,7 @@ $aosConfig->loadConfigFromDB();
                         echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
                     }
                     echo "</select>";
-                    echo "<a href=\"#\" title=\"People on Newcomers (101) team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\"/></a>";
+                    echo "<a href=\"#\" title=\"People on Newcomers (101) team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
                 if ($aosConfig->getConfig("serenity") == "true") {
@@ -937,7 +932,7 @@ $aosConfig->loadConfigFromDB();
                         echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
                     }
                     echo "</select>";
-                    echo "<a href=\"#\" title=\"People on Serenity Prayer team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\"/></a>";
+                    echo "<a href=\"#\" title=\"People on Serenity Prayer team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
                 
@@ -951,7 +946,7 @@ $aosConfig->loadConfigFromDB();
                     echo "<fieldset><legend>Generations</legend>";
                     echo "<table>";
                     if ($aosConfig->getConfig("nursery") == "true") {
-                        echo "<tr><td align=\"right\"><div class=\"mtgLabels\" style=\"float:right\">Nursery:&nbsp;</div></td>";
+                        echo "<tr><td><div class=\"mtgLabels\" style=\"float:right\">Nursery:&nbsp;</div></td>";
                         echo "<td><select id=\"mtgNursery\" name=\"mtgNursery\">";
                         for ($a = 0; $a < 201; $a ++) {
                             if ($a == $mtgNurseryCnt) {
@@ -963,7 +958,7 @@ $aosConfig->loadConfigFromDB();
                         echo "</select>";
                         echo "</td>";
                         if ($aosConfig->getConfig("nurseryFac") == "true") {
-                            echo "<td align=\"right\">" . $aosConfig->getDisplayString("nurseryFac") . "</td><td><select id=\"mtgNurseryFac\" name=\"mtgNurseryFac\">";
+                            echo "<td>" . $aosConfig->getDisplayString("nurseryFac") . "</td><td><select id=\"mtgNurseryFac\" name=\"mtgNurseryFac\">";
                             $option = getPeepsForService("nurseryFac");
                             foreach ($option as $id => $name) {
                                 if ($mtgNurseryFac == $id) {
@@ -987,7 +982,7 @@ $aosConfig->loadConfigFromDB();
                         echo "</tr>";
                     }
                     if ($aosConfig->getConfig("children") == "true") {
-                        echo "<tr><td align=\"right\"><div class=\"mtgLabels\" style=\"float:right\">Children:&nbsp;</div></td>";
+                        echo "<tr><td><div class=\"mtgLabels\" style=\"float:right\">Children:&nbsp;</div></td>";
                         echo "<td><select id=\"mtgChildren\" name=\"mtgChildren\">";
                         for ($a = 0; $a < 201; $a ++) {
                             if ($a == $mtgChildrenCnt) {
@@ -999,7 +994,7 @@ $aosConfig->loadConfigFromDB();
                         echo "</select>";
                         echo "</td>";
                         if ($aosConfig->getConfig("childrenFac") == "true") {
-                            echo "<td align=\"right\">" . $aosConfig->getDisplayString("childrenFac") . "</td><td><select id=\"mtgChildrenFac\" name=\"mtgChildrenFac\">";
+                            echo "<td>" . $aosConfig->getDisplayString("childrenFac") . "</td><td><select id=\"mtgChildrenFac\" name=\"mtgChildrenFac\">";
                             $option = getPeepsForService("childrenFac");
                             foreach ($option as $id => $name) {
                                 if ($mtgChildrenFac == $id) {
@@ -1023,7 +1018,7 @@ $aosConfig->loadConfigFromDB();
                         echo "</tr>";
                     }
                     if ($aosConfig->getConfig("youth") == "true") {
-                        echo "<tr><td align=\"right\"><div class=\"mtgLabels\" style=\"float:right\">Youth:&nbsp;</div></td>";
+                        echo "<tr><td><div class=\"mtgLabels\" style=\"float:right\">Youth:&nbsp;</div></td>";
                         echo "<td><select id=\"mtgYouth\" name=\"mtgYouth\">";
                         for ($a = 0; $a < 201; $a ++) {
                             if ($a == $mtgYouthCnt) {
@@ -1035,7 +1030,7 @@ $aosConfig->loadConfigFromDB();
                         echo "</select>";
                         echo "</td>";
                         if ($aosConfig->getConfig("youthFac") == "true") {
-                            echo "<td align=\"right\">" . $aosConfig->getDisplayString("youthFac") . "</td><td><select id=\"mtgYouthFac\" name=\"mtgYouthFac\">";
+                            echo "<td>" . $aosConfig->getDisplayString("youthFac") . "</td><td><select id=\"mtgYouthFac\" name=\"mtgYouthFac\">";
                             $option = getPeepsForService("youthFac");
                             foreach ($option as $id => $name) {
                                 if ($mtgYouthFac == $id) {
@@ -1093,7 +1088,7 @@ $aosConfig->loadConfigFromDB();
                         echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
                     }
                     echo "</select>";
-                    echo "<a href=\"#\" title=\"People on Cafe team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\"/></a>";
+                    echo "<a href=\"#\" title=\"People on Cafe team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
                 if ($aosConfig->getConfig("teardown") == "true") {
@@ -1123,7 +1118,7 @@ $aosConfig->loadConfigFromDB();
                         echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
                     }
                     echo "</select>";
-                    echo "<a href=\"#\" title=\"People on Tear-Down team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\"/></a>";
+                    echo "<a href=\"#\" title=\"People on Tear-Down team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
                 
@@ -1154,7 +1149,7 @@ $aosConfig->loadConfigFromDB();
                         echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
                     }
                     echo "</select>";
-                    echo "<a href=\"#\" title=\"People on Security team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\"/></a>";
+                    echo "<a href=\"#\" title=\"People on Security team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
                 echo "</table>";
@@ -1167,19 +1162,20 @@ $aosConfig->loadConfigFromDB();
 							<legend>Notes and Comments</legend>
                               	<?php
                             if (sizeof($mtgNotes) > 0) {
-                                echo "<textarea id=\"mtgNotes\" name=\"mtgNotes\" rows=\"5\" cols=\"50\">" . $mtgNotes . "</textarea>";
+                                echo "<textarea id=\"mtgNotes\" name=\"mtgNotes\" rows=\"5\" cols=\"80\">" . $mtgNotes . "</textarea>";
                             } else {
-                                echo "<textarea id=\"mtgNotes\" name=\"mtgNotes\"  rows=\"5\" cols=\"50\"></textarea>";
+                                echo "<textarea id=\"mtgNotes\" name=\"mtgNotes\"  rows=\"5\" cols=\"80\"></textarea>";
                             }
                             ?>
                         	</fieldset>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<button style="font-family:tahoma; font-size:12pt; color:white; background:green; padding: 5px 15px 5px 15px; border-radius:10px;background-image: linear-gradient(to bottom right, #006600, #33cc33);" type="button" onclick="alert('update attempt')">UPDATE</button>
+					<td colspan="2">
+						<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<button style="font-family:tahoma; font-size:12pt; color:white; background:green; padding: 5px 15px 5px 15px; border-radius:10px;background-image: linear-gradient(to bottom right, #006600, #33cc33);" type="button" onclick="validateMtgForm()">UPDATE</button>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<button style="font-family:tahoma; font-size:12pt; color:white; background:green; padding: 5px 15px 5px 15px; border-radius:10px;background-image: linear-gradient(to bottom right, #cc0000, #ff3300);" type="button" onclick="alert('cancel attempt')">CANCEL</button>
+						<button style="font-family:tahoma; font-size:12pt; color:white; background:green; padding: 5px 15px 5px 15px; border-radius:10px;background-image: linear-gradient(to bottom right, #cc0000, #ff3300);" type="button" onclick="cancelMtgForm()">CANCEL</button>
 						<br/><br/>
 					</td>
 				</tr>
@@ -1213,14 +1209,14 @@ $aosConfig->loadConfigFromDB();
 //         							output += '<tr><td>'+value.Title+'</td></tr>';
 									output += '<tr><td valign=\'center\' style=\'padding: 5px\'>';
 									var editLink = 'grpForm.php?GID='+value.ID+'&MID='+<?php echo $MID; ?>+'&Action=Edit';
-									output += '<a href=\''+editLink+'\'><img src=\'images/btnEdit.gif\'></img></a></td>';
+									output += '<a href=\''+editLink+'\'><img src=\'images/btnEdit.gif\' alt=\"(edit)\"></img></a></td>';
 									output += '<td style=\'padding: 5px\'>'+value.Title+'</td>';
 									output += '<td style=\'padding: 10px; text-align: center;\'>'+value.FacFirstName+'</td>';
 									output += '<td style=\'padding: 10px; text-align: center;\'>'+value.CoFirstName+'</td>';
 									output += '<td>'+value.Location+'</td>';
 									output += '<td align=\'center\' style=\'left-padding: 5px; right-padding: 5px;\'>'+value.Attendance+'</td>';
 									editLink = 'mtgAction.php?Action=DeleteGroup&MID='+<?php echo $MID;?>+'&GID='+value.ID;
-									output += '<td width=15px; alight=\'right\'><a href=\''+editLink+'\'><img src=\'images/minusbutton.gif\'></img></a></td>';
+									output += '<td width=15px; alight=\'right\'><a href=\''+editLink+'\'><img src=\'images/minusbutton.gif\' alt=\"(remove)\"></img></a></td>';
 									output += '</tr>';
 	
         					});
@@ -1230,7 +1226,7 @@ $aosConfig->loadConfigFromDB();
     					error : function(xhr, ajaxOptions, thrownError){
     						var createCall = 'mtgAction.php?Action=PreLoadGroups&MID='+<?php echo $MID;?>
     						
-    						output = '<a href="'+createCall+'"><img src="images/btnGetLastWeek.png"></img></a>';
+    						output = '<a href="'+createCall+'"><img src="images/btnGetLastWeek.png" alt=\"(previous)\"></img></a>';
     				           $('#groupInformationArea').append(output);
     			       	}
     					
@@ -1242,13 +1238,14 @@ $aosConfig->loadConfigFromDB();
 			<!--  ENDING OPEN SHARE SECTION  -->
 			<!-- ########################### -->
 			</form>
+			
 		</article>
 		<div id="footerArea"></div>
 		<script>
 			$( "#footerArea" ).load( "footer.php" );
 		</script>
 	</div>
-	<script type="text/javascript">
+	<script>
 	
 //          $(function() {
              
