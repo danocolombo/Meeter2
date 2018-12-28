@@ -4,6 +4,6 @@
 	<a href="teams.php">Teams</a> 
 	<a href="leadership.php">Leadership</a> 
 	<a href="reportlist.php">Reporting</a> 
-	<a href="adminMeeter.php">ADMIN</a> 
+	<a href="adminMeeter.php">ADMIN*</a>
 	<a href="logout.php">[ LOGOUT ]</a>
 </nav>
