@@ -29,6 +29,7 @@ require_once 'HTML/Table.php';
         <link rel="stylesheet" type="text/css" media="only screen and (min-width:501px) and (max-width:800px)"  href="css/screen_layout_medium.css">
         <!--[if lt IE 9]>
         <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <![endif]-->
     </head>
     <body>
@@ -36,15 +37,10 @@ require_once 'HTML/Table.php';
 			<header>
 				<a class="logo" title="home" href="index.php"><span></span></a>
 			</header>
-			<nav>
-				<a href="meetings.php">Meetings</a>
-				<a href="people.php">People</a>
-				<a href="teams.php">Teams</a>
-				<a href="leadership.php">Leadership</a>
-				<a href="reportlist.php">Reporting</a>
-				<a href="#">ADMIN</a>
-				<a href="logout.php">[ LOGOUT ]</a>
-			</nav>
+			<div id="navBar"></div>
+		<script>
+			$( "#navBar" ).load( "navbar.php" );
+		</script>
 			<article>
 <?php 
     /**********************************

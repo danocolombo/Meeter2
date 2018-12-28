@@ -206,6 +206,42 @@ background-color:#EAF2D3;
 	font-size: 12pt;
 	font-weight: strong;
 }
+button.greenButton {
+	font-family:tahoma;
+	font-size:12pt;
+	color:white;
+	background:green;
+	padding: 5px 15px 5px 15px; 
+	border-radius:10px;
+	linear-gradient(to bottom right, #006600, #33cc33);
+}
+button.redButton {
+	font-family:tahoma;
+	font-size:12pt;
+	color:white;
+	background:green;
+	padding: 5px 15px 5px 15px; 
+	border-radius:10px;
+	linear-gradient(to bottom right, #cc0000, #ff3300);
+}
+button.blueButton {
+	font-family:tahoma;
+	font-size:12pt;
+	color:white;
+	background:green;
+	padding: 5px 15px 5px 15px; 
+	border-radius:10px;
+	linear-gradient(to bottom right, #3399ff, #0000ff);	
+}
+button.blackButtonShort {
+	font-family:tahoma;
+	font-size:12pt;
+	color:white;
+	background:green;
+	padding: 0px 15px 0px 15px; 
+	border-radius:10px;
+	linear-gradient(to bottom right, #000000, #808080);
+}
 /*===============================
 	side navigator menu settings
 =============================== */

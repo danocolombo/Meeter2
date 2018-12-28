@@ -55,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	<meta http-equiv="content-type" content="text/html; charset=utf-8">
 	<title>Meeter Web Application</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="meeter.css" />
 </head>
 <body>
 <div id="page">
@@ -67,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="loginText">
                     <p><label for="username">Username:</label><input id="username" name="username" type="text" required></p>
                     <p><label for="password">Password:</label><input id="password" name="password" type="password" required></p>					
-                       <p><input type="submit" value="Login"></p>
+                       <p><input class="greenButton" type="submit" value="Login"></p>
 					</div>
                     </fieldset>
                     </div>
@@ -79,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			<label for="password">Password:</label>
 			<input id="password" name="password" type="password" required>					
 			<br />
-			<input type="submit" value="Login">
+			<input class="greenButton" type="submit" value="Login">
                     -->
 		</form>
 	</section>

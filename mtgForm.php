@@ -341,7 +341,6 @@ $aosConfig->loadConfigFromDB();
 		<script>
 			$( "#navBar" ).load( "navbar.php" );
 		</script>
-		
 		<article>
 			<?php
             if ($edit) {
@@ -615,7 +614,7 @@ $aosConfig->loadConfigFromDB();
                     // ================================
                     // echo "<tr><td width=\"150px\" align=\"right\"><div class=\"mtgLabels\" style=\"float:right\">" . $aosConfig->getDisplayString("resources") . ":</div></td>";
                     echo "<tr><td><div class=\"mtgLabels\" style=\"float:right\">" . $aosConfig->getDisplayString("resources") . ":</div></td>";
-                    echo "<td><select id=\"mtgSetup\" name=\"mtgResources\">";
+                    echo "<td><select id=\"mtgResources\" name=\"mtgResources\">";
                     $option = getPeepsForService("resources");
                     foreach ($option as $id => $name) {
                         if ($mtgResourcesFac == $id) {
@@ -652,7 +651,7 @@ $aosConfig->loadConfigFromDB();
                     echo "<table>";
                     if ($aosConfig->getConfig("menu") == "true") {
                         echo "<tr><td colspan=4><div class=\"mtgLabels\" style=\"float:left\">Menu:&nbsp;";
-                        echo "<input id=\"mtgMenu\" name=\"mtgMenu\" size=\"40\" style=\"font-size:14pt;\" type=\"text\" value=\"" . $mtgMenu . "\"/></div></td></tr>";
+                        echo "<input id=\"mtgMenu\" name=\"mtgMenu\" size=\"32\" maxlength=\"30\" style=\"font-size:14pt;\" type=\"text\" value=\"" . $mtgMenu . "\"/></div></td></tr>";
                     }
                     echo "<tr><td><div class=\"mtgLabels\" style=\"float:right\">Served:&nbsp;</div></td>";
                     echo "<td><select id=\"mtgMealCnt\" name=\"mtgMealCnt\">";
