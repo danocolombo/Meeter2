@@ -29,8 +29,9 @@ require_once 'HTML/Table.php';
         <link rel="stylesheet" type="text/css" media="only screen and (min-width:501px) and (max-width:800px)"  href="css/screen_layout_medium.css">
         <!--[if lt IE 9]>
         <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
         <![endif]-->
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     </head>
     <body>
 		<div class="page">

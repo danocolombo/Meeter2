@@ -69,6 +69,7 @@ $PID = $_GET["PID"];
         <!--[if lt IE 9]>
         <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script type="text/javascript">
 			function validateForm(){
 				var x = document.forms["peepForm"]["peepFName"].value;
