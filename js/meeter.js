@@ -66,3 +66,21 @@ function SelectNoInterests(){
 	document.getElementById('cbChips').checked = false;
     return false;
 }
+function stringToDate(_date,_format,_delimiter)
+{
+	// this returns a date in a variety of formats
+	//	stringToDate("17/9/2014","dd/MM/yyyy","/");
+	//	stringToDate("9/17/2014","mm/dd/yyyy","/")
+	//	stringToDate("9-17-2014","mm-dd-yyyy","-")
+    var formatLowerCase=_format.toLowerCase();
+    var formatItems=formatLowerCase.split(_delimiter);
+    var dateItems=_date.split(_delimiter);
+    var monthIndex=formatItems.indexOf("mm");
+    var dayIndex=formatItems.indexOf("dd");
+    var yearIndex=formatItems.indexOf("yyyy");
+    var month=parseInt(dateItems[monthIndex]);
+    month-=1;
+    var formatedDate = new Date(dateItems[yearIndex],month,dateItems[dayIndex]);
+    return formatedDate;
+}
+

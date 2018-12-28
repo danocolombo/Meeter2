@@ -165,7 +165,7 @@ $aosConfig->loadConfigFromDB();
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
+<script src="./js/meeter.js"></script>
 
 <!-- Javascript -->
 <script>
@@ -323,11 +323,12 @@ $aosConfig->loadConfigFromDB();
         	$(function() {
                 $( "#mtgDate" ).datepicker();
                 var meetingID = <?php echo json_encode($MID)?>;
+                var meetingDate = <?php echo json_encode(date("m-d-Y", strtotime($mtgDate)));?>;
+                var daDate = new Date();
+                daDate = stringToDate(meetingDate,"mm-dd-yyyy","-");
                 if(meetingID != null){
-                    console.log('MID:'+meetingID);
-                	var meetingDate = <?php echo json_encode(date("m-d-Y", strtotime($mtgDate)));?>;
+					$("#mtgDate").datepicker("setDate", daDate);
                 }
-                $("#mtgDate").datepicker("setDate", new Date(meetingDate));
              });
 		</script>
 </head>
