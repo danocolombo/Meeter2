@@ -123,6 +123,11 @@ if ($edit) {
     $mtgAudioVisualFac = $mtg[0][33];
     $mtgAnnouncementsFac = $mtg[0][34];
     $mtgSecurityFac = $mtg[0][35];
+    
+//     echo "\$mtgTitle: $mtgTitle<br/>";
+//     echo "\$mtgMenu: $mtgMenu<br/>";
+//     echo "\$mtgNotes: $mtgNotes<br/>";
+//     exit();
 }
 // load the system configuration settings into object to use.
 $aosConfig->loadConfigFromDB();
@@ -183,7 +188,9 @@ $aosConfig->loadConfigFromDB();
 				$( "#mtgDate" ).datepicker();
 				var tmpString = "";
 				var m_Date = $( "#mtgDate" ).datepicker('getDate');
+				
 				var m_NewDate = $("#mtgDate").datepicker({ dateFormat: 'yyyy,mm,dd'}).val();
+
 				if(isValidDate(m_NewDate) == false){
 					alert("please select an accurate date");
 					$("#mtgDate").datepicker("setDate", new Date());
@@ -399,7 +406,7 @@ $aosConfig->loadConfigFromDB();
                 // BEGINNING TABLE 1
                 echo "<table>";
                 echo "<tr>";
-                echo "<td><div class=\"mtgLabels\">Title:&nbsp;</div></td>";
+                echo "<td><div class=\"mtgLabels\" style=\"float:right\">Title:&nbsp;</div></td>";
                 echo "<td><input id=\"mtgTitle\" name=\"mtgTitle\" size=\"40\" style=\"font-size:14pt;\" type=\"text\" value=\"$mtgTitle\"/></td>";
                 echo "</tr>";
                 echo "<tr>";
@@ -1173,7 +1180,15 @@ $aosConfig->loadConfigFromDB();
 				<tr>
 					<td colspan="2">
 						<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<button style="font-family:tahoma; font-size:12pt; color:white; background:green; padding: 5px 15px 5px 15px; border-radius:10px;background-image: linear-gradient(to bottom right, #006600, #33cc33);" type="button" onclick="validateMtgForm()">UPDATE</button>
+						<?php 
+						if($MID>0){
+						    //display update button, otherwise insert
+						    echo "<button style=\"font-family:tahoma; font-size:12pt; color:white; background:green; padding: 5px 15px 5px 15px; border-radius:10px;background-image: linear-gradient(to bottom right, #006600, #33cc33);\" type=\"button\" onclick=\"validateMtgForm()\">UPDATE</button>";
+						}else{
+						    echo "<button style=\"font-family:tahoma; font-size:12pt; color:white; background:green; padding: 5px 15px 5px 15px; border-radius:10px;background-image: linear-gradient(to bottom right, #006600, #33cc33);\" type=\"button\" onclick=\"validateMtgForm()\">INSERT</button>";
+						}
+						?>
+						
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<button style="font-family:tahoma; font-size:12pt; color:white; background:green; padding: 5px 15px 5px 15px; border-radius:10px;background-image: linear-gradient(to bottom right, #cc0000, #ff3300);" type="button" onclick="cancelMtgForm()">CANCEL</button>
 						<br/><br/>

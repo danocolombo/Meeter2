@@ -46,7 +46,7 @@ function addMeetingToDB(){
     $mtgDate = $_POST['mtgDate'];
     $mtgType = $_POST['rdoMtgType'];
     $mtgTitle = $_POST['mtgTitle'];
-    
+
     $mtgFac = $_POST['mtgCoordinator'];
     $mtgAttendance = $_POST['mtgAttendance'];
     $mtgDonations = $_POST['mtgDonations'];
@@ -85,17 +85,50 @@ function addMeetingToDB(){
     
     $mtgNotes = $_POST['mtgNotes'];
     
-
+//         echo "\$mtgDate: " . $mtgDate . "<br/>";
+//         echo "\$mtgType: $mtgType<br/>";
+//         echo "\$mtgTitle: $mtgTitle<br/>";
+//         echo "\$mtgFac: $mtgFac<br/>";
+//         echo "\$mtgAttendance: $mtgAttendance<br/>";
+//         echo "\$mtgDonations: $mtgDonations<br/>";
+//         echo "\$mtgWorshipFac: $mtgWorshipFac<br/>";
+//         echo "\$mtgAudioVisualFac: $mtgAudioVisualFac<br/>";
+//         echo "\$mtgSetupFac: $mtgSetupFac<br/>";
+//         echo "\$mtgTransportationFac: $mtgTransportationFac<br/>";
+//         echo "\$mtgGreeter1Fac: $mtgGreeter1Fac<br/>";
+//         echo "\$mtgGreeter2Fac: $mtgGreeter2Fac<br/>";
+//         echo "\$mtgResourcesFac: $mtgResourcesFac<br/>";
+//         echo "\$mtgMenu: $mtgMenu<br/>";
+//         echo "\$mtgMealCnt: $mtgMealCnt<br/>";
+//         echo "\$mtgMealFac: $mtgMealFac<br/>";
+        
+//         echo "\$mtgReader1Fac: $mtgReader1Fac<br/>";
+//         echo "\$mtgReader2Fac: $mtgReader2Fac<br/>";
+//         echo "\$mtgAnnouncementsFac: $mtgAnnouncementsFac<br/>";
+//         echo "\$mtgTeachingFac: $mtgTeachingFac<br/>";
+        
+//         echo "\$mtgChips1Fac: $mtgChips1Fac<br/>";
+//         echo "\$mtgChips2Fac: $mtgChips2Fac<br/>";
+//         echo "\$mtgNewcomers1Fac: $mtgNewcomers1Fac<br/>";
+//         echo "\$mtgNewcomers2Fac: $mtgNewcomers2Fac<br/>";
+//         echo "\$mtgSerenityFac: $mtgSerenityFac<br/>";
+//         echo "\$mtgNurseryCnt: $mtgNurseryCnt<br/>";
+//         echo "\$mtgNurseryFac: $mtgNurseryFac<br/>";
+//         echo "\$mtgChildrenCnt: $mtgChildrenCnt<br/>";
+//         echo "\$mtgChildrenFac: $mtgChildrenFac<br/>";
+//         echo "\$mtgYouthCnt: $mtgYouthCnt<br/>";
+//         echo "\$mtgYouthFac: $mtgYouthFac<br/>";
+//         echo "\$mtgCafeFac: $mtgCafeFac<br/>";
+//         echo "\$mtgTearDownFac: $mtgTearDownFac<br/>";
+//         echo "\$mtgSecurityFac: $mtgSecurityFac<br/>";
+//         echo "\$mtgNotes: $mtgNotes<br/>";
+//         exit();
     
     
     
     // ????????????????????????????????????????????????????
     // need to check if a similar meeting is already loaded
     // ????????????????????????????????????????????????????
-//     define('DB_HOST', 'localhost');
-//     define('DB_USER', 'dcolombo_muat');
-//     define('DB_PASSWORD', 'MR0mans1212!');
-//     define('DB_NAME', 'dcolombo_muat');
     $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
     // Check connection
     if ($connection->connect_error) {
@@ -103,7 +136,7 @@ function addMeetingToDB(){
     }
     $dbID = 0;
     $stmt = $connection->prepare("Select ID, MtgDate, MtgType, MtgTitle FROM meetings WHERE MtgDate = ? AND MtgType = ? AND MtgTitle = ?");
-    $stmt->bind_param("sss", $mtgDate, $mtgType, $mtgTitle);
+    $stmt->bind_param("sss", date("Y-m-d", strtotime($mtgDate)), $mtgType, mysql_real_escape_string($mtgTitle));
     $stmt->execute();
     $stmt->store_result();
     if ($stmt->num_rows > 0){
@@ -117,45 +150,6 @@ function addMeetingToDB(){
         $connection->close();
         destination(307, "error.php?ErrorCode=3001&ErrorMsg=\"That%20meeting%20already%20exists\"&ID=$mtgID");
     }
-
-//     // get the basic values from the form, theses are not required... these are all dropdowns
-//         echo "mtgID:" . $mtg->getMtgID() . "<br/>";
-//         echo "mtgDate:" . $mtg->getMtgDate() . "<br/>";
-//         echo "mtgTitle:" . $mtg->getMtgTitle() . "<br/>";
-//         echo "mtgFac:" . $mtg->getMtgFac() . "<br/>";
-//         echo "mtgAttendance:" . $mtg->getMtgAttendance() . "<br/>";
-//         echo "Donations:" . $mtg->getDonations() . "<br/>";
-//         echo "WorshipFac:" . $mtg->getWorshipFac() . "<br/>";
-//         echo "AudioVisualFac:" . $mtg->getAudioVisualFac() . "<br/>";
-//         echo "SetupFac:" . $mtg->getSetupFac() . "<br/>";
-//         echo "TransportationFac:" . $mtg->getTransportationFac() . "<br/>";
-//         echo "Greeter1Fac:" . $mtg->getGreeter1Fac() . "<br/>";
-//         echo "Greeter2Fac:" . $mtg->getGreeter2Fac() . "<br/>";
-//         echo "ResourcesFac:" . $mtg->getResourcesFac() . "<br/>";
-//         echo "Menu:" . $mtg->getTransportationFac() . "<br/>";
-//         echo "MealCnt:" . $mtg->getMealCnt() . "<br/>";
-//         echo "MealFac:" . $mtg->getMealFac() . "<br/>";
-//         echo "Reader1Fac:" . $mtg->getReader1Fac() . "<br/>";
-//         echo "Reader2Fac:" . $mtg->getReader2Fac() . "<br/>";
-//         echo "AnnouncementsFac:" . $mtg->getAnnouncementsFac() . "<br/>";
-//         echo "TeachingFac:" . $mtg->getTeachingFac() . "<br/>";
-//         echo "Chips1Fac:" . $mtg->getChips1Fac() . "<br/>";
-//         echo "Chips2Fac:" . $mtg->getChips2Fac() . "<br/>";
-//         echo "Newcomers1Fac:" . $mtg->getNewcomers1Fac() . "<br/>";
-//         echo "Newcomers2Fac:" . $mtg->getNewcomers2Fac() . "<br/>";
-//         echo "SerenityFac:" . $mtg->getSerenityFac() . "<br/>";
-//         echo "NurseryCnt:" . $mtg->getNurseryCnt() . "<br/>";
-//         echo "NurseryFac:" . $mtg->getNurseryFac() . "<br/>";
-//         echo "ChildrenCnt:" . $mtg->getChildrenFac() . "<br/>";
-//         echo "ChildrenFac:" . $mtg->getChildrenFac() . "<br/>";
-//         echo "YouthCnt:" . $mtg->getYouthCnt() . "<br/>";
-//         echo "YouthFac:" . $mtg->getYouthFac() . "<br/>";
-//         echo "CafeFac:" . $mtg->getCafeFac() . "<br/>";
-//         echo "TearDownFac:" . $mtg->getTearDownFac() . "<br/>";
-//         echo "SecurityFac:" . $mtg->getSecurityFac() . "<br/>";
-//         echo "Notes:" . $mtg->getNotes() . "<br/>";
-    
-//         exit();
     //--------------------------------------------------------------
     // no record found, proceed to add the entry
     //--------------------------------------------------------------
@@ -163,7 +157,7 @@ function addMeetingToDB(){
 
 //     $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
     $stmt = $connection->prepare("INSERT INTO `meetings` ( `MtgDate`, `MtgType`, `MtgTitle`) VALUES ( ?, ?, ?)");
-    $stmt->bind_param("sss", $mtgDate, $mtgType, $mtgTitle );
+    $stmt->bind_param("sss", date("Y-m-d", strtotime($mtgDate)), $mtgType, $mtgTitle );
     $stmt->execute();
     $stmt->close();
     //--------------------------------------------------------------
@@ -174,16 +168,13 @@ function addMeetingToDB(){
 //     $stmt->execute();
 //     $stmt->bind_result($ID);
     $sql = "SELECT ID FROM meetings WHERE MtgDate = '";
-    $sql .= $mtgDate . "' AND MtgType = '";
+    $sql .= date("Y-m-d", strtotime($mtgDate)) . "' AND MtgType = '";
     $sql .= $mtgType . "' AND  MtgTitle = '";
-    $sql .= $mtgTitle . "'";
-//     echo "sql: $sql<br/>";
+    $sql .= mysql_real_escape_string($mtgTitle) . "'";
     $result = $connection->query($sql, MYSQLI_STORE_RESULT);
     list($returnedID) = $result->fetch_row();
     $mtgID = $returnedID;
     $result->close();
-//     $stmt->fetch();
-//     $stmt->close();
     //----------------------------------------------------------
     //now add (update) in sections 
     //----------------------------------------------------------
@@ -207,17 +198,6 @@ function addMeetingToDB(){
     $stmt->execute();
     $stmt->close();
     
-//     echo "MealCnt = $mtgMealCnt<br/>";
-//     echo "MealFac = $mtgMealFac<br/>";
-//     echo "Reader1Fac = $mtgReader1Fac<br/>";
-//     echo "Reader2Fac = $mtgReader2Fac<br/>";
-//     echo "AnnouncementsFac = $mtgAnnouncementsFac<br/>";
-//     echo "TeachingFac = $mtgTeachingFac<br/>";
-//     echo "Chips1Fac = $mtgChips1Fac<br/>";
-//     echo "Chips2Fac = $mtgChips2Fac<br/>";
-//     echo "SerenityFac = $mtgSerenityFac<br/>";
-//     echo "ID = $mtgID<br/>";
-//     exit();
     $sql = "UPDATE meetings SET MealCnt = ?, MealFac = ?, Reader1Fac = ?, Reader2Fac = ?, AnnouncementsFac = ?, ";
     $sql .= "TeachingFac = ?, Chips1Fac = ?, Chips2Fac = ?, SerenityFac = ? WHERE ID = ?";
     $stmt = $connection->prepare($sql);
@@ -258,8 +238,8 @@ function addMeetingToDB(){
         $mtgCafeFac,
         $mtgTearDownFac,
         $mtgSecurityFac,
-        mysql_real_escape_string($mtgMenu),
-        mysql_real_escape_string($mtgNotes),
+        $mtgMenu,
+        $mtgNotes,
         $mtgID);
     $stmt->execute();
     $stmt->close();
@@ -428,7 +408,6 @@ function updateMeetingInDB(){
         $mtgSecurityFac,
         $mtgMenu,
         $mtgNotes,
-//         mysql_real_escape_string($mtgNotes),
         $mtgID);
     $stmt->execute();
     $stmt->close();
@@ -464,7 +443,7 @@ function updateMeetingInDB1(){
     $mNotes = $_POST['mtgNotes'];
     
     $sql = "UPDATE meetings SET MtgDate = '";
-    $sql = $sql . $mDate . "', MtgType = '";
+    $sql = $sql . date("Y-m-d", strtotime($mDate)) . "', MtgType = '";
     $sql = $sql . $mType . "', MtgTitle = '";
     $sql = $sql . mysql_real_escape_string($mTitle) . "', MtgPresenter = '";
     $sql = $sql . mysql_real_escape_string($mPresenter) . "', MtgAttendance = '";
