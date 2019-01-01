@@ -94,7 +94,7 @@ $mtrConfig->getLatestConfig();
 
 			}
 			function cancelForm(){
-				var dest = "index.php";
+				var dest = "adminMain.php";
 				window.location.href=dest;
 			}
       	</script>

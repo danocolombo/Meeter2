@@ -45,7 +45,8 @@ require_once ('authenticate.php'); /* this is used for security purposes */
 			this site or its contents please contact <a
 				href='mailto:dano@dcolombo.com'>Dano</a>
 		</article>
-		<footer> &copy; 2013-2018 Rogue Intelligence </footer>
+		<div id="mtrFooter"></div>
+		<script>$("#mtrFooter").load("footer.php");</script>
 	</div>
 </body>
 </html>

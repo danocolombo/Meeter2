@@ -184,4 +184,4 @@ $aosConfig->saveConfigToDB();
 // $aosConfig->saveConfigToDB();
 
 header($loc["301"]);
-header("Location: index.php");
+header("Location: adminMain.php");
