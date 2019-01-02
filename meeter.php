@@ -7,7 +7,8 @@
  * for system configuration
  *****************************************/
 define("NOBODY", "0");
-
+//define("CLIENT", "UAT");
+$CLIENT = "UAT";
 class mFeature
 {
 

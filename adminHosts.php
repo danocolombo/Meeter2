@@ -1,5 +1,6 @@
 <?php 
 require_once('authenticate.php'); /* this is used for security purposes */
+require 'meeter.php';
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -31,10 +32,81 @@ require_once('authenticate.php'); /* this is used for security purposes */
     			$( "#navBar" ).load( "navbar.php" );
     		</script>
 			<article>
-			<div>this will be the list of current hosts</div>
-			
+			<div>this will be the list of current hosts.<br/>
+			</div>
+			<div id="confirmedHosts"></div>
+			<script>
+    			$(document).ready(function(){
+    				var theUrl = 'http://recovery.help/meeter/api/json/hosts/getHosts.php?client=UAT';
+    				//var theUrl = 'http://recovery.help/meeter/api/json/hosts/getHosts.php?client='+<?php echo $CLIENT?>;
+    				//var theUrl = 'http://recovery.help/meeter/api/json/groups/getGroupsForMtgForm.php?client=UAT&MID='+<?php echo $MID?>;
+        				var output = '';
+            			$.ajax({
+            				url: theUrl,
+            				dataType: 'json',
+            				type: 'get',
+            				cache: false,
+            				success: function(hosts) {
+                				output += '<table border=1><tr><th>ID</th><th>Name</th></tr>';
+            					$(hosts.hosts).each(function(index, value){
+									output += '<tr><td style=\'padding: 5px\'>';
+									output += value.ID;
+									output += "</td><td>";
+									output += value.FName + " " + value.LName;
+									//var editLink = 'grpForm.php?GID='+value.ID+'&MID='+<?php echo $MID; ?>+'&Action=Edit';
+    								//output += '<a href=\''+editLink+'\'><img src=\'images/btnEdit.gif\' alt=\"(edit)\"></img></a></td>';
+    								//output += '<td style=\'padding: 5px\'>'+value.Title+'</td>';
+    								//output += '<td style=\'padding: 10px; text-align: center;\'>'+value.FacFirstName+'</td>';
+    								//output += '<td style=\'padding: 10px; text-align: center;\'>'+value.CoFirstName+'</td>';
+    								//output += '<td>'+value.Location+'</td>';
+    								//output += '<td align=\'center\' style=\'left-padding: 5px; right-padding: 5px;\'>'+value.Attendance+'</td>';
+    								//editLink = 'mtgAction.php?Action=DeleteGroup&MID='+<?php echo $MID;?>+'&GID='+value.ID;
+    								//output += '<td width=15px; alight=\'right\'><a href=\''+editLink+'\'><img src=\'images/minusbutton.gif\' alt=\"(remove)\"></img></a></td>';
+    								output += '</td></tr>';
+    
+        					});
+        					output += '</table>';
+        					$('#confirmedHosts').append(output);
+    					}    					
+        			});
+    			});
+			</script>	
 			<div>this will be the from with a drop down with available people to host.</div>
-			
+			<div id="potentialHosts"></div>
+			<script>
+    			$(document).ready(function(){
+    				var theUrl = 'http://recovery.help/meeter/api/json/hosts/getHostCandidates.php?client=UAT';
+        				var output = '';
+            			$.ajax({
+            				url: theUrl,
+            				dataType: 'json',
+            				type: 'get',
+            				cache: false,
+            				success: function(hosts) {
+                				output += '<table border=1><tr><th>ID</th><th>Name</th></tr>';
+            					$(hosts.hosts).each(function(index, value){
+									output += '<tr><td style=\'padding: 5px\'>';
+									output += value.ID;
+									output += "</td><td>";
+									output += value.FName + " " + value.LName;
+									//var editLink = 'grpForm.php?GID='+value.ID+'&MID='+<?php echo $MID; ?>+'&Action=Edit';
+    								//output += '<a href=\''+editLink+'\'><img src=\'images/btnEdit.gif\' alt=\"(edit)\"></img></a></td>';
+    								//output += '<td style=\'padding: 5px\'>'+value.Title+'</td>';
+    								//output += '<td style=\'padding: 10px; text-align: center;\'>'+value.FacFirstName+'</td>';
+    								//output += '<td style=\'padding: 10px; text-align: center;\'>'+value.CoFirstName+'</td>';
+    								//output += '<td>'+value.Location+'</td>';
+    								//output += '<td align=\'center\' style=\'left-padding: 5px; right-padding: 5px;\'>'+value.Attendance+'</td>';
+    								//editLink = 'mtgAction.php?Action=DeleteGroup&MID='+<?php echo $MID;?>+'&GID='+value.ID;
+    								//output += '<td width=15px; alight=\'right\'><a href=\''+editLink+'\'><img src=\'images/minusbutton.gif\' alt=\"(remove)\"></img></a></td>';
+    								output += '</td></tr>';
+    
+        					});
+        					output += '</table>';
+        					$('#potentialHosts').append(output);
+    					}    					
+        			});
+    			});
+			</script>	
 				<br/><br/>
 			</article>
 			<div id="mtrFooter"></div>
