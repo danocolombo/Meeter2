@@ -1,4 +1,5 @@
 <?php 
+session_start();
 require_once('authenticate.php'); /* this is used for security purposes */
 require 'meeter.php';
 ?>
@@ -32,14 +33,12 @@ require 'meeter.php';
     			$( "#navBar" ).load( "navbar.php" );
     		</script>
 			<article>
-			<div>this will be the list of current hosts.<br/>
+			<div>This administration setting is to identify who can be a host of a meeting.<br/>
 			</div>
 			<div id="confirmedHosts"></div>
 			<script>
     			$(document).ready(function(){
     				var theUrl = 'http://recovery.help/meeter/api/json/hosts/getHosts.php?client=UAT';
-    				//var theUrl = 'http://recovery.help/meeter/api/json/hosts/getHosts.php?client='+<?php echo $CLIENT?>;
-    				//var theUrl = 'http://recovery.help/meeter/api/json/groups/getGroupsForMtgForm.php?client=UAT&MID='+<?php echo $MID?>;
         				var output = '';
             			$.ajax({
             				url: theUrl,
@@ -47,12 +46,12 @@ require 'meeter.php';
             				type: 'get',
             				cache: false,
             				success: function(hosts) {
-                				output += '<table border=1><tr><th>ID</th><th>Name</th></tr>';
+                				
             					$(hosts.hosts).each(function(index, value){
-									output += '<tr><td style=\'padding: 5px\'>';
-									output += value.ID;
-									output += "</td><td>";
+									//output += '<tr><td style=\'padding: 5px\'>';
 									output += value.FName + " " + value.LName;
+									output += "&nbsp;&nbsp;";
+									output += "<a href=\'adminAction.php?Action=RemoveHost&ID=" + value.ID + "\'><font style='font-family:tahoma; font-size:10pt; font-color:red'>[ REMOVE ]</font></a><br/>";
 									//var editLink = 'grpForm.php?GID='+value.ID+'&MID='+<?php echo $MID; ?>+'&Action=Edit';
     								//output += '<a href=\''+editLink+'\'><img src=\'images/btnEdit.gif\' alt=\"(edit)\"></img></a></td>';
     								//output += '<td style=\'padding: 5px\'>'+value.Title+'</td>';
@@ -62,7 +61,7 @@ require 'meeter.php';
     								//output += '<td align=\'center\' style=\'left-padding: 5px; right-padding: 5px;\'>'+value.Attendance+'</td>';
     								//editLink = 'mtgAction.php?Action=DeleteGroup&MID='+<?php echo $MID;?>+'&GID='+value.ID;
     								//output += '<td width=15px; alight=\'right\'><a href=\''+editLink+'\'><img src=\'images/minusbutton.gif\' alt=\"(remove)\"></img></a></td>';
-    								output += '</td></tr>';
+
     
         					});
         					output += '</table>';
@@ -71,7 +70,7 @@ require 'meeter.php';
         			});
     			});
 			</script>	
-			<div>this will be the from with a drop down with available people to host.</div>
+			<div><br/>this will be the from with a drop down with available people to host.</div>
 			<div id="potentialHosts"></div>
 			<script>
     			$(document).ready(function(){

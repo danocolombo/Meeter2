@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once ('authenticate.php'); /* this is used for security purposes */
 ?>
 

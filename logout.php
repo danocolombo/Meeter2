@@ -1,10 +1,12 @@
 <?php
+session_start();
 include 'mtgRedirects.php';
 include 'database.php';
 /*
  * logout.php
  */
-session_start();
+$_SESSION["userID"] = null;
+$_SESSION["userName"] = null;
 $session_key = session_id();
 
 require_once('database.php');

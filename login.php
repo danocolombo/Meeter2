@@ -1,4 +1,7 @@
 <?php
+session_start();
+requre("meeter.php");
+$_SESSION["client"] = $client;
 //require_once("classPage.php");
 /*=========================================================
  * login.php
@@ -27,7 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		$query->close();
 		
 		if(!empty($userid)) {
-			session_start();
+		    $_SESSION["userID"] = $userid;
+		    $_SESSION["userName"] = $username;
 			$session_key = session_id();
 			
 			$query = $connection->prepare("INSERT INTO `sessions` ( `user_id`, `session_key`, `session_address`, `session_useragent`, `session_expires`) VALUES ( ?, ?, ?, ?, DATE_ADD(NOW(),INTERVAL 1 HOUR) );");
@@ -35,8 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$query->execute();
 			$query->close();
 			
-                        $_SESSION["username"] = $username;
-                        $_SESSION["password"] = $password;
+//                         $_SESSION["username"] = $username;
+//                         $_SESSION["password"] = $password;
 			header('Location: index.php');
 		}
 		else {
