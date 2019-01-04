@@ -1,6 +1,6 @@
 <?php
 session_start();
-requre("meeter.php");
+require("meeter.php");
 $_SESSION["client"] = $client;
 //require_once("classPage.php");
 /*=========================================================

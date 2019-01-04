@@ -70,7 +70,7 @@ require 'meeter.php';
         			});
     			});
 			</script>	
-			<div><br/>this will be the from with a drop down with available people to host.</div>
+			<div><br/>The following people can be added to host a meeting.</div>
 			<div id="potentialHosts"></div>
 			<script>
     			$(document).ready(function(){
@@ -101,12 +101,39 @@ require 'meeter.php';
     
         					});
         					output += '</table>';
-        					$('#potentialHosts').append(output);
+//         					$('#potentialHosts').append(output);
     					}    					
         			});
     			});
 			</script>	
-				<br/><br/>
+			<select id="candidates" name="candidates"></select>
+			<script>
+    			$(document).ready(function(){
+    				var theUrl = 'http://recovery.help/meeter/api/json/hosts/getHostCandidates.php?client=UAT';
+        				var output = '';
+            			$.ajax({
+            				url: theUrl,
+            				dataType: 'json',
+            				type: 'get',
+            				cache: false,
+            				success: function(hosts) {
+//                 				output += '<table border=1><tr><th>ID</th><th>Name</th></tr>';
+            					$(hosts.hosts).each(function(index, value){
+									output += '<option value=\"';
+									output += value.ID;
+									output += '\">';
+									output += value.FName + " " + value.LName;
+    								output += '</option>';
+    
+        					});
+        					output += '</select>';
+        					$('#candidates').append(output);
+    					}    					
+        			});
+    			});
+			</script>
+			&nbsp;&nbsp;
+			<button style="font-family:tahoma; font-size:10pt; color:white; background:green; padding: 2px 15px 2px 15px; border-radius:10px;background-image: linear-gradient(to bottom right, #006600, #33cc33);" type="button" onclick="addHost()">ADD</button>	
 			</article>
 			<div id="mtrFooter"></div>
 			<script>
