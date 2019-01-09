@@ -21,6 +21,20 @@ require 'meeter.php';
 		<!--[if lt IE 9]>
 			<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
+		<script>
+			function addHost(){
+				var PID = $("#candidates").val();
+				var dest = "adminHostsAction.php?Action=AddHost&PID=" + PID;
+alert(dest);
+				document.getElementById("addHostForm").action = dest;
+				window.location.href=dest;
+				document.getElementById("mtgForm").submit();
+			}
+			
+			
+			
+        </script>
+		
 	</head>
 	<body>
 		<div class="page">
@@ -106,6 +120,7 @@ require 'meeter.php';
         			});
     			});
 			</script>	
+			<form id=\"addHostForm\" action=\"#\" method=\"post\">
 			<select id="candidates" name="candidates"></select>
 			<script>
     			$(document).ready(function(){
@@ -134,6 +149,7 @@ require 'meeter.php';
 			</script>
 			&nbsp;&nbsp;
 			<button style="font-family:tahoma; font-size:10pt; color:white; background:green; padding: 2px 15px 2px 15px; border-radius:10px;background-image: linear-gradient(to bottom right, #006600, #33cc33);" type="button" onclick="addHost()">ADD</button>	
+			</form>
 			</article>
 			<div id="mtrFooter"></div>
 			<script>
