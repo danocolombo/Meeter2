@@ -10,14 +10,14 @@ require 'includes/database.inc.php';
 
 
 $Action = $_GET['Action'];
-$PID = $_GET['PID'];
-echo $Action + " " + $PID;
-if (!isset($PID) || !isset($Action)){
-    // Action and PID are required
-    header($loc["301"]);
-    header("Location: adminHosts.php");
-    return;
-} 
+$PID = $_GET['candidates'];
+echo $Action . " " . $PID;  
+// if (!isset($candidates) || !isset($Action)){
+//     // Action and PID are required
+//     header($loc["301"]);
+//     header("Location: adminHosts.php");
+//     return;
+// } 
 switch ($Action){
     case "removeHost":
         removeHost($PID);

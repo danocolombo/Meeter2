@@ -26,10 +26,11 @@ require 'meeter.php';
 				var PID = $("#candidates").val();
 				var dest = "adminHostsAction.php?Action=AddHost&PID=" + PID;
 alert(dest);
-				document.getElementById("addHostForm").action = dest;
+// 				document.getElementById("addHostForm").action = dest;
 // 				window.location.href=dest;
 // 				document.getElementById("addHostForm").action = updateAction;
 				document.getElementById("addHostForm").submit();
+				return true;
 			}
         </script>
 		
@@ -45,7 +46,8 @@ alert(dest);
     			$( "#navBar" ).load( "navbar.php" );
     		</script>
 			<article>
-			<form id=\"addHostForm\" action=\"adminHostsAction.php\" method=\"post\">
+			<form id="addHostForm" action="adminHostsAction.php" method="get">
+			<input type="hidden" id="Action" name="Action" value="addHost">
 			<div>This administration setting is to identify who can be a host of a meeting.<br/>
 			</div>
 			<div id="confirmedHosts"></div>
@@ -120,7 +122,7 @@ alert(dest);
     			});
 			</script>	
 			
-			<select id="candidates" name="candidates"></select>
+			<select id="candidate" name="candidates"></select>
 			<script>
     			$(document).ready(function(){
     				var theUrl = 'http://recovery.help/meeter/api/json/hosts/getHostCandidates.php?client=UAT';
@@ -141,13 +143,13 @@ alert(dest);
     
         					});
         					output += '</select>';
-        					$('#candidates').append(output);
+        					$('#candidate').append(output);
     					}    					
         			});
     			});
 			</script>
 			&nbsp;&nbsp;
-			<button style="font-family:tahoma; font-size:10pt; color:white; background:green; padding: 2px 15px 2px 15px; border-radius:10px;background-image: linear-gradient(to bottom right, #006600, #33cc33);" type="button" onclick="addHost()">ADD</button>	
+			<button style="font-family:tahoma; font-size:10pt; color:white; background:green; padding: 2px 15px 2px 15px; border-radius:10px;background-image: linear-gradient(to bottom right, #006600, #33cc33);" type="submit" >ADD</button>	
 			</form>
 			</article>
 			<div id="mtrFooter"></div>
