@@ -46,8 +46,7 @@ alert(dest);
     			$( "#navBar" ).load( "navbar.php" );
     		</script>
 			<article>
-			<form id="addHostForm" action="adminHostsAction.php" method="get">
-			<input type="hidden" id="Action" name="Action" value="addHost">
+			
 			<div>This administration setting is to identify who can be a host of a meeting.<br/>
 			</div>
 			<div id="confirmedHosts"></div>
@@ -61,23 +60,13 @@ alert(dest);
             				type: 'get',
             				cache: false,
             				success: function(hosts) {
-                				
+                				//now loop through all the individuals that are 
             					$(hosts.hosts).each(function(index, value){
 									//output += '<tr><td style=\'padding: 5px\'>';
 									output += value.FName + " " + value.LName;
 									output += "&nbsp;&nbsp;";
-									output += "<a href=\'adminAction.php?Action=RemoveHost&ID=" + value.ID + "\'><font style='font-family:tahoma; font-size:10pt; font-color:red'>[ REMOVE ]</font></a><br/>";
-									//var editLink = 'grpForm.php?GID='+value.ID+'&MID='+<?php echo $MID; ?>+'&Action=Edit';
-    								//output += '<a href=\''+editLink+'\'><img src=\'images/btnEdit.gif\' alt=\"(edit)\"></img></a></td>';
-    								//output += '<td style=\'padding: 5px\'>'+value.Title+'</td>';
-    								//output += '<td style=\'padding: 10px; text-align: center;\'>'+value.FacFirstName+'</td>';
-    								//output += '<td style=\'padding: 10px; text-align: center;\'>'+value.CoFirstName+'</td>';
-    								//output += '<td>'+value.Location+'</td>';
-    								//output += '<td align=\'center\' style=\'left-padding: 5px; right-padding: 5px;\'>'+value.Attendance+'</td>';
-    								//editLink = 'mtgAction.php?Action=DeleteGroup&MID='+<?php echo $MID;?>+'&GID='+value.ID;
-    								//output += '<td width=15px; alight=\'right\'><a href=\''+editLink+'\'><img src=\'images/minusbutton.gif\' alt=\"(remove)\"></img></a></td>';
-
-    
+									output += "<a href=\'adminHostsAction.php?Action=removeHost&ID=" + value.ID + "\'><font style='font-family:tahoma; font-size:10pt; font-color:red'>[ REMOVE ]</font></a><br/>";
+									
         					});
         					output += '</table>';
         					$('#confirmedHosts').append(output);
@@ -86,41 +75,9 @@ alert(dest);
     			});
 			</script>	
 			<div><br/>The following people can be added to host a meeting.</div>
+			<form id="addHostForm" action="adminHostsAction.php" method="get">
+			<input type="hidden" id="Action" name="Action" value="addHost">
 			<div id="potentialHosts"></div>
-			<script>
-    			$(document).ready(function(){
-    				var theUrl = 'http://recovery.help/meeter/api/json/hosts/getHostCandidates.php?client=UAT';
-        				var output = '';
-            			$.ajax({
-            				url: theUrl,
-            				dataType: 'json',
-            				type: 'get',
-            				cache: false,
-            				success: function(hosts) {
-                				output += '<table border=1><tr><th>ID</th><th>Name</th></tr>';
-            					$(hosts.hosts).each(function(index, value){
-									output += '<tr><td style=\'padding: 5px\'>';
-									output += value.ID;
-									output += "</td><td>";
-									output += value.FName + " " + value.LName;
-									//var editLink = 'grpForm.php?GID='+value.ID+'&MID='+<?php echo $MID; ?>+'&Action=Edit';
-    								//output += '<a href=\''+editLink+'\'><img src=\'images/btnEdit.gif\' alt=\"(edit)\"></img></a></td>';
-    								//output += '<td style=\'padding: 5px\'>'+value.Title+'</td>';
-    								//output += '<td style=\'padding: 10px; text-align: center;\'>'+value.FacFirstName+'</td>';
-    								//output += '<td style=\'padding: 10px; text-align: center;\'>'+value.CoFirstName+'</td>';
-    								//output += '<td>'+value.Location+'</td>';
-    								//output += '<td align=\'center\' style=\'left-padding: 5px; right-padding: 5px;\'>'+value.Attendance+'</td>';
-    								//editLink = 'mtgAction.php?Action=DeleteGroup&MID='+<?php echo $MID;?>+'&GID='+value.ID;
-    								//output += '<td width=15px; alight=\'right\'><a href=\''+editLink+'\'><img src=\'images/minusbutton.gif\' alt=\"(remove)\"></img></a></td>';
-    								output += '</td></tr>';
-    
-        					});
-        					output += '</table>';
-//         					$('#potentialHosts').append(output);
-    					}    					
-        			});
-    			});
-			</script>	
 			
 			<select id="candidate" name="candidates"></select>
 			<script>
