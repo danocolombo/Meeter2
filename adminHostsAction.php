@@ -12,7 +12,7 @@ include 'mtgRedirects.php';
 
 $Action = $_GET['Action'];
 $PID = $_GET['candidates'];
-$ID = $_GET['PID'];
+$ID = $_GET['ID'];
 // if (!isset($candidates) || !isset($Action)){
 //     // Action and PID are required
 //     header($loc["301"]);
@@ -34,7 +34,7 @@ switch ($Action){
         header("Location: adminHosts.php");
         break;
 }
-function removeHost($PID){
+function removeHost($ID){
    //this function removes the $PID from the hosts string in Meeter table
     $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
     // Check connection
@@ -62,7 +62,7 @@ function removeHost($PID){
     //put delimited string into array
     $h_arr = explode("|", $hostSetting);
     //identify the element of the $PID
-    $bullseye = array_search($PID,$h_arr);
+    $bullseye = array_search($ID,$h_arr);
     //remove element
     unset($h_arr[$bullseye]);
     //convert array to string
