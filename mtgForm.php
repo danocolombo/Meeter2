@@ -572,7 +572,7 @@ $aosConfig->loadConfigFromDB();
                     // GREETER IS TRUE = DISPLAY OPTION
                     // ======================================
                     echo "<tr><td>";
-                    echo "<div class=\"mtgGreeter1\" style=\"float:right\">" . $aosConfig->getDisplayString("greeter") . ":</div></td>";
+                    echo "<div class=\"mtg=Labels\" style=\"float:right\">" . $aosConfig->getDisplayString("greeter") . ":</div></td>";
                     echo "<td>";
                     echo "<select id=\"mtgGreeter1\" name=\"mtgGreeter1\">";
                     $option = getPeepsForService("greeter");
@@ -783,37 +783,38 @@ $aosConfig->loadConfigFromDB();
                     echo "<a href=\"#\" title=\"People on Announcement team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
-                if ($aosConfig->getConfig("teaching") == "true") {
-                    // ================================
-                    // TEACHING IS TRUE = DISPLAY OPTION
-                    // ======================================
-                    echo "<tr><td>";
-                    echo "<div class=\"mtgLabels\" style=\"float:right\">" . $aosConfig->getDisplayString("teaching") . ":</div></td>";
-                    echo "<td>";
-                    echo "<select id=\"mtgTeaching\" name=\"mtgTeaching\">";
-                    $option = getPeepsForService("teaching");
-                    foreach ($option as $id => $name) {
-                        if ($mtgTeachingFac == $id) {
-                            echo "<option value=\"$id\" SELECTED>$name</option>";
-                        } else {
-                            echo "<option value=\"$id\">$name</option>";
+                if ($mtgType == "Lesson") {
+                    if ($aosConfig->getConfig("teaching") == "true") {
+                        // ================================
+                        // TEACHING IS TRUE = DISPLAY OPTION
+                        // ======================================
+                        echo "<tr><td>";
+                        echo "<div class=\"mtgLabels\" style=\"float:right\">" . $aosConfig->getDisplayString("teaching") . ":</div></td>";
+                        echo "<td>";
+                        echo "<select id=\"mtgTeaching\" name=\"mtgTeaching\">";
+                        $option = getPeepsForService("teaching");
+                        foreach ($option as $id => $name) {
+                            if ($mtgTeachingFac == $id) {
+                                echo "<option value=\"$id\" SELECTED>$name</option>";
+                            } else {
+                                echo "<option value=\"$id\">$name</option>";
+                            }
                         }
-                    }
-                    // add the ghost to the bottom
-                    if ($edit) {
-                        if ($mtgTeachingFac == $_gid) {
+                        // add the ghost to the bottom
+                        if ($edit) {
+                            if ($mtgTeachingFac == $_gid) {
+                                echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
+                            } else {
+                                echo "<option value=\"$_gid\">$_glabel</option>";
+                            }
+                        } else {
                             echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
-                        } else {
-                            echo "<option value=\"$_gid\">$_glabel</option>";
                         }
-                    } else {
-                        echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
+                        echo "</select>";
+                        echo "<a href=\"#\" title=\"People on Teaching team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
+                        echo "</td></tr>";
                     }
-                    echo "</select>";
-                    echo "<a href=\"#\" title=\"People on Teaching team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
-                    echo "</td></tr>";
                 }
-                
                 if ($aosConfig->getConfig("chips") == "true") {
                     // ================================
                     // CHIPS IS TRUE = DISPLAY OPTION

@@ -174,7 +174,7 @@ if ($ACTION == "Edit"){
     echo "<tr><td align='right' valign='top'>Notes:</td><td><textarea name='grpNotes' rows='5' cols='40'>" . htmlspecialchars($grp[0][7], ENT_QUOTES) . "</textarea></td></tr>";
     echo "<tr><td></td><td><input type='submit' value='Ok' size='10'/></td></tr>";
     echo "</table>";
-    echo "<center><img src='images/CCC-room-map.gif'/></center>";
+    
     
 }else{
     /*------------------------------------------------
@@ -260,11 +260,7 @@ if ($ACTION == "Edit"){
     echo "<tr><td align='right' valign='top'>Notes:</td><td><textarea name='grpNotes' rows='5' cols='40'></textarea></td></tr>";
     echo "<tr><td></td><td><input type='submit' value='Ok' size='10'/></td></tr>";
     echo "</table>";
-    /*-------------------------------------------------------------------
-     * the following line displays a map that might make it easier in 
-     * identifying rooms when entering group info.
-     * =================================================================*/
-     //echo "<center><img src='images/CCC-room-map.gif'/></center>";
+    
     
 }
 

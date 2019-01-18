@@ -59,7 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	<meta http-equiv="content-type" content="text/html; charset=utf-8">
 	<title>Meeter Web Application</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="google-signin-client_id" content="1016615882873-4ri4h7650un1mn4kms8fc3k3g3k8ntkp.apps.googleusercontent.com">
 	<link rel="stylesheet" type="text/css" href="meeter.css" />
 	<script src="https://apis.google.com/js/platform.js" async defer></script>
 	<script src="js/jquery/jquery-3.3.1.js" type="text/javascript"></script>
@@ -77,38 +76,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <p><label for="username">Username:</label><input id="username" name="username" type="text" required></p>
                     <p><label for="password">Password:</label><input id="password" name="password" type="password" required></p>					
                        <p><input class="greenButton" name="loginBtn" type="submit" value="Login"></p>
-                       <p><button style="font-family:tahoma; font-size:12pt; color:white; background:green; padding: 5px 15px 5px 15px; border-radius:10px;background-image: linear-gradient(to bottom right, #006600, #33cc33);" type="button" onclick="validateMtgForm()">LOGIN</button></p>
 					</div>
                     </fieldset>
                     </div>
                     
-			<div><input type='hidden' id='googleID' name='googleID'></input><br/></div>
-            <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark">
             
             </div>
-            <script>
-              function onSignIn(googleUser) {
-                // Useful data for your client-side scripts:
-                var profile = googleUser.getBasicProfile();
-                console.log("ID: " + profile.getId()); // Don't send this directly to your server!
-                console.log('Full Name: ' + profile.getName());
-                console.log('Given Name: ' + profile.getGivenName());
-                console.log('Family Name: ' + profile.getFamilyName());
-                console.log("Image URL: " + profile.getImageUrl());
-                console.log("Email: " + profile.getEmail());
-        
-                // The ID token you need to pass to your backend:
-                var id_token = googleUser.getAuthResponse().id_token;
-                console.log("ID Token: " + id_token);
-                
-                $("#googleID").val(profile.getId());
-                $("#username").val(profile.getEmail());
-                $("#loginBtn").val("PROCEED");
-                
-//                 var dest = "index.php";
-//         		window.location.href=dest;
-              }
-            </script>
 		</form>
 	</section>
 	<!-- [/content] -->
