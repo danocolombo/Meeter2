@@ -433,10 +433,11 @@ function showForm($action, $origin, $destination, $ID){
             $dest = "people.php";
             break; 
     }
-    //loads the user information;
+    //loads the user information, if $PID is provide
     global $person;
-    $person->getPerson($PID);
-    
+    if(isset($PID)){
+        $person->getPerson($PID);
+    }
     //loads the system configuration
     global $sAOS;
     $sAOS = new mConfig();
@@ -450,7 +451,6 @@ function showForm($action, $origin, $destination, $ID){
     echo "<center>";
     echo "<table border='0'>";
     echo "<tr><td align='right'>First Name:</td><td><input type='text' id='peepFName' name='peepFName' size='15' value='" . htmlspecialchars($person->getFName(),ENT_QUOTES) . "'/></td></tr>";
-
     echo "<tr><td align='right'>Last Name:</td><td><input type='text' id='peepLName' name='peepLName' size='15' value='" . htmlspecialchars($person->getLName(),ENT_QUOTES) . "'/></td></tr>";     
     echo "<tr><td align='right'>Address:</td><td><input type='text' id='peepAddress' name='peepAddress' size='25' value='" . htmlspecialchars($person->getStreet(),ENT_QUOTES) . "'/></td></tr>";     
     echo "<tr><td align='right'>City:</td><td><input type='text' id='peepCity' name='peepCity' size='15' value='" . htmlspecialchars($person->getCity(),ENT_QUOTES) . "'/> ";
