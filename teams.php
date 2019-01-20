@@ -2,6 +2,12 @@
 require_once('authenticate.php'); /* for security purposes */
 include 'mtgRedirects.php';
 include 'database.php';
+
+$Action = $_GET["Action"];
+$Destination = $_GET["Destination"];
+$Origin = $_GET["Origin"];
+$TID = $_GET["TID"];
+$TeamTitle = $_GET['TeamTitle'];
 /*
  * teams.php
  * ======================================================
@@ -33,6 +39,34 @@ include 'database.php';
 		<!--[if lt IE 9]>
 			<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
+		<?php 
+		if (isset($Action)){
+		    if($Action == "Edit"){
+		        //provide javascript to delete a teeam if doing edit....
+		        ?>
+		        <script>
+		        function validateDeleteTeam(){
+		            // if user is trying to delete team, warn
+		            //--------------------------------------------------------------------------------
+		            var team = $("#teamName").val();
+					alert(team);
+					var oldWayTeam = document.forms["tmForm"]["teamName"].value;
+					alert(oldWayTeam);
+		            //check if the current user is set to active
+	                var x = confirm("Press OK if you want to really delete. All references in the system will be lost");
+	                if (x == true){
+	                    var recordID = getUrlVars()["TID"];
+	                    var newURL = "teamAction.php?Action=DeleteTeam&TID=" + recordID;
+	                    window.location.href=newURL;
+	                    return true;
+	                }else{
+	                    return false;
+	                }
+		        }
+		        </script>
+	     	<?php 
+		    }
+		}?>
 	</head>
 	<body>
 		<div class="page">
@@ -51,10 +85,7 @@ include 'database.php';
  * ###################################################
  */
 
-$Action = $_GET["Action"];
-$Destination = $_GET["Destination"];
-$Origin = $_GET["Origin"];
-$TID = $_GET["TID"];
+
 
 switch ("$Action"){     
     case "Edit":
@@ -67,7 +98,6 @@ switch ("$Action"){
          * for adding to system
          *============================================
          */
-        //showForm("New", $_GET['Origin'], $_GET['Dest'], $_GET['$TID']);
         showTeamForm("New","","", $TID);
         break;
     case "adminDisplayTeams":
@@ -81,22 +111,6 @@ switch ("$Action"){
         break;
 }
 
-
-/* =============================
- * GENERIC HTML TO FOLLOW:
- * =============================
- */
-/* print <<<EOF
-<div id="mainContent">
-
-<p>This is where content would go, should there be any.</p>
-</div> <!-- end main content -->
-
-EOF;
- * 
- */
-//print ("</center>");
-//print $page->getBottom();
 ?>
 </article>
     <footer>
@@ -211,7 +225,7 @@ function showTeamForm($Action){
          */ 
         $TID = $_GET["TID"];
         $TeamTitle = $_GET['TeamTitle'];
-        $FormTitle = $TeamTitle . " Team Info";
+        $FormTitle = $TeamTitle . " Team";
         $FormAction = "teamAction.php?Action=Update&TID=" . $TID;
         
         $query = "SELECT * FROM teams WHERE ID = " . $TID;
@@ -226,7 +240,7 @@ function showTeamForm($Action){
     /* start the form */
     echo "<form id='tmForm' action='" . $FormAction . "' method='post'>";
     
-    echo "<center><h2>" . $FormTitle . "</h2></center>";
+    echo "<center><div id=\"teamTitle\">" . $FormTitle . "</div></center>";
     echo "<center>";
     echo "<table border='0'>";
     //if ($Action == "Edit") echo "<tr><td colspan='2' align='right' border='1'>" . $ID . "</td></tr>";
@@ -307,7 +321,9 @@ function showTeamForm($Action){
     //if we are doing Edit, get the current members
     If ($Action == "Edit"){
     
-        echo "<div style='text-align:right; padding-right: 20px;'><a href='people.php?Action=TeamCandidates&TID=" . $TID . "&TeamTitle=" . $TeamTitle . "'><img src='images/addpeepbutton.jpg' width='50px'></img></a></div>";
+        echo "<div style='text-align:right; padding-right: 20px;'>";
+        echo "<a href='people.php?Action=TeamCandidates&TID=" . $TID . "&TeamTitle=" . $TeamTitle . "'><img src='images/addpeepbutton.jpg' width='50px'></img></a>";
+        echo "<div style='float:right;'><button type='button' id='deleteButton' onclick='validateDeleteTeam()' style='background:red;color:white;'>&nbsp;DELETE TEAM&nbsp;</button></div>";
         /********************************************************
          * display a list of memobers of the team
          * ******************************************************
