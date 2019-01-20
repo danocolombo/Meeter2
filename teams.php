@@ -48,12 +48,15 @@ $TeamTitle = $_GET['TeamTitle'];
 		        function validateDeleteTeam(){
 		            // if user is trying to delete team, warn
 		            //--------------------------------------------------------------------------------
-		            var team = $("#teamName").val();
-					alert(team);
-					var oldWayTeam = document.forms["tmForm"]["teamName"].value;
-					alert(oldWayTeam);
+		            // get Team Tile from URL
+		            //-------------------------------
+		            var titleForTeam = decodeURIComponent(getUrlVars()["TeamTitle"]);
+		            
+					alert(titleForTeam);
+
 		            //check if the current user is set to active
-	                var x = confirm("Press OK if you want to really delete. All references in the system will be lost");
+		            var q = "Press OK if you really want to eliminate '" + titleForTeam + "' from the system";
+	                var x = confirm(q);
 	                if (x == true){
 	                    var recordID = getUrlVars()["TID"];
 	                    var newURL = "teamAction.php?Action=DeleteTeam&TID=" + recordID;
@@ -63,6 +66,13 @@ $TeamTitle = $_GET['TeamTitle'];
 	                    return false;
 	                }
 		        }
+		        function getUrlVars() {
+		        	var vars = {};
+		        	var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+		        	vars[key] = value;
+		        	});
+		        	return vars;
+	        	}
 		        </script>
 	     	<?php 
 		    }
@@ -240,7 +250,7 @@ function showTeamForm($Action){
     /* start the form */
     echo "<form id='tmForm' action='" . $FormAction . "' method='post'>";
     
-    echo "<center><div id=\"teamTitle\">" . $FormTitle . "</div></center>";
+    echo "<center><p class=\"teamTitle\">" . $FormTitle . "</p></center>";
     echo "<center>";
     echo "<table border='0'>";
     //if ($Action == "Edit") echo "<tr><td colspan='2' align='right' border='1'>" . $ID . "</td></tr>";

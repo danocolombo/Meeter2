@@ -42,7 +42,10 @@ switch ($Action){
          */
         addTeamToDB();
         break;
+    case "deleteTeam":
+        /* the user wants to delete the team from the system */
         
+        break;
     default:
         echo "not sure what to do with " . $Action;
         exit;
@@ -147,6 +150,20 @@ function addTeamToDB(){
     
     $tmp = "teams.php";
     executeSQL($sql,$tmp);
+    //testSQL($sql);
+}
+function dropTeam($TID){
+    $link = mysql_connect(DB_HOST, DB_USER, DB_PASSWORD)
+    OR die(mysql_error());
+    
+    //delete all team members assosticated with TID
+    $sql = "DELETE FROM team_members WHERE TID='" . $TID . "'";
+    executeSQL($sql, $tmp);
+    
+    $sql = "DELETE FROM team_members WHERE TID='" . $TID . "' AND PID='" . $PID . "'";
+    $TeamTitle = $_GET["TeamTitle"];
+    $tmp = "teams.php?Action=Edit&TID=" . $TID . "&TeamTitle=". $TeamTitle;
+    executeSQL($sql, $tmp);
     //testSQL($sql);
 }
 ?>
