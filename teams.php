@@ -51,15 +51,13 @@ $TeamTitle = $_GET['TeamTitle'];
 		            // get Team Tile from URL
 		            //-------------------------------
 		            var titleForTeam = decodeURIComponent(getUrlVars()["TeamTitle"]);
-		            
-					alert(titleForTeam);
 
 		            //check if the current user is set to active
 		            var q = "Press OK if you really want to eliminate '" + titleForTeam + "' from the system";
 	                var x = confirm(q);
 	                if (x == true){
 	                    var recordID = getUrlVars()["TID"];
-	                    var newURL = "teamAction.php?Action=DeleteTeam&TID=" + recordID;
+	                    var newURL = "teamAction.php?Action=deleteTeam&TID=" + recordID;
 	                    window.location.href=newURL;
 	                    return true;
 	                }else{

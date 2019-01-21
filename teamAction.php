@@ -44,7 +44,8 @@ switch ($Action){
         break;
     case "deleteTeam":
         /* the user wants to delete the team from the system */
-        
+        $TID = $_GET["TID"];  // Team ID
+        dropTeam($TID);
         break;
     default:
         echo "not sure what to do with " . $Action;
@@ -153,17 +154,20 @@ function addTeamToDB(){
     //testSQL($sql);
 }
 function dropTeam($TID){
-    $link = mysql_connect(DB_HOST, DB_USER, DB_PASSWORD)
-    OR die(mysql_error());
     
+    $con=mysqli_connect(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
+    if (mysqli_connect_errno($con))
+    {
+        echo "Failed to connect to MySQL: " . mysqli_connect_error();
+    }
     //delete all team members assosticated with TID
     $sql = "DELETE FROM team_members WHERE TID='" . $TID . "'";
-    executeSQL($sql, $tmp);
-    
-    $sql = "DELETE FROM team_members WHERE TID='" . $TID . "' AND PID='" . $PID . "'";
-    $TeamTitle = $_GET["TeamTitle"];
-    $tmp = "teams.php?Action=Edit&TID=" . $TID . "&TeamTitle=". $TeamTitle;
-    executeSQL($sql, $tmp);
-    //testSQL($sql);
+    mysqli_query($con,$sql);
+    $sql = "DELETE FROM teams WHERE ID='" . $TID . "'";
+    mysqli_query($con,$sql);
+    mysqli_close($con);
+
+    $destination = "teams.php";
+    destination(307, $destination);
 }
 ?>
