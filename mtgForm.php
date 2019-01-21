@@ -430,7 +430,9 @@ $aosConfig->loadConfigFromDB();
                 } else {
                     echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
                 }
-                echo "</select></td>";
+                echo "</select>";
+                echo "<a href=\"#\" title=\"Individuals defined as Hosts in Admin features.\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
+                echo "</td>";
                 echo "</tr>";
                 echo "<tr>";
                 echo "<td><div class=\"mtgLabels\" style=\"float:right\">Attendance:</div></td>";
@@ -572,7 +574,7 @@ $aosConfig->loadConfigFromDB();
                     // GREETER IS TRUE = DISPLAY OPTION
                     // ======================================
                     echo "<tr><td>";
-                    echo "<div class=\"mtg=Labels\" style=\"float:right\">" . $aosConfig->getDisplayString("greeter") . ":</div></td>";
+                    echo "<div class=\"mtgLabels\" style=\"float:right\">" . $aosConfig->getDisplayString("greeter") . ":</div></td>";
                     echo "<td>";
                     echo "<select id=\"mtgGreeter1\" name=\"mtgGreeter1\">";
                     $option = getPeepsForService("greeter");
