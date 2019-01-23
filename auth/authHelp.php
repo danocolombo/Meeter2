@@ -27,7 +27,7 @@
 						<legend>&nbsp;Meeter Web Application&nbsp;</legend>
 						<div class="loginText">
 							<p>If you have forgotten your password or would like to reset your password.</p>
-							<p><a href="changePassword.php">CHANGE PASSWORD</a></p>
+							<p><a href="recoverPassword.php">RECOVER PASSWORD</a></p>
 							<p><br/>
 							<p>If you need to register for the application, please follow the link below.</p>
 							<p><a href="register.php">REGISTER FOR ACCESS</a></p>

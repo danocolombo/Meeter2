@@ -1,5 +1,4 @@
 <?php
-    //include 'mtrAOS.php';
     // this file is for use with the meeter people functionality.
     
     function people_select_all_commits(){

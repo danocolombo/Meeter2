@@ -1,5 +1,4 @@
 <?php
-// include 'user.inc.php';
 class Commitments extends User{
     public $peepCommits = array(User);
     function Commitments(){
