@@ -20,7 +20,9 @@
 				return false;
 			}
 			if(validateEmail(em)){
-				alert("good email");
+				var dest = "recoveryAction.php?em=" + em;
+				window.location.href=dest;
+				return true;
 			}else{
 				alert("You need to provide a well-formed email address.");
 				return false;
