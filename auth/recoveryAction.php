@@ -18,7 +18,8 @@ $userName = $userInfo["user_firstname"];
 mysqli_free_result($result); 
 
 $uniqueId = random();
-
+$sql = "UPDATE users set recovery_token = '$uniqueId'";
+$sql += " WHERE user_email = '$email'";
 email_notification($userName, $email);
 
 
