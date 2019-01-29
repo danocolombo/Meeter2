@@ -9,7 +9,9 @@ require_once ('authenticate.php'); /* this is used for security purposes */
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport"
 	content="width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1" />
-<title>Meeter Web Application</title>
+    <title>Meeter Web Application</title>
+
+
 <link rel="stylesheet" type="text/css" href="css/screen_styles.css" />
 <link rel="stylesheet" type="text/css"
 	href="css/screen_layout_large.css" />
@@ -37,7 +39,14 @@ require_once ('authenticate.php'); /* this is used for security purposes */
 		</header>
 		<div id="navBar"></div>
 		<script>
-			$( "#navBar" ).load( "navbar.php" );
+			<?php 
+			if($_SESSION["adminFlag"] == "1"){
+			    echo "$( \"#navBar\" ).load( \"navbarA.php\" );";
+			}else{
+			    echo "$( \"#navBar\" ).load( \"navbar.php\" );";
+			}
+			?>
+			
 		</script>
 		<article>
 			<img src='images/cr_splash_590x250.jpg'></img><br />
@@ -45,6 +54,15 @@ require_once ('authenticate.php'); /* this is used for security purposes */
 			Celebrate Recovery ministry. For further information regarding<br />
 			this site or its contents please contact <a
 				href='mailto:dano@dcolombo.com'>Dano</a>
+				
+				<div>
+				<?php 
+// 				echo "userID: " . $_SESSION["userID"] . "<br/>";
+// 				echo "userName: " . $_SESSION["userName"] . "<br/>";
+// 				echo "adminFlag: " . $_SESSION["adminFlag"] . "<br/>";
+// 				echo "sessionKey: " . $_SESSION["sessionKey"] . "<br/>";
+				?>
+				</div>
 		</article>
 		<div id="mtrFooter"></div>
 		<script>$("#mtrFooter").load("footer.php");</script>

@@ -23,18 +23,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $username = $_POST["username"];
         $password = $_POST["password"];
         
-        $query = $connection->prepare("SELECT `user_id` FROM `users` WHERE `user_login` = ? and `user_password` = PASSWORD(?)");
+        $query = $connection->prepare("SELECT user_id, Admin FROM `users` WHERE `user_login` = ? and `user_password` = PASSWORD(?)");
         $query->bind_param("ss", $username, $password);
         $query->execute();
-        $query->bind_result($userid);
+        $query->bind_result($userid, $adminFlag);
         $query->fetch();
         $query->close();
         
         if (! empty($userid)) {
             $_SESSION["userID"] = $userid;
             $_SESSION["userName"] = $username;
+            if($adminFlag == 1){
+                $_SESSION["adminFlag"] = true;
+            }else{
+                $_SESSION["adminFlag"] = false;
+            }
+            $_SESSION["adminFlag"] = $adminFlag;
             $session_key = session_id();
-            
+            $_SESSION["sessionKey"] = $session_key;
             $query = $connection->prepare("INSERT INTO `sessions` ( `user_id`, `session_key`, `session_address`, `session_useragent`, `session_expires`) VALUES ( ?, ?, ?, ?, DATE_ADD(NOW(),INTERVAL 1 HOUR) );");
             $query->bind_param("isss", $userid, $session_key, $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
             $query->execute();

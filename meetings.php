@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once('authenticate.php'); /* used for security purposes */
 include 'database.php';
 require_once 'HTML/Table.php';
@@ -40,7 +41,13 @@ require_once 'HTML/Table.php';
 			</header>
 			<div id="navBar"></div>
 		<script>
-			$( "#navBar" ).load( "navbar.php" );
+		<?php 
+				if($_SESSION["adminFlag"] == "1"){
+				    echo "$( \"#navBar\" ).load( \"navbarA.php\" );";
+				}else{
+				    echo "$( \"#navBar\" ).load( \"navbar.php\" );";
+				}
+				?>
 		</script>
 			<article>
 <?php 
@@ -122,8 +129,12 @@ require_once 'HTML/Table.php';
     }
     $table->altRowAttributes(1,null, array("class"=>"alt"));
 
-    /* add a link to enter a new meeting record */
-    echo "<div style='text-align:right; padding-right: 20px;'><a href='mtgForm.php'>NEW ENTRY</a><br/>";
+    /* add a link to enter a new meeting record - IF USER IS ADMIN*/
+    if($_SESSION["adminFlag"] == "1"){
+        echo "<div style='text-align:right; padding-right: 20px;'><a href='mtgForm.php'>NEW ENTRY</a><br/>";
+    }else{
+        echo "<div style='text-align:right; padding-right: 20px;'><br/>";
+    }
     /* add link to old or new meetings */
     if ($past){
         echo "<a href='meetings.php'>mtg plans</a>";

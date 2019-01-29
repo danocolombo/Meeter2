@@ -347,7 +347,13 @@ $aosConfig->loadConfigFromDB();
 		</header>
 		<div id="navBar"></div>
 		<script>
-			$( "#navBar" ).load( "navbar.php" );
+		<?php 
+				if($_SESSION["adminFlag"] == "1"){
+				    echo "$( \"#navBar\" ).load( \"navbarA.php\" );";
+				}else{
+				    echo "$( \"#navBar\" ).load( \"navbar.php\" );";
+				}
+				?>
 		</script>
 		<article>
 			<?php
@@ -1184,11 +1190,13 @@ $aosConfig->loadConfigFromDB();
 					<td colspan="2">
 						<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<?php 
-						if($MID>0){
-						    //display update button, otherwise insert
-						    echo "<button style=\"font-family:tahoma; font-size:12pt; color:white; background:green; padding: 5px 15px 5px 15px; border-radius:10px;background-image: linear-gradient(to bottom right, #006600, #33cc33);\" type=\"button\" onclick=\"validateMtgForm()\">UPDATE</button>";
-						}else{
-						    echo "<button style=\"font-family:tahoma; font-size:12pt; color:white; background:green; padding: 5px 15px 5px 15px; border-radius:10px;background-image: linear-gradient(to bottom right, #006600, #33cc33);\" type=\"button\" onclick=\"validateMtgForm()\">INSERT</button>";
+						if($_SESSION["adminFlag"] == "1"){
+    						if($MID>0){
+    						    //display update button, otherwise insert
+    						    echo "<button style=\"font-family:tahoma; font-size:12pt; color:white; background:green; padding: 5px 15px 5px 15px; border-radius:10px;background-image: linear-gradient(to bottom right, #006600, #33cc33);\" type=\"button\" onclick=\"validateMtgForm()\">UPDATE</button>";
+    						}else{
+    						    echo "<button style=\"font-family:tahoma; font-size:12pt; color:white; background:green; padding: 5px 15px 5px 15px; border-radius:10px;background-image: linear-gradient(to bottom right, #006600, #33cc33);\" type=\"button\" onclick=\"validateMtgForm()\">INSERT</button>";
+    						}
 						}
 						?>
 						
@@ -1221,20 +1229,33 @@ $aosConfig->loadConfigFromDB();
         				type: 'get',
         				cache: false,
         				success: function(data) {
-            				output += '<table border=1><tr><th></th><th>Title</th><th>Facilitator</th><th>Co-Facilitator</th><th>Location</th><th>#</th></tr>';
+            				output += '<table border=1><tr>';
+            				<?php if($_SESSION["adminFlag"] == "1"){?>
+                				output += '<th></th>';
+            				<?php }?>
+            				output += '<th>Title</th><th>Facilitator</th><th>Co-Facilitator</th><th>Location</th><th>#</th>';
+            				<?php if($_SESSION["adminFlag"] == "1"){?>
+                				output += '<th></th>';
+            				<?php }?>
+            				output += '</tr>';
         					$(data.groups).each(function(index, value){
     //     							console.log(value.Title);
 //         							output += '<tr><td>'+value.Title+'</td></tr>';
-									output += '<tr><td valign=\'center\' style=\'padding: 5px\'>';
-									var editLink = 'grpForm.php?GID='+value.ID+'&MID='+<?php echo $MID; ?>+'&Action=Edit';
-									output += '<a href=\''+editLink+'\'><img src=\'images/btnEdit.gif\' alt=\"(edit)\"></img></a></td>';
+									output += '<tr>';
+									<?php if($_SESSION["adminFlag"] == "1"){?>
+										output += '<td valign=\'center\' style=\'padding: 5px\'>';
+										var editLink = 'grpForm.php?GID='+value.ID+'&MID='+<?php echo $MID; ?>+'&Action=Edit';
+										output += '<a href=\''+editLink+'\'><img src=\'images/btnEdit.gif\' alt=\"(edit)\"></img></a></td>';
+									<?php }?>
 									output += '<td style=\'padding: 5px\'>'+value.Title+'</td>';
 									output += '<td style=\'padding: 10px; text-align: center;\'>'+value.FacFirstName+'</td>';
 									output += '<td style=\'padding: 10px; text-align: center;\'>'+value.CoFirstName+'</td>';
 									output += '<td>'+value.Location+'</td>';
 									output += '<td align=\'center\' style=\'left-padding: 5px; right-padding: 5px;\'>'+value.Attendance+'</td>';
-									editLink = 'mtgAction.php?Action=DeleteGroup&MID='+<?php echo $MID;?>+'&GID='+value.ID;
-									output += '<td width=15px; alight=\'right\'><a href=\''+editLink+'\'><img src=\'images/minusbutton.gif\' alt=\"(remove)\"></img></a></td>';
+									<?php if($_SESSION["adminFlag"] == "1"){?>
+    									editLink = 'mtgAction.php?Action=DeleteGroup&MID='+<?php echo $MID;?>+'&GID='+value.ID;
+    									output += '<td width=15px; alight=\'right\'><a href=\''+editLink+'\'><img src=\'images/minusbutton.gif\' alt=\"(remove)\"></img></a></td>';
+									<?php }?>
 									output += '</tr>';
 	
         					});
