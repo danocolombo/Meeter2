@@ -25,11 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $dest = "Location: newPassword.php?Error=noMatch&r=" . $rToken;
             header($dest);
         }
-        echo $password1 . "\n\r" . $rToken;
+        //echo $password1 . "\n\r" . $rToken;
         $query = $connection->prepare("UPDATE users set user_password = PASSWORD(?) WHERE recovery_token = ?");
         $query->bind_param("ss", $password1, $rToken);
         $query->execute();
-        $query->bind_result($userid);
+        //$query->bind_result($userid);
         $query->fetch();
         $query->close();
         header('Location: ../login.php');

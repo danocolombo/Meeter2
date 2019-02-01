@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		<section id="content">
 			<form id="login" method="post">
 				<div class="loginBox">
-					<fieldset style="width: 250px;">
+					<fieldset style="width: 200px;">
 						<legend>&nbsp;Meeter Web Application&nbsp;</legend>
 						<div class="loginText">
 							<p>
