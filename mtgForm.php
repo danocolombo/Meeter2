@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once ('authenticate.php'); /* for security purposes */
 require 'meeter.php';
 require 'mtrAOS.php';
@@ -1210,7 +1211,7 @@ $aosConfig->loadConfigFromDB();
 			<!-- ########################### -->
 			<!-- STARTING OPEN SHARE SECTION -->
 			<!-- ########################### -->
-			<?php if($MID>0){ 
+			<?php if(($MID>0) && ($_SESSION["adminFlag"] == "1")){ 
 			 // don't show groups list if it is a new entry
 			     ?>
 				<fieldset>
@@ -1265,8 +1266,8 @@ $aosConfig->loadConfigFromDB();
     					error : function(xhr, ajaxOptions, thrownError){
     						var createCall = 'mtgAction.php?Action=PreLoadGroups&MID='+<?php echo $MID;?>
     						
-    						output = '<a href="'+createCall+'"><img src="images/btnGetLastWeek.png" alt=\"(previous)\"></img></a>';
-    				           $('#groupInformationArea').append(output);
+							output = '<a href="'+createCall+'"><img src="images/btnGetLastWeek.png" alt=\"(previous)\"></img></a>';
+				           		$('#groupInformationArea').append(output);
     			       	}
     					
         			});
