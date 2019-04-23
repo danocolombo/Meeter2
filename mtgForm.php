@@ -23,6 +23,8 @@ include 'database.php';
 loadCommitTableWithAllPeople();
 $_gid = getGhostID();
 $_glabel = getGhostLabel();
+$_npwid = getNonPersonWorshipID();
+$_npwlabel = getNonPersonWorshipLabel();
 // echo "\nID: " . $_gid . "\tlabel: " . $_glabel . "\n";
 // $aosConfig->setGhostID($_gid);
 // $aosConfig->setGhostLabel($_glabel);
@@ -479,14 +481,20 @@ $aosConfig->loadConfigFromDB();
                             echo "<option value=\"$id\">$name</option>";
                         }
                     }
-                    // add the ghost to the bottom
+                    // add the ghost AND non-person to the bottom
                     if ($edit) {
+                        if ($mtgWorship == $_npwid){
+                            echo "<option value=\"$_npwid\" SELECTED>$_npwlabel</option>";
+                        } else {
+                            echo "<option value=\"$_npwid\">$_npwlabel</option>";
+                        }
                         if ($mtgWorship == $_gid) {
                             echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
                         } else {
                             echo "<option value=\"$_gid\">$_glabel</option>";
                         }
                     } else {
+                        echo "<option value=\"$_npwid\" SELECTED>$_npwlabel</option>";
                         echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
                     }
                     echo "</select>";

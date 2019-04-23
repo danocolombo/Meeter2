@@ -72,6 +72,59 @@
             echo "Error: [peopleAOS.php_loadCommitTableWithAllPeople() - INSERT Commits table contents]\n" . $e->getMessage();
         }
     }
+    function getNonPersonWorshipID(){
+        $returnValue = 0;
+        mysqli_report(MYSQLI_REPORT_STRICT);
+        
+        define('DB_HOST', 'localhost');
+        define('DB_USER', 'dcolombo_muat');
+        define('DB_PASSWORD', 'MR0mans1212!');
+        define('DB_NAME', 'dcolombo_muat');
+        $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+        
+        // Check connection
+        if ($connection->connect_error) {
+            die("Connection failed: " . $connection->connect_error);
+        }
+        $config = "NonPersonWorshipID";
+        $query = $connection->prepare("SELECT Setting FROM Meeter WHERE Config = ?");
+        $query->bind_param("s", $config);
+        $query->execute();
+        $query->bind_result($Setting);
+        while($query->fetch()){
+            $returnValue = $Setting;
+        }
+        $query->close();
+        $connection->close();
+        return $returnValue;
+    }
+    function getNonPersonWorshipLabel(){
+        $returnValue = 0;
+        mysqli_report(MYSQLI_REPORT_STRICT);
+        
+        //         define('DB_HOST', 'localhost');
+        //         define('DB_USER', 'dcolombo_muat');
+        //         define('DB_PASSWORD', 'MR0mans1212!');
+        //         define('DB_NAME', 'dcolombo_muat');
+        //         $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+        
+        // Check connection
+        $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+        if ($connection->connect_error) {
+            die("Connection failed: " . $connection->connect_error);
+        }
+        $config = "NonPersonWorshipLabel";
+        $query = $connection->prepare("SELECT Setting FROM Meeter WHERE Config = ?");
+        $query->bind_param("s", $config);
+        $query->execute();
+        $query->bind_result($Setting);
+        while($query->fetch()){
+            $returnValue = $Setting;
+        }
+        $query->close();
+        $connection->close();
+        return $returnValue;
+    }
     function getGhostID(){
         $returnValue = 0;
         mysqli_report(MYSQLI_REPORT_STRICT);
