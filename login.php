@@ -1,7 +1,7 @@
 <?php
 session_start();
 require ("meeter.php");
-$_SESSION["client"] = $client;
+$_SESSION["client"] = "TBD";
 // require_once("classPage.php");
 /*
  * =========================================================
@@ -18,11 +18,14 @@ $password = null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
-    require_once ('database.php');
+    
     if (! empty($_POST["username"]) && ! empty($_POST["password"])) {
         $username = $_POST["username"];
+        $entity = $_POST["entity"];
         $password = $_POST["password"];
+        $_SESSION["client"] = $entity;
         
+        require_once ('auth/database.php');
         $query = $connection->prepare("SELECT user_id, Admin FROM `users` WHERE `user_login` = ? and `user_password` = PASSWORD(?)");
         $query->bind_param("ss", $username, $password);
         $query->execute();
@@ -76,6 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		}else if(uError === "Missing"){
 			alert("You need to enter a login and password to access the application.");
 			return true;
+		}else if(uError == "Invalid"){
+			alert("You need to provide proper login definition (acronym\\username)");
+			return true;
 		}
 		return true;
 	}
@@ -107,6 +113,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 							<p>
 								<label for="username">Username:</label><input id="username"
 									name="username" type="text" required>
+							</p>
+							<p>
+								<label for="entity">Entity:</label><input id="entity"
+									name="entity" type="text" required>
 							</p>
 							<p>
 								<label for="password">Password:</label><input id="password"
