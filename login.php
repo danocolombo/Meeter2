@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $query->bind_result($userid, $adminFlag);
         $query->fetch();
         $query->close();
-        
+        echo "done with query";
         if (! empty($userid)) {
             $_SESSION["userID"] = $userid;
             $_SESSION["userName"] = $username;
