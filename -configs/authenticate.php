@@ -16,7 +16,7 @@ SELECT 'dano', PASSWORD('servant88'), 'Dano',
 session_start();
 $session_key = session_id();
 
-require_once('database.php');
+require_once('auth/db.php');
 
 $query = $connection->prepare("SELECT `session_id`, `user_id` FROM `sessions` WHERE `session_key` = ? AND `session_address` = ? AND `session_useragent` = ? AND `session_expires` > NOW();");
 $query->bind_param("sss", $session_key, $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);

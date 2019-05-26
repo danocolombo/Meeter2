@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once ('authenticate.php'); /* this is used for security purposes */
+require_once ('../configs/authenticate.php'); /* this is used for security purposes */
 ?>
 
 <!DOCTYPE HTML>

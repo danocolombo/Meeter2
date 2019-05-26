@@ -8,24 +8,23 @@ global $connection;
  * http://www.developerdrive.com/2013/05/creating-a-simple-to-do-application-–-part-3/
  * 
  */
-$pword = "MR0mans1212!";
+//aws lightsail rogueIntel1 info
+$host="localhost";
+$port=3306;
+$socket="";
+$user="root";
+$password="TwoZeroR0mans1212!";
+$dbname="muat";
+
 if ( isset( $connection ) )
 	return;
 mysqli_report(MYSQLI_REPORT_STRICT);
 
-//define('DB_HOST', 'localhost');
-//define('DB_USER', 'dcolombo_muat');
-//define('DB_PASSWORD', 'MR0mans1212!');
-//define('DB_NAME', 'dcolombo_muat');
 
-//define('DB_HOST', 'localhost');
-define('DB_HOST', 'ls-7ef76385fad42b2871f54789598686fa1e8ddf54.c2cwx5xdgogr.us-east-1.rds.amazonaws.com');
-//$tmp = "dcolombo_m" . $_SESSION['client'];
-define('DB_USER', 'dbmasteruser');
-define('DB_PASSWORD', 'S>gbnTsG+cvk:MlSz`W`H9>Nm_786Q.7');
-//$tmp = "dcolombo_m" && $_SESSION['client'];
-define('DB_NAME', 'rogueIntel1');
-$mysqli = new mysqli(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
+//$mysqli = new mysqli($host, $user, $password, $dbname, $port);
+$mysqli = new mysqli($host, $user, $password);
+
+//$mysqli = new mysqli(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
 $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
 

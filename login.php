@@ -25,8 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $password = $_POST["password"];
         $_SESSION["client"] = $entity;
         
-        require_once ('auth/database.php');
-        $query = $connection->prepare("SELECT user_id, Admin FROM `users` WHERE `user_login` = ? and `user_password` = PASSWORD(?)");
+        require_once ('auth/db.php');
+        $query = $connection->prepare("SELECT user_id, Admin FROM `uat`.`users` WHERE `user_login` = ? and `user_password` = PASSWORD(?)");
         $query->bind_param("ss", $username, $password);
         $query->execute();
         $query->bind_result($userid, $adminFlag);
