@@ -6,17 +6,17 @@
  * http://www.developerdrive.com/2013/05/creating-a-simple-to-do-application-–-part-3/
  * 
  * ======================================================
- * the following sql will need to be run to add users to 
- * the database
- * INSERT INTO `users` ( `user_login`, `user_password`, `user_firstname`, 
-	`user_surname`, `user_email`, `user_registered` )
-SELECT 'dano', PASSWORD('servant88'), 'Dano',
-	'Colombo', 'dano@dcolombo.com', NOW();
  */
-session_start();
+if (session_status() == PHP_SESSION_NONE){
+    session_start();
+}
+
 $session_key = session_id();
 
-require_once('auth/db.php');
+//need to check the session in meeter database.session
+include('db.php');
+$dbname = "meeter";
+include('db_connect.php');
 
 $query = $connection->prepare("SELECT `session_id`, `user_id` FROM `sessions` WHERE `session_key` = ? AND `session_address` = ? AND `session_useragent` = ? AND `session_expires` > NOW();");
 $query->bind_param("sss", $session_key, $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
@@ -29,7 +29,7 @@ $_SESSION["session_userid"] = $userid;
 //$_SESSOIN["session_username"] $username;
 
 if(empty($session_id)) {
-	header('Location: login.php');
+	header('Location: /login.php');
 }else{
     //echo $_SESSION["session_userid"] = $session_id;
 }

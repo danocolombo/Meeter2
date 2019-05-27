@@ -1,17 +1,5 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "KZCCpkxa2bJh!";
-$dbname = "meeter";
-
-// Create connection
-$connection = new mysqli($servername, $username, $password, $dbname);
-
-// Check connection
-if ($connection->connect_error) {
-    die("Connection failed: " . $connection->connect_error);
-}
-if (mysqli_connect_errno()) {
-    die(sprintf("[database.php] Connect failed: %s\n", mysqli_connect_error()));
-}
+$servername = "ls-e4e3cbb511361cb2edb5d083f158e77a49afb24f.c2cwx5xdgogr.us-east-1.rds.amazonaws.com";
+$username = "dbmaster";
+$password = "Tw0Zer019R0mans1212!";
 ?>
