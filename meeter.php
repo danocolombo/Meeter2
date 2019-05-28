@@ -1210,13 +1210,17 @@ class meeting
         if ( isset( $connection ) ) return;
             
         mysqli_report(MYSQLI_REPORT_STRICT);
-            
-        define('DB_HOST', 'localhost');
-        define('DB_USER', 'dcolombo_muat');
-        define('DB_PASSWORD', 'MR0mans1212!');
-        define('DB_NAME', 'dcolombo_muat');
-        $mysqli = new mysqli(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
-        $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+        include('../configs/db.php');
+        $dbname = "meeter";
+        include('../configs/db_connect.php');
+        
+        
+//         define('DB_HOST', 'localhost');
+//         define('DB_USER', 'dcolombo_muat');
+//         define('DB_PASSWORD', 'MR0mans1212!');
+//         define('DB_NAME', 'dcolombo_muat');
+//         $mysqli = new mysqli(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
+//         $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
             
             
         if (mysqli_connect_errno()) {
@@ -1276,7 +1280,10 @@ class meeting
         $this->setSecurity($mtg[0][30]);
     }
 }
-$theMeeting = new meeting($mDate, $mType, $mTitle);
+//#########################################################
+// the following line was throwing php error (all the args are undefined), not sure if thisline is in proper location...
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//$theMeeting = new meeting($mDate, $mType, $mTitle);
 
 //#####################################
 //    MeeterPeep
@@ -1571,13 +1578,15 @@ class MeeterPeep{
         if ( isset( $connection ) ) return;
         
         mysqli_report(MYSQLI_REPORT_STRICT);
-        
-        define('DB_HOST', 'localhost');
-        define('DB_USER', 'dcolombo_muat');
-        define('DB_PASSWORD', 'MR0mans1212!');
-        define('DB_NAME', 'dcolombo_muat');
-        $mysqli = new mysqli(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
-        $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+        include('../configs/db.php');
+        $dbname = "meeter";
+        include('../configs/db_connect.php');
+//         define('DB_HOST', 'localhost');
+//         define('DB_USER', 'dcolombo_muat');
+//         define('DB_PASSWORD', 'MR0mans1212!');
+//         define('DB_NAME', 'dcolombo_muat');
+//         $mysqli = new mysqli(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
+//         $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
         
         
         if (mysqli_connect_errno()) {
@@ -1639,13 +1648,15 @@ class MeeterPeep{
         if ( isset( $connection ) ) return;
         
         mysqli_report(MYSQLI_REPORT_STRICT);
-        
-        define('DB_HOST', 'localhost');
-        define('DB_USER', 'dcolombo_muat');
-        define('DB_PASSWORD', 'MR0mans1212!');
-        define('DB_NAME', 'dcolombo_muat');
-        $mysqli = new mysqli(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
-        $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+        include('../configs/db.php');
+        $dbname = "meeter";
+        include('../configs/db_connect.php');
+//         define('DB_HOST', 'localhost');
+//         define('DB_USER', 'dcolombo_muat');
+//         define('DB_PASSWORD', 'MR0mans1212!');
+//         define('DB_NAME', 'dcolombo_muat');
+//         $mysqli = new mysqli(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
+//         $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
         
         
         if (mysqli_connect_errno()) {

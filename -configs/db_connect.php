@@ -1,10 +1,10 @@
 <?php
 
 // Create connection
-echo "servername: $servername <br/>";
-echo "username: $username<br/>";
-echo "password: $password<br/>";
-echo "dbname: $dbname<br/>";
+// echo "servername: $servername <br/>";
+// echo "username: $username<br/>";
+// echo "password: $password<br/>";
+// echo "dbname: $dbname<br/>";
 $connection = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection

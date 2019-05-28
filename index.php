@@ -1,6 +1,13 @@
 <?php
-session_start();
-require_once ('../configs/authenticate.php'); /* this is used for security purposes */
+if (session_status() == PHP_SESSION_NONE){
+    session_start();
+}
+// Check if the user is logged in, if not then redirect him to login page
+if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+    header("location: login.php");
+    exit;
+}
+//require_once ('../configs/authenticate.php'); /* this is used for security purposes */
 ?>
 
 <!DOCTYPE HTML>
@@ -40,7 +47,7 @@ require_once ('../configs/authenticate.php'); /* this is used for security purpo
 		<div id="navBar"></div>
 		<script>
 			<?php 
-			if($_SESSION["adminFlag"] == "1"){
+			if($_SESSION["adminFlag"] == true){
 			    echo "$( \"#navBar\" ).load( \"navbarA.php\" );";
 			}else{
 			    echo "$( \"#navBar\" ).load( \"navbar.php\" );";
@@ -54,15 +61,6 @@ require_once ('../configs/authenticate.php'); /* this is used for security purpo
 			Celebrate Recovery ministry. For further information regarding<br />
 			this site or its contents please contact <a
 				href='mailto:dano@dcolombo.com'>Dano</a>
-				
-				<div>
-				<?php 
-// 				echo "userID: " . $_SESSION["userID"] . "<br/>";
-// 				echo "userName: " . $_SESSION["userName"] . "<br/>";
-// 				echo "adminFlag: " . $_SESSION["adminFlag"] . "<br/>";
-// 				echo "sessionKey: " . $_SESSION["sessionKey"] . "<br/>";
-				?>
-				</div>
 		</article>
 		<div id="mtrFooter"></div>
 		<script>$("#mtrFooter").load("footer.php");</script>

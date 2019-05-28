@@ -60,37 +60,37 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     // Bind result variables
                     mysqli_stmt_bind_result($stmt, $userid, $usrename, $userlogin, $adminFlag);
                     if(mysqli_stmt_fetch($stmt)){
-                        
-                        // Password is correct, so start a new session
-                        session_start();
-                        
-                        // Store data in session variables
-                        $_SESSION["loggedin"] = true;
-                        $_SESSION["userid"] = $userid;
-                        $_SESSION["username"] = $username;
-                        $_SESSION["userlogin"] = $userlogin;
-                        if($adminFlag == 1){
-                            $_SESSION["adminFlag"] = true;
-                        }else{
-                            $_SESSION["adminFlag"] = false;
-                        }
-                        //insert session instance in sessions table
-                        $session_key = session_id();
-                        $query = $connection->prepare("INSERT INTO `sessions` ( `user_id`, `session_key`, `session_address`, `session_useragent`, `session_expires`) VALUES ( ?, ?, ?, ?, DATE_ADD(NOW(),INTERVAL 1 HOUR) );");
-                        $query->bind_param("isss", $userid, $session_key, $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
-                        $query->execute();
-                        //$query->close();
-                        
-                        
-                        // Redirect user to welcome page
-                        header("location: index.php");
+                            
+                            // Password is correct, so start a new session
+                            session_start();
+                            
+                            // Store data in session variables
+                            $_SESSION["loggedin"] = true;
+                            $_SESSION["userid"] = $userid;
+                            $_SESSION["username"] = $username;
+                            $_SESSION["userlogin"] = $userlogin;
+                            if($adminFlag == 1){
+                                $_SESSION["adminFlag"] = true;
+                            }else{
+                                $_SESSION["adminFlag"] = false;
+                            }
+                            //insert session instance in sessions table
+                            $session_key = session_id();
+                            $query = $connection->prepare("INSERT INTO `sessions` ( `user_id`, `session_key`, `session_address`, `session_useragent`, `session_expires`) VALUES ( ?, ?, ?, ?, DATE_ADD(NOW(),INTERVAL 1 HOUR) );");
+                            $query->bind_param("isss", $userid, $session_key, $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
+                            $query->execute();
+                            //$query->close();
+                            
+                            
+                            // Redirect user to welcome page
+                            header("location: welcome.php");
                     }
-                    //                         } else{
-                    //                             // Display an error message if password is not valid
-                    //                             $errtext = "Passwords: " . $password . " vs " . $user_password;
-                    //                             $password_err = $errtext;
-                    //                             //$password_err = "The password you entered was not valid.";
-                    //                         }
+//                         } else{
+//                             // Display an error message if password is not valid
+//                             $errtext = "Passwords: " . $password . " vs " . $user_password;
+//                             $password_err = $errtext;
+//                             //$password_err = "The password you entered was not valid.";
+//                         }
                     else{
                         $username = "your attempt was unsuccessful. Try again.";
                     }
