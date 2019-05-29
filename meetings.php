@@ -4,9 +4,11 @@ session_start();
 //include 'database.php';
 include('../configs/db.php');
 $dbname = $_SESSION["client"];
-$past = $_SESSION["VIEW"];
-if (strlen($_SESSION["VIEW"] < 1)){
-    $_SESSION["VIEW"] = "FUTURE";
+$_SESSION["view"] = "PAST";
+$meeting_view = $_SESSION["view"];
+if (strlen($meeting_view) < 1){
+    $_SESSION["view"] = "FUTURE"; 
+    $meeting_view = "FUTURE";
 }
 include('../configs/db_connect.php');
 //require_once 'HTML/Table.php';
@@ -62,20 +64,20 @@ include('../configs/db_connect.php');
      * finish generic header above
      **********************************/
     //$past = $_GET["PAST"];
-    $view = $_SESSION["VIEW"];
-    if ($view){
+    //$view = $_SESSION["view"];
+    if (strcmp($_SESSION["view"], "PAST")){
         echo "<center><h1>Past Meetings</h1>";
     }else{
         echo "<center><h1>Future Meetings</h1>";
     }
     
     
-    if($mysqli->errno > 0){
+    if($connection->errno > 0){
         printf("Mysql error number generated: %d", $mysqli->errno);
         exit();
     }
     $tmpToday = date("Y-m-d");
-    if ($view == "PAST"){
+    if (strcmp($_SESSION["view"], "PAST")){
         $sql = "select m.ID iD, m.MtgDate dAT, m.MtgType tYP, m.MtgTitle tIT, p.fName pNA, 
             w.fName wNA, m.MtgAttendance aTT from meetings m, people p, people w where 
             m.MtgFac = p.ID and m.MtgWorship = w.ID AND m.MtgDate <= '" . $tmpToday . "' ORDER BY m.MtgDate DESC";
@@ -95,50 +97,52 @@ include('../configs/db_connect.php');
             m.MtgFac = p.ID and m.MtgWorship = w.ID AND m.MtgDate >= '2018-06-21' ORDER BY m.MtgDate ASC";
     }
      * **/
-    $meetings = array();
-    //$result = $mysqli->query($sql);
-    $result = $connection->query($sql);
-    
-    while ($row = $result->fetch_array(MYSQLI_ASSOC))
-    {
-        $meetings[] = array($row['iD'], $row['dAT'], $row['tYP'], $row['tIT'], $row['pNA'], $row['wNA'], $row['aTT']);
+    class aMeeting {
+        public $ID;
+        public $mDate;
+        public $mType;
+        public $mTitle;
+        public $mHost;
+        public $mWorship;
+        public $mAttendance;
         
     }
+    $mtgs = $connection->query($sql)->fetch_all(PDO::FETCH_CLASS, 'aMeeting');
     
-    for($cnt=0;$cnt<$result->num_rows;$cnt++){
-        $mtg[$cnt][0] = "&nbsp;<a href='mtgForm.php?ID=" . $meetings[$cnt][0] . "'>&nbsp;" . $meetings[$cnt][1] . "</a>&nbsp;"; /* Date */
-        $mtg[$cnt][1] = "&nbsp;" . $meetings[$cnt][6] . "&nbsp;"; /* Attendance */
-        $mtg[$cnt][2] = "&nbsp;" . $meetings[$cnt][2] . "&nbsp;"; /* Type */
-        $mtg[$cnt][3] = "&nbsp;" . $meetings[$cnt][3] . "&nbsp;"; /* Title */
-        $mtg[$cnt][4] = "&nbsp;" . $meetings[$cnt][4] . "&nbsp;"; /* presenter */
-        $mtg[$cnt][5] = "&nbsp;" . $meetings[$cnt][5] . "&nbsp;"; /* worship name */
-        //$mtg[$cnt][5] = "&nbsp;" . $meetings[$cnt][7] . " " . $meetings[$cnt][8] . "&nbsp"; /* worship leader */
-    }
+//     for($cnt=0;$cnt<$mtgs->count; $cnt++){
+//         $mtg[$cnt][0] = "&nbsp;<a href='mtgForm.php?ID=" . $meetings[$cnt][0] . "'>&nbsp;" . $meetings[$cnt][1] . "</a>&nbsp;"; /* Date */
+//         $mtg[$cnt][1] = "&nbsp;" . $meetings[$cnt][6] . "&nbsp;"; /* Attendance */
+//         $mtg[$cnt][2] = "&nbsp;" . $meetings[$cnt][2] . "&nbsp;"; /* Type */
+//         $mtg[$cnt][3] = "&nbsp;" . $meetings[$cnt][3] . "&nbsp;"; /* Title */
+//         $mtg[$cnt][4] = "&nbsp;" . $meetings[$cnt][4] . "&nbsp;"; /* presenter */
+//         $mtg[$cnt][5] = "&nbsp;" . $meetings[$cnt][5] . "&nbsp;"; /* worship name */
+//         //$mtg[$cnt][5] = "&nbsp;" . $meetings[$cnt][7] . " " . $meetings[$cnt][8] . "&nbsp"; /* worship leader */
+//     }
     
     // create an array of table attributes
-    $attributes = array('border' => '1', 'id' => 'trainingdata', 'align' => 'center', 'text-align' => 'center');
+//     $attributes = array('border' => '1', 'id' => 'trainingdata', 'align' => 'center', 'text-align' => 'center');
     
     //create the table object
     //$table = new HTML_Table($attributes);
     
     //set the headers
-    $table->setHeaderContents(0,0, "Date");
-    $table->setHeaderContents(0,1, "#");
-    $table->setHeaderContents(0,2, "Type");
-    $table->setHeaderContents(0,3, "Title");
-    $table->setHeaderContents(0,4, "Leader");
-    $table->setHeaderContents(0,5, "Worship");
+//     $table->setHeaderContents(0,0, "Date");
+//     $table->setHeaderContents(0,1, "#");
+//     $table->setHeaderContents(0,2, "Type");
+//     $table->setHeaderContents(0,3, "Title");
+//     $table->setHeaderContents(0,4, "Leader");
+//     $table->setHeaderContents(0,5, "Worship");
     echo "<table border=1 id=\"tabledata\" align=\"center\">";
     echo "<tr><td>Date</td><td>#</td><td>Type</td><td>Title</td><td>Leader</td><td>Worship</td></tr>";
 
     //cycle through the array to produce the table data
-    for($rownum = 0; $rownum < count($mtg); $rownum++){
-        echo "<tr><td>" . $mtg[rownum][0] . "</td>";
-        echo "<td>" . $mtg[rownum][1] . "</td>";
-        echo "<td>" . $mtg[rownum][2] . "</td>";
-        echo "<td>" . $mtg[rownum][3] . "</td>";
-        echo "<td>" . $mtg[rownum][4] . "</td>";
-        echo "<td>" . $mtg[rownum][5] . "</td></tr>";
+    for($rownum = 0; $rownum < count($mtgs); $rownum++){
+        echo "<tr><td>" . $mtgs[rownum][0] . "</td>";
+        echo "<td>" . $mtgs[rownum][1] . "</td>";
+        echo "<td>" . $mtgs[rownum][2] . "</td>";
+        echo "<td>" . $mtgs[rownum][3] . "</td>";
+        echo "<td>" . $mtgs[rownum][4] . "</td>";
+        echo "<td>" . $mtgs[rownum][5] . "</td></tr>";
     }
     echo "</table>";
 //     for($rownum = 0; $rownum < count($mtg); $rownum++){
