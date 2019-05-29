@@ -40,7 +40,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate credentials
     if(empty($username_err) && empty($password_err)){
         // Prepare a select statement
-        $sql = "SELECT user_id, user_login, user_firstname, Admin FROM users WHERE user_login = ? and user_password = PASSWORD(?)";
+        $sql = "SELECT user_id, user_login, user_firstname, Admin, clientAccess FROM users WHERE user_login = ? and user_password = PASSWORD(?)";
         
         if($stmt = mysqli_prepare($connection, $sql)){
             // Bind variables to the prepared statement as parameters
@@ -58,7 +58,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 // Check if username exists, if yes then verify password
                 if(mysqli_stmt_num_rows($stmt) == 1){
                     // Bind result variables
-                    mysqli_stmt_bind_result($stmt, $userid, $usrename, $userlogin, $adminFlag);
+                    mysqli_stmt_bind_result($stmt, $userid, $username, $userlogin, $adminFlag, $clientAccess);
                     if(mysqli_stmt_fetch($stmt)){
                         
                         // Password is correct, so start a new session
@@ -80,8 +80,23 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         $query->bind_param("isss", $userid, $session_key, $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
                         $query->execute();
                         //$query->close();
-                        
-                        
+                        //=============================================
+                        // check if clients associated with user
+                        // it is possible that some access to more than one
+                        // client, if so, we need to go select client
+                        //=============================================
+                        // all client acronyms are 3 in length. If the
+                        // length of clientAccess value is 3, just set 
+                        // the client SESSION variable.
+                        //=============================================
+                        if (strlen(trim($clientAccess)) == 3){
+                            $_SESSION["client"] = $clientAccess;
+                        }else{
+                            mysqli_stmt_close($stmt);
+                            $selectClientString = "location: selectClient.php?clientAccess=$clientAccess";
+                            header($selectClientString);
+                            exit;
+                        }
                         // Redirect user to welcome page
                         header("location: index.php");
                     }

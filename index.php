@@ -61,6 +61,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 			Celebrate Recovery ministry. For further information regarding<br />
 			this site or its contents please contact <a
 				href='mailto:dano@dcolombo.com'>Dano</a>
+				<div style="float:right"><?php echo $_SESSION["client"]?></div>
 		</article>
 		<div id="mtrFooter"></div>
 		<script>$("#mtrFooter").load("footer.php");</script>

@@ -1,8 +1,15 @@
 <?php
 session_start();
-require_once('authenticate.php'); /* used for security purposes */
-include 'database.php';
-require_once 'HTML/Table.php';
+//require_once('authenticate.php'); /* used for security purposes */
+//include 'database.php';
+include('../configs/db.php');
+$dbname = $_SESSION["client"];
+$past = $_SESSION["VIEW"];
+if (strlen($_SESSION["VIEW"] < 1)){
+    $_SESSION["VIEW"] = "FUTURE";
+}
+include('../configs/db_connect.php');
+//require_once 'HTML/Table.php';
 /*
  * meetings.php
  * ======================================================
@@ -54,8 +61,9 @@ require_once 'HTML/Table.php';
     /**********************************
      * finish generic header above
      **********************************/
-    $past = $_GET["PAST"];
-    if ($past){
+    //$past = $_GET["PAST"];
+    $view = $_SESSION["VIEW"];
+    if ($view){
         echo "<center><h1>Past Meetings</h1>";
     }else{
         echo "<center><h1>Future Meetings</h1>";
@@ -67,7 +75,7 @@ require_once 'HTML/Table.php';
         exit();
     }
     $tmpToday = date("Y-m-d");
-    if ($past){
+    if ($view == "PAST"){
         $sql = "select m.ID iD, m.MtgDate dAT, m.MtgType tYP, m.MtgTitle tIT, p.fName pNA, 
             w.fName wNA, m.MtgAttendance aTT from meetings m, people p, people w where 
             m.MtgFac = p.ID and m.MtgWorship = w.ID AND m.MtgDate <= '" . $tmpToday . "' ORDER BY m.MtgDate DESC";
@@ -88,7 +96,8 @@ require_once 'HTML/Table.php';
     }
      * **/
     $meetings = array();
-    $result = $mysqli->query($sql);
+    //$result = $mysqli->query($sql);
+    $result = $connection->query($sql);
     
     while ($row = $result->fetch_array(MYSQLI_ASSOC))
     {
@@ -110,7 +119,7 @@ require_once 'HTML/Table.php';
     $attributes = array('border' => '1', 'id' => 'trainingdata', 'align' => 'center', 'text-align' => 'center');
     
     //create the table object
-    $table = new HTML_Table($attributes);
+    //$table = new HTML_Table($attributes);
     
     //set the headers
     $table->setHeaderContents(0,0, "Date");
@@ -119,15 +128,25 @@ require_once 'HTML/Table.php';
     $table->setHeaderContents(0,3, "Title");
     $table->setHeaderContents(0,4, "Leader");
     $table->setHeaderContents(0,5, "Worship");
-    
+    echo "<table border=1 id=\"tabledata\" align=\"center\">";
+    echo "<tr><td>Date</td><td>#</td><td>Type</td><td>Title</td><td>Leader</td><td>Worship</td></tr>";
+
     //cycle through the array to produce the table data
-    
     for($rownum = 0; $rownum < count($mtg); $rownum++){
-        for($colnum = 0; $colnum < 6; $colnum++){
-            $table->setCellContents($rownum+1, $colnum, $mtg[$rownum][$colnum]);
-        }
+        echo "<tr><td>" . $mtg[rownum][0] . "</td>";
+        echo "<td>" . $mtg[rownum][1] . "</td>";
+        echo "<td>" . $mtg[rownum][2] . "</td>";
+        echo "<td>" . $mtg[rownum][3] . "</td>";
+        echo "<td>" . $mtg[rownum][4] . "</td>";
+        echo "<td>" . $mtg[rownum][5] . "</td></tr>";
     }
-    $table->altRowAttributes(1,null, array("class"=>"alt"));
+    echo "</table>";
+//     for($rownum = 0; $rownum < count($mtg); $rownum++){
+//         for($colnum = 0; $colnum < 6; $colnum++){
+//             $table->setCellContents($rownum+1, $colnum, $mtg[$rownum][$colnum]);
+//         }
+//     }
+//     $table->altRowAttributes(1,null, array("class"=>"alt"));
 
     /* add a link to enter a new meeting record - IF USER IS ADMIN*/
     if($_SESSION["adminFlag"] == "1"){
@@ -155,7 +174,7 @@ require_once 'HTML/Table.php';
     ?>
 	</article>
 	<footer>
-		&copy; 2013-2018 Rogue Intelligence
+		&copy; 2013-2019 Rogue Intelligence
 	</footer>
 </div>
 </body>
