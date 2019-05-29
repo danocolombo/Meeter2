@@ -1,17 +1,15 @@
 <?php
 session_start();
 //require_once('authenticate.php'); /* used for security purposes */
-//include 'database.php';
-include('../configs/db.php');
-$dbname = $_SESSION["client"];
+include '../configs/db.php';
+$dbname = $_SESSION['client'];
+include '../configs/db_connect.php';
 $_SESSION["view"] = "PAST";
 $meeting_view = $_SESSION["view"];
 if (strlen($meeting_view) < 1){
     $_SESSION["view"] = "FUTURE"; 
     $meeting_view = "FUTURE";
 }
-include('../configs/db_connect.php');
-//require_once 'HTML/Table.php';
 /*
  * meetings.php
  * ======================================================
@@ -63,94 +61,58 @@ include('../configs/db_connect.php');
     /**********************************
      * finish generic header above
      **********************************/
-    //$past = $_GET["PAST"];
-    //$view = $_SESSION["view"];
-    if (strcmp($_SESSION["view"], "PAST")){
+if ($meeting_view == "PAST"){
         echo "<center><h1>Past Meetings</h1>";
     }else{
         echo "<center><h1>Future Meetings</h1>";
     }
     
-    
-    if($connection->errno > 0){
-        printf("Mysql error number generated: %d", $mysqli->errno);
-        exit();
-    }
     $tmpToday = date("Y-m-d");
-    if (strcmp($_SESSION["view"], "PAST")){
+    if ($meeting_view == "PAST"){
         $sql = "select m.ID iD, m.MtgDate dAT, m.MtgType tYP, m.MtgTitle tIT, p.fName pNA, 
             w.fName wNA, m.MtgAttendance aTT from meetings m, people p, people w where 
-            m.MtgFac = p.ID and m.MtgWorship = w.ID AND m.MtgDate <= '" . $tmpToday . "' ORDER BY m.MtgDate DESC";
+            m.MtgFac = p.ID and m.MtgWorship = w.ID AND m.MtgDate <= ? ORDER BY m.MtgDate DESC";
     }else{
         $sql = "select m.ID iD, m.MtgDate dAT, m.MtgType tYP, m.MtgTitle tIT, p.fName pNA, 
             w.fName wNA, m.MtgAttendance aTT from meetings m, people p, people w where 
-            m.MtgFac = p.ID and m.MtgWorship = w.ID AND m.MtgDate >= '" . $tmpToday . "' ORDER BY m.MtgDate ASC";
+            m.MtgFac = p.ID and m.MtgWorship = w.ID AND m.MtgDate >= ? ORDER BY m.MtgDate ASC";
     }
-    /**
-    if ($past){
-        $sql = "select m.ID iD, m.MtgDate dAT, m.MtgType tYP, m.MtgTitle tIT, p.fName pNA, 
-            w.fName wNA, m.MtgAttendance aTT from meetings m, people p, people w where 
-            m.MtgFac = p.ID and m.MtgWorship = w.ID AND m.MtgDate <= '2018-06-21' ORDER BY m.MtgDate DESC";
-    }else{
-        $sql = "select m.ID iD, m.MtgDate dAT, m.MtgType tYP, m.MtgTitle tIT, p.fName pNA, 
-            w.fName wNA, m.MtgAttendance aTT from meetings m, people p, people w where 
-            m.MtgFac = p.ID and m.MtgWorship = w.ID AND m.MtgDate >= '2018-06-21' ORDER BY m.MtgDate ASC";
-    }
-     * **/
-    class aMeeting {
-        public $ID;
-        public $mDate;
-        public $mType;
-        public $mTitle;
-        public $mHost;
-        public $mWorship;
-        public $mAttendance;
+    echo "<br/>servername:" . $servername . "<br/>";
+    echo "username:" . $username . "<br/>";
+    echo "password:" . $password . "<br/>";
+    echo "dbname:" . $dbname . "<br/>";
+    echo "meeting_view:" . $meeting_view . "<br/>";
+    //Output any connection error
+    
+    echo "<br/>" . $sql . "<br/>";
+    
+    $query=$connection->prepare($sql);
+    $query->bind_param("s", $tmpToday);
+    $query->execute();
+    $result = $query->get_result();
+    $row = $result->fetch_row();
+    $num_of_rows=count($row);
+    echo $num_of_rows."<br>";
+    $query->close();
+    $connection->close();
+    
+    
+    
+    
+//     $result = $connection->query($sql, MYSQLI_STORE_RESULT);
         
-    }
-    $mtgs = $connection->query($sql)->fetch_all(PDO::FETCH_CLASS, 'aMeeting');
-    
-//     for($cnt=0;$cnt<$mtgs->count; $cnt++){
-//         $mtg[$cnt][0] = "&nbsp;<a href='mtgForm.php?ID=" . $meetings[$cnt][0] . "'>&nbsp;" . $meetings[$cnt][1] . "</a>&nbsp;"; /* Date */
-//         $mtg[$cnt][1] = "&nbsp;" . $meetings[$cnt][6] . "&nbsp;"; /* Attendance */
-//         $mtg[$cnt][2] = "&nbsp;" . $meetings[$cnt][2] . "&nbsp;"; /* Type */
-//         $mtg[$cnt][3] = "&nbsp;" . $meetings[$cnt][3] . "&nbsp;"; /* Title */
-//         $mtg[$cnt][4] = "&nbsp;" . $meetings[$cnt][4] . "&nbsp;"; /* presenter */
-//         $mtg[$cnt][5] = "&nbsp;" . $meetings[$cnt][5] . "&nbsp;"; /* worship name */
-//         //$mtg[$cnt][5] = "&nbsp;" . $meetings[$cnt][7] . " " . $meetings[$cnt][8] . "&nbsp"; /* worship leader */
-//     }
-    
-    // create an array of table attributes
-//     $attributes = array('border' => '1', 'id' => 'trainingdata', 'align' => 'center', 'text-align' => 'center');
-    
-    //create the table object
-    //$table = new HTML_Table($attributes);
-    
-    //set the headers
-//     $table->setHeaderContents(0,0, "Date");
-//     $table->setHeaderContents(0,1, "#");
-//     $table->setHeaderContents(0,2, "Type");
-//     $table->setHeaderContents(0,3, "Title");
-//     $table->setHeaderContents(0,4, "Leader");
-//     $table->setHeaderContents(0,5, "Worship");
     echo "<table border=1 id=\"tabledata\" align=\"center\">";
     echo "<tr><td>Date</td><td>#</td><td>Type</td><td>Title</td><td>Leader</td><td>Worship</td></tr>";
-
-    //cycle through the array to produce the table data
-    for($rownum = 0; $rownum < count($mtgs); $rownum++){
-        echo "<tr><td>" . $mtgs[rownum][0] . "</td>";
-        echo "<td>" . $mtgs[rownum][1] . "</td>";
-        echo "<td>" . $mtgs[rownum][2] . "</td>";
-        echo "<td>" . $mtgs[rownum][3] . "</td>";
-        echo "<td>" . $mtgs[rownum][4] . "</td>";
-        echo "<td>" . $mtgs[rownum][5] . "</td></tr>";
+    while(list($mID, $mDate, $mType, $mTitle, $mName1, $mName2, $mAttendance) = $result->fetch_row()){
+        echo "<tr><td>" . $mID . "</td>";
+        echo "<td>" . $mDate . "</td>";
+        echo "<td>" . $mType . "</td>";
+        echo "<td>" . $mTitle . "</td>";
+        echo "<td>" . $mName1 . "</td>";
+        echo "<td>" . $mName2 . "</td>";
+        echo "<td>" . $mName2 . "</td></tr>";
     }
     echo "</table>";
-//     for($rownum = 0; $rownum < count($mtg); $rownum++){
-//         for($colnum = 0; $colnum < 6; $colnum++){
-//             $table->setCellContents($rownum+1, $colnum, $mtg[$rownum][$colnum]);
-//         }
-//     }
-//     $table->altRowAttributes(1,null, array("class"=>"alt"));
 
     /* add a link to enter a new meeting record - IF USER IS ADMIN*/
     if($_SESSION["adminFlag"] == "1"){
