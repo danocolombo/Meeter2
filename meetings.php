@@ -67,6 +67,7 @@ if ($meeting_view == "PAST"){
         echo "<center><h1>Future Meetings</h1>";
     }
     
+    
     $tmpToday = date("Y-m-d");
     if ($meeting_view == "PAST"){
         $sql = "select m.ID iD, m.MtgDate dAT, m.MtgType tYP, m.MtgTitle tIT, p.fName pNA, 
@@ -77,42 +78,64 @@ if ($meeting_view == "PAST"){
             w.fName wNA, m.MtgAttendance aTT from meetings m, people p, people w where 
             m.MtgFac = p.ID and m.MtgWorship = w.ID AND m.MtgDate >= ? ORDER BY m.MtgDate ASC";
     }
-    echo "<br/>servername:" . $servername . "<br/>";
-    echo "username:" . $username . "<br/>";
-    echo "password:" . $password . "<br/>";
-    echo "dbname:" . $dbname . "<br/>";
-    echo "meeting_view:" . $meeting_view . "<br/>";
+//     echo "<br/>servername:" . $servername . "<br/>";
+//     echo "username:" . $username . "<br/>";
+//     echo "password:" . $password . "<br/>";
+//     echo "dbname:" . $dbname . "<br/>";
+//     echo "meeting_view:" . $meeting_view . "<br/>";
     //Output any connection error
     
-    echo "<br/>" . $sql . "<br/>";
+//     echo "<br/>" . $sql . "<br/>";
     
-    $query=$connection->prepare($sql);
-    $query->bind_param("s", $tmpToday);
-    $query->execute();
-    $result = $query->get_result();
-    $row = $result->fetch_row();
-    $num_of_rows=count($row);
-    echo $num_of_rows."<br>";
-    $query->close();
+    $result = $connection->query($sql);
+    
+    if ($result->num_rows > 0) {
+        // output data of each row
+        echo "<table border=1 id=\"tabledata\" align=\"center\">";
+        echo "<tr><td>Date</td><td>#</td><td>Type</td><td>Title</td><td>Leader</td><td>Worship</td></tr>";
+        
+        while($row = $result->fetch_assoc()) {
+//             echo "id: " . $row["user_id"]. " - Name: " . $row["user_firstname"]. " " . $row["user_surname"]. "<br>";
+            echo "<tr><td>" . $row["dAT"] . "</td>";
+            echo "<td>" . $row["aTT"] . "</td>";
+            echo "<td>" . $row["tYP"] . "</td>";
+            echo "<td>" . $row["tIT"] . "</td>";
+            echo "<td>" . $row["pNA"] . "</td>";
+            echo "<td>" . $row["wNA"] . "</td></tr>";
+        }
+        echo "</table>";
+    } else {
+        echo "0 results";
+    }
     $connection->close();
+    
+//     $query=$connection->prepare($sql);
+//     $query->bind_param("s", $tmpToday);
+//     $query->execute();
+//     $result = $query->get_result();
+//     $row = $result->fetch_row();
+//     $num_of_rows=count($row);
+//     echo $num_of_rows."<br>";
+//     $query->close();
+//     $connection->close();
     
     
     
     
 //     $result = $connection->query($sql, MYSQLI_STORE_RESULT);
         
-    echo "<table border=1 id=\"tabledata\" align=\"center\">";
-    echo "<tr><td>Date</td><td>#</td><td>Type</td><td>Title</td><td>Leader</td><td>Worship</td></tr>";
-    while(list($mID, $mDate, $mType, $mTitle, $mName1, $mName2, $mAttendance) = $result->fetch_row()){
-        echo "<tr><td>" . $mID . "</td>";
-        echo "<td>" . $mDate . "</td>";
-        echo "<td>" . $mType . "</td>";
-        echo "<td>" . $mTitle . "</td>";
-        echo "<td>" . $mName1 . "</td>";
-        echo "<td>" . $mName2 . "</td>";
-        echo "<td>" . $mName2 . "</td></tr>";
-    }
-    echo "</table>";
+//     echo "<table border=1 id=\"tabledata\" align=\"center\">";
+//     echo "<tr><td>Date</td><td>#</td><td>Type</td><td>Title</td><td>Leader</td><td>Worship</td></tr>";
+//     while(list($mID, $mDate, $mType, $mTitle, $mName1, $mName2, $mAttendance) = $result->fetch_row()){
+//         echo "<tr><td>" . $mID . "</td>";
+//         echo "<td>" . $mDate . "</td>";
+//         echo "<td>" . $mType . "</td>";
+//         echo "<td>" . $mTitle . "</td>";
+//         echo "<td>" . $mName1 . "</td>";
+//         echo "<td>" . $mName2 . "</td>";
+//         echo "<td>" . $mName2 . "</td></tr>";
+//     }
+//     echo "</table>";
 
     /* add a link to enter a new meeting record - IF USER IS ADMIN*/
     if($_SESSION["adminFlag"] == "1"){
@@ -121,7 +144,7 @@ if ($meeting_view == "PAST"){
         echo "<div style='text-align:right; padding-right: 20px;'><br/>";
     }
     /* add link to old or new meetings */
-    if ($past){
+    if ($meeting_view <> "PAST"){
         echo "<a href='meetings.php'>mtg plans</a>";
     }else{
         echo "<a href='meetings.php?PAST=1'>mtg history</a>";
@@ -129,7 +152,6 @@ if ($meeting_view == "PAST"){
     echo "</div>";
     //output the data
     echo "<div>";
-    echo $table->toHTML();
     /**** print the records returned  */
     printf("There were %d meetings found", $result->num_rows);
     echo "</div>";
