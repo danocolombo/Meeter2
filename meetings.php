@@ -4,12 +4,16 @@ session_start();
 include '../configs/db.php';
 $dbname = $_SESSION['client'];
 include '../configs/db_connect.php';
-$_SESSION["view"] = "PAST";
-$meeting_view = $_SESSION["view"];
-if (strlen($meeting_view) < 1){
-    $_SESSION["view"] = "FUTURE"; 
+if(isset($_GET['PAST'])){
+    if($_GET['PAST'] == "1"){
+        $meeting_view = "PAST";
+    }else{
+        $meeting_view = "FUTURE";
+    }
+}else{
     $meeting_view = "FUTURE";
 }
+
 /*
  * meetings.php
  * ======================================================
@@ -61,31 +65,36 @@ if (strlen($meeting_view) < 1){
     /**********************************
      * finish generic header above
      **********************************/
-if ($meeting_view == "PAST"){
+    if ($meeting_view == "PAST"){
         echo "<center><h1>Past Meetings</h1>";
     }else{
         echo "<center><h1>Future Meetings</h1>";
     }
-    
+    echo "meeting_view:" . $meeting_view . "<br/>";
+    /* add a link to enter a new meeting record - IF USER IS ADMIN*/
+    if($_SESSION["adminFlag"] == "1"){
+        echo "<div style='text-align:right; padding-right: 20px;'><a href='mtgForm.php'>NEW ENTRY</a><br/>";
+    }else{
+        echo "<div style='text-align:right; padding-right: 20px;'><br/>";
+    }
+    /* add link to old or new meetings */
+    if ($meeting_view == "PAST"){
+        echo "<a href='meetings.php'>mtg plans</a>";
+    }else{
+        echo "<a href='meetings.php?PAST=1'>mtg history</a>";
+    }
+    echo "</div>";
     
     $tmpToday = date("Y-m-d");
     if ($meeting_view == "PAST"){
         $sql = "select m.ID iD, m.MtgDate dAT, m.MtgType tYP, m.MtgTitle tIT, p.fName pNA, 
             w.fName wNA, m.MtgAttendance aTT from meetings m, people p, people w where 
-            m.MtgFac = p.ID and m.MtgWorship = w.ID AND m.MtgDate <= ? ORDER BY m.MtgDate DESC";
+            m.MtgFac = p.ID and m.MtgWorship = w.ID AND m.MtgDate <= '" . $tmpToday . "' ORDER BY m.MtgDate DESC";
     }else{
         $sql = "select m.ID iD, m.MtgDate dAT, m.MtgType tYP, m.MtgTitle tIT, p.fName pNA, 
             w.fName wNA, m.MtgAttendance aTT from meetings m, people p, people w where 
-            m.MtgFac = p.ID and m.MtgWorship = w.ID AND m.MtgDate >= ? ORDER BY m.MtgDate ASC";
+            m.MtgFac = p.ID and m.MtgWorship = w.ID AND m.MtgDate >= '" . $tmpToday . "' ORDER BY m.MtgDate ASC";
     }
-//     echo "<br/>servername:" . $servername . "<br/>";
-//     echo "username:" . $username . "<br/>";
-//     echo "password:" . $password . "<br/>";
-//     echo "dbname:" . $dbname . "<br/>";
-//     echo "meeting_view:" . $meeting_view . "<br/>";
-    //Output any connection error
-    
-//     echo "<br/>" . $sql . "<br/>";
     
     $result = $connection->query($sql);
     
@@ -109,47 +118,8 @@ if ($meeting_view == "PAST"){
     }
     $connection->close();
     
-//     $query=$connection->prepare($sql);
-//     $query->bind_param("s", $tmpToday);
-//     $query->execute();
-//     $result = $query->get_result();
-//     $row = $result->fetch_row();
-//     $num_of_rows=count($row);
-//     echo $num_of_rows."<br>";
-//     $query->close();
-//     $connection->close();
-    
-    
-    
-    
-//     $result = $connection->query($sql, MYSQLI_STORE_RESULT);
-        
-//     echo "<table border=1 id=\"tabledata\" align=\"center\">";
-//     echo "<tr><td>Date</td><td>#</td><td>Type</td><td>Title</td><td>Leader</td><td>Worship</td></tr>";
-//     while(list($mID, $mDate, $mType, $mTitle, $mName1, $mName2, $mAttendance) = $result->fetch_row()){
-//         echo "<tr><td>" . $mID . "</td>";
-//         echo "<td>" . $mDate . "</td>";
-//         echo "<td>" . $mType . "</td>";
-//         echo "<td>" . $mTitle . "</td>";
-//         echo "<td>" . $mName1 . "</td>";
-//         echo "<td>" . $mName2 . "</td>";
-//         echo "<td>" . $mName2 . "</td></tr>";
-//     }
-//     echo "</table>";
 
-    /* add a link to enter a new meeting record - IF USER IS ADMIN*/
-    if($_SESSION["adminFlag"] == "1"){
-        echo "<div style='text-align:right; padding-right: 20px;'><a href='mtgForm.php'>NEW ENTRY</a><br/>";
-    }else{
-        echo "<div style='text-align:right; padding-right: 20px;'><br/>";
-    }
-    /* add link to old or new meetings */
-    if ($meeting_view <> "PAST"){
-        echo "<a href='meetings.php'>mtg plans</a>";
-    }else{
-        echo "<a href='meetings.php?PAST=1'>mtg history</a>";
-    }
-    echo "</div>";
+    
     //output the data
     echo "<div>";
     /**** print the records returned  */
