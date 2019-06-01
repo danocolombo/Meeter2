@@ -40,7 +40,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate credentials
     if(empty($username_err) && empty($password_err)){
         // Prepare a select statement
-        $sql = "SELECT user_id, user_login, user_firstname, Admin, clientAccess FROM users WHERE user_login = ? and user_password = PASSWORD(?)";
+        $sql = "SELECT user_id, user_login, user_firstname, clientAccess FROM users WHERE user_login = ? and user_password = PASSWORD(?)";
         
         if($stmt = mysqli_prepare($connection, $sql)){
             // Bind variables to the prepared statement as parameters
@@ -58,7 +58,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 // Check if username exists, if yes then verify password
                 if(mysqli_stmt_num_rows($stmt) == 1){
                     // Bind result variables
-                    mysqli_stmt_bind_result($stmt, $userid, $username, $userlogin, $adminFlag, $clientAccess);
+                    mysqli_stmt_bind_result($stmt, $userid, $username, $userlogin, $clientAccess);
                     if(mysqli_stmt_fetch($stmt)){
                         
                         // Password is correct, so start a new session
@@ -69,11 +69,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         $_SESSION["userid"] = $userid;
                         $_SESSION["username"] = $username;
                         $_SESSION["userlogin"] = $userlogin;
-                        if($adminFlag == 1){
-                            $_SESSION["adminFlag"] = true;
-                        }else{
-                            $_SESSION["adminFlag"] = false;
-                        }
+//                         if($adminFlag == 1){
+//                             $_SESSION["adminFlag"] = true;
+//                         }else{
+//                             $_SESSION["adminFlag"] = false;
+//                         }
                         //insert session instance in sessions table
                         $session_key = session_id();
                         $query = $connection->prepare("INSERT INTO `sessions` ( `user_id`, `session_key`, `session_address`, `session_useragent`, `session_expires`) VALUES ( ?, ?, ?, ?, DATE_ADD(NOW(),INTERVAL 1 HOUR) );");
@@ -91,6 +91,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         //=============================================
                         if (strlen(trim($clientAccess)) == 3){
                             $_SESSION["client"] = $clientAccess;
+                            include '../configs/checkAdmin.php';
                         }else{
                             mysqli_stmt_close($stmt);
                             $selectClientString = "location: selectClient.php?clientAccess=$clientAccess";

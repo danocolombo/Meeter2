@@ -1,9 +1,7 @@
 <?php
 session_start();
-//require_once('authenticate.php'); /* used for security purposes */
-include '../configs/db.php';
-$dbname = $_SESSION['client'];
-include '../configs/db_connect.php';
+require_once('../configs/authenticate.php'); /* used for security purposes */
+
 if(isset($_GET['PAST'])){
     if($_GET['PAST'] == "1"){
         $meeting_view = "PAST";
@@ -70,7 +68,6 @@ if(isset($_GET['PAST'])){
     }else{
         echo "<center><h1>Future Meetings</h1>";
     }
-    echo "meeting_view:" . $meeting_view . "<br/>";
     /* add a link to enter a new meeting record - IF USER IS ADMIN*/
     if($_SESSION["adminFlag"] == "1"){
         echo "<div style='text-align:right; padding-right: 20px;'><a href='mtgForm.php'>NEW ENTRY</a><br/>";
@@ -84,7 +81,9 @@ if(isset($_GET['PAST'])){
         echo "<a href='meetings.php?PAST=1'>mtg history</a>";
     }
     echo "</div>";
-    
+    include '../configs/db.php';
+    $dbname = $_SESSION['client'];
+    include '../configs/db_connect.php';
     $tmpToday = date("Y-m-d");
     if ($meeting_view == "PAST"){
         $sql = "select m.ID iD, m.MtgDate dAT, m.MtgType tYP, m.MtgTitle tIT, p.fName pNA, 
