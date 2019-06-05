@@ -5,24 +5,23 @@
 // }
 // Check if the user is already logged in, if yes then redirect him to welcome page
 if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
+    require_once ('../configs/authenticate.php'); /* if not accounted for, will send to login*/
     header("location: welcome.php");
     exit;
 }
 
-// Include config file
-//require_once "config.php";
-include('../configs/db.php');
-$dbname = "meeter";
-include('../configs/db_connect.php');
-
-
-// Define variables and initialize with empty values
-$username = $password = "";
-$username_err = $password_err = "";
-
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
+    // Include config file
+    //require_once "config.php";
+    include('../configs/db.php');
+    $dbname = "meeter";
+    include('../configs/db_connect.php');
     
+    
+    // Define variables and initialize with empty values
+    $username = $password = "";
+    $username_err = $password_err = "";
     // Check if username is empty
     if(empty(trim($_POST["username"]))){
         $username_err = "Please enter username.";
@@ -101,12 +100,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         // Redirect user to welcome page
                         header("location: index.php");
                     }
-                    //                         } else{
-                    //                             // Display an error message if password is not valid
-                    //                             $errtext = "Passwords: " . $password . " vs " . $user_password;
-                    //                             $password_err = $errtext;
-                    //                             //$password_err = "The password you entered was not valid.";
-                    //                         }
                     else{
                         $username = "your attempt was unsuccessful. Try again.";
                     }

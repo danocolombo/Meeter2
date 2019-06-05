@@ -58,10 +58,13 @@ require_once ('../configs/authenticate.php'); /* this is used for security purpo
 		</script>
 		<article>
 			<img src='images/cr_splash_590x250.jpg'></img><br />
+			<?php 
+			     echo "tmp>>" . $_SESSION["tmp"] . "<<<br/>";
+			?>
 			<br /> This web application is designed explicitly for your<br />
 			Celebrate Recovery ministry. For further information regarding<br />
 			this site or its contents please contact <a
-				href='mailto:dano@dcolombo.com'>Dano</a>
+				href='mailto:danocolombo@gmail.com'>Dano</a>
 				<div style="float:right"><?php echo $_SESSION["client"]?></div>
 		</article>
 		<div id="mtrFooter"></div>

@@ -1862,5 +1862,5 @@ function insertNav(){
     echo "</nav>";
 }
 function insertFooter(){
-    echo "<footer> &copy; 2013-2018 Rogue Intelligence </footer>";
+    echo "<footer> &copy; 2013-2019 Rogue Intelligence </footer>";
 }
