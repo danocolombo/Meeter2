@@ -1,6 +1,8 @@
 <?php
 // this is primary funcitons for the app
-session_start();
+if (session_status() == PHP_SESSION_NONE){
+    session_start();
+}
 
 if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
     $Action = $_GET['Action'];

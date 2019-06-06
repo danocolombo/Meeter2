@@ -48,7 +48,7 @@ require_once ('../configs/authenticate.php'); /* this is used for security purpo
 		<div id="navBar"></div>
 		<script>
 			<?php 
-			if($_SESSION["adminFlag"] == true){
+			if($_SESSION["adminFlag"] == TRUE){
 			    echo "$( \"#navBar\" ).load( \"navbarA.php\" );";
 			}else{
 			    echo "$( \"#navBar\" ).load( \"navbar.php\" );";
@@ -58,14 +58,12 @@ require_once ('../configs/authenticate.php'); /* this is used for security purpo
 		</script>
 		<article>
 			<img src='images/cr_splash_590x250.jpg'></img><br />
-			<?php 
-			     echo "tmp>>" . $_SESSION["tmp"] . "<<<br/>";
-			?>
+			
 			<br /> This web application is designed explicitly for your<br />
 			Celebrate Recovery ministry. For further information regarding<br />
 			this site or its contents please contact <a
 				href='mailto:danocolombo@gmail.com'>Dano</a>
-				<div style="float:right"><?php echo $_SESSION["client"]?></div>
+				<div style="float:right"><?php echo $_SESSION["client"]?>:<?php echo $_SESSION["userid"]?>:<?php echo $_SESSION["adminFlag"]?></div>
 		</article>
 		<div id="mtrFooter"></div>
 		<script>$("#mtrFooter").load("footer.php");</script>

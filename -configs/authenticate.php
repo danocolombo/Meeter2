@@ -25,8 +25,8 @@ $query->bind_result($session_id, $user_id);
 $query->fetch();
 $query->close();
 
-$_SESSION["session_userid"] = $user_id;
-$_SESSION["adminFlag"] = "0";
+$_SESSION["userid"] = $user_id;
+//$_SESSION["adminFlag"] = "0";
 //$_SESSOIN["session_username"] $username;
 
 if(empty($session_id)) {
