@@ -7,29 +7,34 @@
 
 if(isset($_SESSION["userid"]) === true){
     $userid = $_SESSION["userid"];
-    $dbname = $_SESSION["client"];
-    include 'db.php';
-    include 'db_connect.php';
-    // get client Admin value
-    //$sql = "SELECT Setting FROM Meeter WHERE Config = 'Admin'";
-    $_SESSION["tmp"] = "nothing";
-    include('db.php');
-    //$dbname = "meeter";
-    include('db_connect.php');
-    $sql = "SELECT Setting FROM ?.Meeter WHERE Config = 'Admin'";
-    if($stmt = mysqli_prepare($connection, $sql)){
-        $_SESSION["tmp"] = $sql;
-        mysqli_stmt_bind_param($stmt, "s", $param_table);
-        $param_table = $dbname;
-        if(mysqli_stmt_execute($stmt)){
-            mysqli_stmt_bind_result($stmt, $adminSetting);
-            if(mysqli_stmt_fetch($stmt)){
-                $_SESSION["tmp"] = $adminString;
-            }
+    $apiURL = "http://rogueintel.org/mapi/public/api/client/getAdmins/" . $_SESSION["client"];
+    echo "<br>".$apiURL . "<br>";
+//     $url = 'http://rogueintel.org/mapi/public/api/client/getAdmins/cpv'; // path to your JSON file
+    $data = file_get_contents($apiURL); // put the contents of the file into a variable
+    $apiResponse = json_decode($data); // decode the JSON feed
+    $clientAdmins = $apiResponse->{'Setting'};
+    
+    $admins = explode("#", $clientAdmins);
+    print_r($admins);
+    echo "<br>userid: " . $userid . "<br>";
+    echo "<br>";
+    echo "size:" . sizeof($admins) . "<br/>";
+    $isAdmin = array_search($userid, $admins);
+    if(isset($isAdmin)=== true){
+        echo "<br>Admin: true<br>";
+    }else{
+        echo "<br>Admin: false<br>";
+    }
+    exit;
+
+    for($i = 0; i < sizeof($admins); $i++){
+        if($admins[$i] == $userid){
+            $_SESSION["adminFlag"] = true;
         }
     }
+    echo "$_SESSION[adminFlag] = " . $_SESSION["adminFlag"];
+    exit;
     
-    $clientAdmins = explode("#", $adminSetting);
     
     if(strlen(sizeof($clientAdmins))<1){
         // we did not get any admins... throw err. stop
@@ -40,6 +45,7 @@ if(isset($_SESSION["userid"]) === true){
         ECHO "NO ADMINS FOR CLIENT";
         exit;
     }
+
     $admins = explode("#", $clientAdmins);
     for($i = 0; i < sizeof($admins); $i++){
         if(admins[$i] === $userid){
