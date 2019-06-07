@@ -7,7 +7,6 @@ if (session_status() == PHP_SESSION_NONE){
 
 // -------------------------------
 // see if $_SESSION["userid"] is an admin for client
-
 if(isset($_SESSION["userid"]) === true){
     $userid = $_SESSION["userid"];
     $apiURL = "http://rogueintel.org/mapi/public/api/client/getAdmins/" . $_SESSION["client"];     

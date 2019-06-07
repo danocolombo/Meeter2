@@ -25,6 +25,7 @@ function setClientValue(){
     // get the value and select the session value and continue to index.php
     $client = $_REQUEST['meeterClient'];
     $_SESSION["client"] = $client;
+
     // now check if they are admin
     include '../configs/checkAdmin.php';
     
