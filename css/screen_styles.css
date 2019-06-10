@@ -99,3 +99,12 @@ div.loginBox {
 div.loginText {
 	text-align:center;
 }
+td.meetingTable {
+	padding: 0px 15px 0px;
+	
+}
+td.meetingTableHeader {
+	padding: 0px 15px 0px;
+	background-color: #3498DB;
+	color: white;
+}

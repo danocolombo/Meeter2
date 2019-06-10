@@ -99,17 +99,22 @@ if(isset($_GET['PAST'])){
     
     if ($result->num_rows > 0) {
         // output data of each row
-        echo "<table border=1 id=\"tabledata\" align=\"center\">";
-        echo "<tr><td>Date</td><td>#</td><td>Type</td><td>Title</td><td>Leader</td><td>Worship</td></tr>";
+        echo "<table border=1 align=\"center\">";
+        echo "<tr><td class=\"meetingTableHeader\">Date</td>";
+        echo "<td class=\"meetingTableHeader\">#</td>";
+        echo "<td class=\"meetingTableHeader\">Type</td>";
+        echo "<td class=\"meetingTableHeader\">Title</td>";
+        echo "<td class=\"meetingTableHeader\">Leader</td>";
+        echo "<td class=\"meetingTableHeader\">Worship</td></tr>";
         
         while($row = $result->fetch_assoc()) {
 //             echo "id: " . $row["user_id"]. " - Name: " . $row["user_firstname"]. " " . $row["user_surname"]. "<br>";
-            echo "<tr><td>" . $row["dAT"] . "</td>";
-            echo "<td>" . $row["aTT"] . "</td>";
-            echo "<td>" . $row["tYP"] . "</td>";
-            echo "<td>" . $row["tIT"] . "</td>";
-            echo "<td>" . $row["pNA"] . "</td>";
-            echo "<td>" . $row["wNA"] . "</td></tr>";
+            echo "<tr><td class=\"meetingTable\"><a href=\"mtgForm.php?ID=" . $row[iD] . "\">" . $row["dAT"] . "</a></td>";
+            echo "<td class=\"meetingTable\">" . $row["aTT"] . "</td>";
+            echo "<td class=\"meetingTable\">" . $row["tYP"] . "</td>";
+            echo "<td class=\"meetingTable\">" . $row["tIT"] . "</td>";
+            echo "<td class=\"meetingTable\">" . $row["pNA"] . "</td>";
+            echo "<td class=\"meetingTable\">" . $row["wNA"] . "</td></tr>";
         }
         echo "</table>";
     } else {
@@ -120,6 +125,8 @@ if(isset($_GET['PAST'])){
 
     
     //output the data
+    echo "<div style=\"float:right\">" . $_SESSION['client'] . ":" . $_SESSION['userid'] .":" . $_SESSION['adminFlag'] . "</div>";
+    //echo "<div>AdminFlag:" . $_SESSION('adminFlag') . "</div>";
     echo "<div>";
     /**** print the records returned  */
     printf("There were %d meetings found", $result->num_rows);

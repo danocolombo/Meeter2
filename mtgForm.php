@@ -1,15 +1,15 @@
 <?php
 session_start();
-require_once ('authenticate.php'); /* for security purposes */
+require_once ('../configs/authenticate.php'); /* for security purposes */
 require 'meeter.php';
 require 'mtrAOS.php';
-require 'includes/database.inc.php';
-require 'includes/meeting.inc.php';
+//require 'includes/database.inc.php';
+//require 'includes/meeting.inc.php';
 // require 'peopleAOS.php';
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
-include 'database.php';
+//include 'database.php';
 // ---------------------------------------------------
 // mtgForm 2.0
 // ---------------------------------------------------
