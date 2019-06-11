@@ -74,31 +74,30 @@ if(isset($_GET['PAST'])){
     }else{
         echo "<div style='text-align:right; padding-right: 20px;'><br/>";
     }
+    /* add link to old or new meetings  AND the proper API call*/
     /* add link to old or new meetings */
     if ($meeting_view == "PAST"){
         echo "<a href='meetings.php'>mtg plans</a>";
+        $url = "http://rogueintel.org/mapi/public/api/meetings/getHistory/" . $_SESSION['client'];
     }else{
         echo "<a href='meetings.php?PAST=1'>mtg history</a>";
+        $url = "http://rogueintel.org/mapi/public/api/meetings/getFuture/" . $_SESSION['client'];
     }
+    
     echo "</div>";
-    include '../configs/db.php';
-    $dbname = $_SESSION['client'];
-    include '../configs/db_connect.php';
-    $tmpToday = date("Y-m-d");
-    if ($meeting_view == "PAST"){
-        $sql = "select m.ID iD, m.MtgDate dAT, m.MtgType tYP, m.MtgTitle tIT, p.fName pNA, 
-            w.fName wNA, m.MtgAttendance aTT from meetings m, people p, people w where 
-            m.MtgFac = p.ID and m.MtgWorship = w.ID AND m.MtgDate <= '" . $tmpToday . "' ORDER BY m.MtgDate DESC";
+   // ---------------------------------------------
+   // get meeting data from MAP call
+   //=======================
+    $data = file_get_contents($url); // put the contents of the file into a variable
+    $meetings = json_decode($data); // decode the JSON feed
+    
+    
+    // if we got some meetings back, display, if not provide notificaiton
+    if (sizeof($meetings) < 1)
+    {
+        echo "There are no meetings to display in this view\n";
     }else{
-        $sql = "select m.ID iD, m.MtgDate dAT, m.MtgType tYP, m.MtgTitle tIT, p.fName pNA, 
-            w.fName wNA, m.MtgAttendance aTT from meetings m, people p, people w where 
-            m.MtgFac = p.ID and m.MtgWorship = w.ID AND m.MtgDate >= '" . $tmpToday . "' ORDER BY m.MtgDate ASC";
-    }
-    
-    $result = $connection->query($sql);
-    
-    if ($result->num_rows > 0) {
-        // output data of each row
+        //display the table of meetings
         echo "<table border=1 align=\"center\">";
         echo "<tr><td class=\"meetingTableHeader\">Date</td>";
         echo "<td class=\"meetingTableHeader\">#</td>";
@@ -106,30 +105,22 @@ if(isset($_GET['PAST'])){
         echo "<td class=\"meetingTableHeader\">Title</td>";
         echo "<td class=\"meetingTableHeader\">Leader</td>";
         echo "<td class=\"meetingTableHeader\">Worship</td></tr>";
-        
-        while($row = $result->fetch_assoc()) {
-//             echo "id: " . $row["user_id"]. " - Name: " . $row["user_firstname"]. " " . $row["user_surname"]. "<br>";
-            echo "<tr><td class=\"meetingTable\"><a href=\"mtgForm.php?ID=" . $row[iD] . "\">" . $row["dAT"] . "</a></td>";
-            echo "<td class=\"meetingTable\">" . $row["aTT"] . "</td>";
-            echo "<td class=\"meetingTable\">" . $row["tYP"] . "</td>";
-            echo "<td class=\"meetingTable\">" . $row["tIT"] . "</td>";
-            echo "<td class=\"meetingTable\">" . $row["pNA"] . "</td>";
-            echo "<td class=\"meetingTable\">" . $row["wNA"] . "</td></tr>";
+        foreach ($meetings as $meeting) {
+            echo "<tr><td class=\"meetingTable\"><a href=\"mtgForm.php?ID=" . $meeting->meetingID . "\">" . $meeting->meetingDate . "</a></td>";
+            echo "<td class=\"meetingTable\" align=\"center\">" . $meeting->meetingAttendance . "</td>";
+            echo "<td class=\"meetingTable\">" . $meeting->meetingType . "</td>";
+            echo "<td class=\"meetingTable\">" . $meeting->meetingTitle . "</td>";
+            echo "<td class=\"meetingTable\">" . $meeting->meetingFacilitator . "</td>";
+            echo "<td class=\"meetingTable\">" . $meeting->worship . "</td></tr>";
         }
         echo "</table>";
-    } else {
-        echo "0 results";
+        echo "\nThere were " . sizeof($meetings) . " meetings found\n";
     }
-    $connection->close();
-    
-
     
     //output the data
     echo "<div style=\"float:right\">" . $_SESSION['client'] . ":" . $_SESSION['userid'] .":" . $_SESSION['adminFlag'] . "</div>";
     //echo "<div>AdminFlag:" . $_SESSION('adminFlag') . "</div>";
     echo "<div>";
-    /**** print the records returned  */
-    printf("There were %d meetings found", $result->num_rows);
     echo "</div>";
     
     /************************************************
