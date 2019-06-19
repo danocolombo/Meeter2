@@ -68,6 +68,22 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         $_SESSION["username"] = $username;
                         $_SESSION["userlogin"] = $userlogin;
                         $_SESSION["client"] = $client;
+                        
+                        //--------------------------------------
+                        // check if user is admin for default client
+                        $url = "http://100.25.128.0/mapi/public/index.php/api/user/isAdmin/". $client . "?uid=" . $userid;
+                        $data = file_get_contents($url); // put the contents of the file into a variable
+                        $adminResponse = json_decode($data); // decode the JSON feed
+                        
+                        echo "<br>data:$data<br>";
+                        echo "value: " . $data[1] . "<br";
+                        if($adminResponse['admin'] == 'true'){
+                            echo "ADMIN=true";
+                            exit;
+                        }else{
+                            echo "ADMIN=false";
+                            exit();
+                        }
 //                         if($adminFlag == 1){
 //                             $_SESSION["adminFlag"] = true;
 //                         }else{

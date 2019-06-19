@@ -48,13 +48,14 @@ require_once ('../../configs/authenticate.php'); /* this is used for security pu
 		<div id="navBar"></div>
 		<script>
 			<?php 
-			if(!isset($_SESSION["adminFlag"])){
-    			if($_SESSION["adminFlag"] == TRUE){
-    			    echo "$( \"#navBar\" ).load( \"navbarA.php\" );";
-    			}else{
-    			    echo "$( \"#navBar\" ).load( \"navbar.php\" );";
-    			}
-			}
+// 			$_SESSION["adminFlag"] = FALSE;
+// 			if(!isset($_SESSION["adminFlag"])){
+//     			if($_SESSION["adminFlag"] == TRUE){
+//     			    echo "$( \"#navBar\" ).load( \"navbarA.php\" );";
+//     			}else{
+//     			    echo "$( \"#navBar\" ).load( \"navbar.php\" );";
+//     			}
+// 			}
 			?>
 			
 		</script>
