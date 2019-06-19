@@ -8,7 +8,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     header("location: login.php");
     exit;
 }
-require_once ('../configs/authenticate.php'); /* this is used for security purposes */
+require_once ('../../configs/authenticate.php'); /* this is used for security purposes */
 ?>
 
 <!DOCTYPE HTML>
@@ -43,15 +43,17 @@ require_once ('../configs/authenticate.php'); /* this is used for security purpo
 	<div class="page">
 		<header>
 			<div id="hero"></div>
-			<a class="logo" title="home" href="index.php"><span></span></a>
+			<a class="logo" title="home" href="/meeter/index.php"><span></span></a>
 		</header>
 		<div id="navBar"></div>
 		<script>
 			<?php 
-			if($_SESSION["adminFlag"] == TRUE){
-			    echo "$( \"#navBar\" ).load( \"navbarA.php\" );";
-			}else{
-			    echo "$( \"#navBar\" ).load( \"navbar.php\" );";
+			if(!isset($_SESSION["adminFlag"])){
+    			if($_SESSION["adminFlag"] == TRUE){
+    			    echo "$( \"#navBar\" ).load( \"navbarA.php\" );";
+    			}else{
+    			    echo "$( \"#navBar\" ).load( \"navbar.php\" );";
+    			}
 			}
 			?>
 			

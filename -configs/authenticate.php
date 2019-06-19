@@ -30,7 +30,7 @@ $_SESSION["userid"] = $user_id;
 //$_SESSOIN["session_username"] $username;
 
 if(empty($session_id)) {
-	header('Location: /login.php');
+	header('Location: /meeter/login.php');
 }else{
     //echo $_SESSION["session_userid"] = $session_id;
 }

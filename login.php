@@ -5,7 +5,7 @@
 // }
 // Check if the user is already logged in, if yes then redirect him to welcome page
 if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
-    require_once ('../configs/authenticate.php'); /* if not accounted for, will send to login*/
+    require_once ('../../configs/authenticate.php'); /* if not accounted for, will send to login*/
     header("location: welcome.php");
     exit;
 }
@@ -14,9 +14,9 @@ if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Include config file
     //require_once "config.php";
-    include('../configs/db.php');
+    include('../../configs/db.php');
     $dbname = "meeter";
-    include('../configs/db_connect.php');
+    include('../../configs/db_connect.php');
     
     
     // Define variables and initialize with empty values
@@ -40,8 +40,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate credentials
     if(empty($username_err) && empty($password_err)){
         // Prepare a select statement
-        $sql = "SELECT user_id, user_login, user_firstname, clientAccess FROM users WHERE user_login = ? and user_password = PASSWORD(?)";
-        
+        $sql = "SELECT user_id, user_login, user_firstname, default_client FROM meeter.users WHERE user_login = ? and user_password = ?";
         if($stmt = mysqli_prepare($connection, $sql)){
             // Bind variables to the prepared statement as parameters
             mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_userpassword);
@@ -58,9 +57,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 // Check if username exists, if yes then verify password
                 if(mysqli_stmt_num_rows($stmt) == 1){
                     // Bind result variables
-                    mysqli_stmt_bind_result($stmt, $userid, $username, $userlogin, $clientAccess);
+                    mysqli_stmt_bind_result($stmt, $userid, $userlogin, $username, $client);
                     if(mysqli_stmt_fetch($stmt)){
-                        
                         // Password is correct, so start a new session
                         session_start();
                         
@@ -69,6 +67,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         $_SESSION["userid"] = $userid;
                         $_SESSION["username"] = $username;
                         $_SESSION["userlogin"] = $userlogin;
+                        $_SESSION["client"] = $client;
 //                         if($adminFlag == 1){
 //                             $_SESSION["adminFlag"] = true;
 //                         }else{
@@ -89,15 +88,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         // length of clientAccess value is 3, just set 
                         // the client SESSION variable.
                         //=============================================
-                        if (strlen(trim($clientAccess)) == 3){
-                            $_SESSION["client"] = $clientAccess;
-                            include '../configs/checkAdmin.php';
-                        }else{
-                            mysqli_stmt_close($stmt);
-                            $selectClientString = "location: selectClient.php?clientAccess=$clientAccess";
-                            header($selectClientString);
-                            exit;
-                        }
+//                         if (strlen(trim($clientAccess)) == 3){
+//                             $_SESSION["client"] = $clientAccess;
+//                             include '../../configs/checkAdmin.php';
+//                         }else{
+//                             mysqli_stmt_close($stmt);
+//                             $selectClientString = "location: selectClient.php?clientAccess=$clientAccess";
+//                             header($selectClientString);
+//                             exit;
+//                         }
                         // Redirect user to welcome page
                         header("location: index.php");
                     }
