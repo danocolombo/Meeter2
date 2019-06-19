@@ -75,25 +75,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         $data = file_get_contents($url); // put the contents of the file into a variable
                         $adminResponse = json_decode($data); // decode the JSON feed
                         
-                        echo "<br>data:$data<br>";
-                        echo "value: " . $data[1] . "<br";
-                        if($adminResponse['admin'] == 'true'){
-                            echo "ADMIN=true";
-                            exit;
+                        if($adminResponse->admin == 'true'){
+                            $_SESSION["adminFlag"] = true;
                         }else{
-                            echo "ADMIN=false";
-                            exit();
+                            $_SESSION["adminFlag"] = false;
                         }
-//                         if($adminFlag == 1){
-//                             $_SESSION["adminFlag"] = true;
-//                         }else{
-//                             $_SESSION["adminFlag"] = false;
-//                         }
                         //insert session instance in sessions table
                         $session_key = session_id();
                         $query = $connection->prepare("INSERT INTO `sessions` ( `user_id`, `session_key`, `session_address`, `session_useragent`, `session_expires`) VALUES ( ?, ?, ?, ?, DATE_ADD(NOW(),INTERVAL 1 HOUR) );");
                         $query->bind_param("isss", $userid, $session_key, $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
                         $query->execute();
+                        
                         //$query->close();
                         //=============================================
                         // check if clients associated with user
@@ -115,6 +107,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 //                         }
                         // Redirect user to welcome page
                         header("location: index.php");
+                        exit;
                     }
                     else{
                         $username = "your attempt was unsuccessful. Try again.";

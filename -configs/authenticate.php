@@ -10,7 +10,6 @@
 if (session_status() == PHP_SESSION_NONE){
     session_start();
 }
-
 $session_key = session_id();
 
 //need to check the session in meeter database.session
@@ -18,13 +17,14 @@ include('db.php');
 $dbname = "meeter";
 include('db_connect.php');
 
-$query = $connection->prepare("SELECT `session_id`, `user_id` FROM `sessions` WHERE `session_key` = ? AND `session_address` = ? AND `session_useragent` = ? AND `session_expires` > NOW();");
+$query = $connection->prepare("SELECT `session_id`, `user_id` FROM 'meeter'.`sessions` WHERE `session_key` = ? AND `session_address` = ? AND `session_useragent` = ? AND `session_expires` > NOW();");
 $query->bind_param("sss", $session_key, $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT']);
 $query->execute();
 $query->bind_result($session_id, $user_id);
 $query->fetch();
 $query->close();
-
+echo "after insert";
+exit;
 $_SESSION["userid"] = $user_id;
 //$_SESSION["adminFlag"] = "0";
 //$_SESSOIN["session_username"] $username;

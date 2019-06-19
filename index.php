@@ -8,7 +8,9 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     header("location: login.php");
     exit;
 }
-require_once ('../../configs/authenticate.php'); /* this is used for security purposes */
+// require_once ('../../configs/authenticate.php'); /* this is used for security purposes */
+// echo "after authenticate";
+// exit;
 ?>
 
 <!DOCTYPE HTML>
@@ -50,11 +52,11 @@ require_once ('../../configs/authenticate.php'); /* this is used for security pu
 			<?php 
 // 			$_SESSION["adminFlag"] = FALSE;
 // 			if(!isset($_SESSION["adminFlag"])){
-//     			if($_SESSION["adminFlag"] == TRUE){
-//     			    echo "$( \"#navBar\" ).load( \"navbarA.php\" );";
-//     			}else{
-//     			    echo "$( \"#navBar\" ).load( \"navbar.php\" );";
-//     			}
+    			if($_SESSION["adminFlag"] == "true"){
+    			    echo "$( \"#navBar\" ).load( \"navbarA.php\" );";
+    			}else{
+    			    echo "$( \"#navBar\" ).load( \"navbar.php\" );";
+    			}
 // 			}
 			?>
 			
