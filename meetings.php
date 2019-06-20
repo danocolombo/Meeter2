@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once('../configs/authenticate.php'); /* used for security purposes */
+// require_once('../configs/authenticate.php'); /* used for security purposes */
 
 if(isset($_GET['PAST'])){
     if($_GET['PAST'] == "1"){
@@ -78,10 +78,10 @@ if(isset($_GET['PAST'])){
     /* add link to old or new meetings */
     if ($meeting_view == "PAST"){
         echo "<a href='meetings.php'>mtg plans</a>";
-        $url = "http://rogueintel.org/mapi/public/api/meetings/getHistory/" . $_SESSION['client'];
+        $url = "http://100.25.128.0/mapi/public/index.php/api/meetings/getHistory/" . $_SESSION['client'];
     }else{
         echo "<a href='meetings.php?PAST=1'>mtg history</a>";
-        $url = "http://rogueintel.org/mapi/public/api/meetings/getFuture/" . $_SESSION['client'];
+        $url = "http://100.25.128.0/mapi/public/index.php/api/meetings/getFuture/" . $_SESSION['client'];
     }
     
     echo "</div>";

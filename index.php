@@ -2,6 +2,17 @@
 if (session_status() == PHP_SESSION_NONE){
     session_start();
 }
+// $url = "http://100.25.128.0/mapi/public/index.php/api/user/authenticate/". $_SESSION['userid'];
+// $data = file_get_contents($url); // put the contents of the file into a variable
+// $authResponse = json_decode($data); // decode the JSON feed
+
+// if($authResponse->auth == 'true'){
+//     $_SESSION["adminFlag"] = true;
+// }else{
+//     $_SESSION["adminFlag"] = false;
+// }
+
+
 // require '../configs/authenticate.php';
 // Check if the user is logged in, if not then redirect him to login page
 if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){

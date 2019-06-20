@@ -23,8 +23,7 @@ $query->execute();
 $query->bind_result($session_id, $user_id);
 $query->fetch();
 $query->close();
-echo "after insert";
-exit;
+
 $_SESSION["userid"] = $user_id;
 //$_SESSION["adminFlag"] = "0";
 //$_SESSOIN["session_username"] $username;
