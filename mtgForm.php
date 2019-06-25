@@ -10,9 +10,13 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 //include 'database.php';
-// ---------------------------------------------------
-// mtgForm 2.0
-// ---------------------------------------------------
+// -----------------------------------------------------------
+// mtgForm 2.1
+//
+//  this version moved from local db (pdo) calls to mapi api
+//  calls. This also change the dependance and elimination of
+//  aos and meeter calls.
+// ------------------------------------------------------------
 /*
  * ------------------------------------------------------------------------------------------------------------
  * load the system configuration and possible assignees
@@ -24,15 +28,87 @@ $url = "http://rogueintel.org/mapi/public/index.php/api/client/getConfig/" . $_S
 $data = file_get_contents($url); // put the contents of the file into a variable
 $configInfo = json_decode($data); // decode the JSON feed
 
+/* -----------------------------------------------------------------------------------------------------------------
+ *      get the meeting information
+ *
+ *      useing the mapi api
+ *      http://rogueintel.org/mapi/public/index.php/api/client/getMeeting/<client>?mid=357
+ ----------------------------------------------------------------------------------------------------------------- */
+$MID = $_GET["ID"];
+$url = "http://rogueintel.org/mapi/public/index.php/api/client/getMeeting/" . $_SESSION['client'] . "?mid=" . $MID;
+$data = file_get_contents($url); // put the contents of the file into a variable
+$mtgDetails = json_decode($data); // decode the JSON feed
+
+// echo "config size:" . sizeof($configInfo) . "<br>";
+foreach($configInfo as $x => $x_value) {
+//     echo "Key=" . $x . ", Value=" . $x_value;
+//     echo "<br>";
+    $tmp = explode(":", $x_value);
+    //store the boolean of the value
+    $configs[$tmp[0]] = $tmp[1];
+}
+// echo "<br><br>configs:<br>";
+foreach($configs as $x => $x_value) {
+//     echo "Key=" . $x . ", Value=" . $x_value;
+//     echo "<br>";
+    $v = explode("#", $x_value);
+    $configItems[] = $x;
+    $configValue[$x] = $v[1];
+    $configSwitch[$x] = $v[0];
+    
+}
+/* ------------------------------------------------------
+ at this point we have two arrays with values for
+ configuration settings and values
+ 
+ configItems[] gives the column values configured
+ 
+ the following arrays are referenced by the configItems value
+ ----------------------------------------------
+ configSwitch[] gives true or false to display
+ configSValue[] gives value to display or use
+ 
+ --------------------------------------------------------*/
+// echo "<br>the config items:<br>";
+// foreach ($configItems as $x => $x_value){
+//     echo $x_value . "<br>";
+// }
+
+/* ----------------------------
+ * print out sample...
+echo "config switches and value: " . sizeof($configValue) . "<br>";
+echo "<br>youthFac display:";
+echo $configSwitch['youthFac'];
+echo "     value:";
+echo $configValue['youthFac'];
+
+
+//echo $configs['youthFac'];
+
+//print_r($configs);
+//echo "##################<br>";
+//echo "configInfo...<br>";
+//print_r($configInfo);
+//echo "<br><br>mtgDetails...<br>";
+//print_r($mtgDetails);
+exit;
+
+
+-------------------------------------- */
+
+
+
 /* -----------------------------------------------------------------------------------------------
  *      get the people list
 ------------------------------------------------------------------------------------------------ */
-// loadCommitTableWithAllPeople();
-// $_gid = getGhostID();
-// $_glabel = getGhostLabel();
-// $_npwid = getNonPersonWorshipID();
-// $_npwlabel = getNonPersonWorshipLabel();
+loadCommitTableWithAllPeople();
+$_gid = getGhostID();
+$_glabel = getGhostLabel();
+$_npwid = getNonPersonWorshipID();
+$_npwlabel = getNonPersonWorshipLabel();
 
+echo "OKAY TO GO!!<br/>";
+exit;
 /* -----------------------------------------------------------------------------------------------------------------
  *      get the meeting information
  *      

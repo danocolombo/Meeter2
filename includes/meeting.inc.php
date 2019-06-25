@@ -17,12 +17,20 @@
          * 5. save each value to Commits table
          *
          ------------------------------------------------------*/
+        include('../../configs/db.php');
+        //$dbname = "meeter";
+        $dbname = $_SESSION['client'];
+        include('../../configs/db_connect.php');
+        /*=================================
+         * old connection for meeter 1.0
         mysqli_report(MYSQLI_REPORT_STRICT);
         define('DB_HOST', 'localhost');
         define('DB_USER', 'dcolombo_muat');
         define('DB_PASSWORD', 'MR0mans1212!');
         define('DB_NAME', 'dcolombo_muat');
         $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+        
+        ======================================*/
         //  1. delete all information in the Commits table
         try{
             $stmt = $connection->prepare("DELETE FROM Commits");
@@ -74,13 +82,22 @@
     }
     function getNonPersonWorshipID(){
         $returnValue = 0;
-        mysqli_report(MYSQLI_REPORT_STRICT);
+        /* ------------------------------
+         * old meeter 1.0 connection
+         * 
+         mysqli_report(MYSQLI_REPORT_STRICT);
         
         define('DB_HOST', 'localhost');
         define('DB_USER', 'dcolombo_muat');
         define('DB_PASSWORD', 'MR0mans1212!');
         define('DB_NAME', 'dcolombo_muat');
         $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+        
+        ===================================== */
+        
+        include('../../configs/db.php');
+        $dbname = $_SESSION['client'];
+        include('../../configs/db_connect.php');
         
         // Check connection
         if ($connection->connect_error) {
@@ -100,13 +117,20 @@
     }
     function getNonPersonWorshipLabel(){
         $returnValue = 0;
-        mysqli_report(MYSQLI_REPORT_STRICT);
         
+        /* =======================================
+         * old meeter 1.0 connection
+        //         mysqli_report(MYSQLI_REPORT_STRICT); 
         //         define('DB_HOST', 'localhost');
         //         define('DB_USER', 'dcolombo_muat');
         //         define('DB_PASSWORD', 'MR0mans1212!');
         //         define('DB_NAME', 'dcolombo_muat');
         //         $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+         *
+         ============================================*/
+        include ('../../configs/db.php');
+        $dbname = $_SESSION['client'];
+        include('../../configs/db_connect.php');
         
         // Check connection
         $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
@@ -127,13 +151,23 @@
     }
     function getGhostID(){
         $returnValue = 0;
-        mysqli_report(MYSQLI_REPORT_STRICT);
+        /* =======================================
+         * old meeter 1.0 connection
+         * 
+         
+         mysqli_report(MYSQLI_REPORT_STRICT);
         
+         
         define('DB_HOST', 'localhost');
         define('DB_USER', 'dcolombo_muat');
         define('DB_PASSWORD', 'MR0mans1212!');
         define('DB_NAME', 'dcolombo_muat');
         $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+        
+        =========================================*/
+        include ('../../configs/db.php');
+        $dbname = $_SESSION['client'];
+        include('../../configs/db_connect.php');
         
         // Check connection
         if ($connection->connect_error) {
@@ -153,13 +187,20 @@
     }
     function getGhostLabel(){
         $returnValue = 0;
-        mysqli_report(MYSQLI_REPORT_STRICT);
+        /* =======================================
+         * old meeter 1.0 connection
+         * 
+//         mysqli_report(MYSQLI_REPORT_STRICT);
         
 //         define('DB_HOST', 'localhost');
 //         define('DB_USER', 'dcolombo_muat');
 //         define('DB_PASSWORD', 'MR0mans1212!');
 //         define('DB_NAME', 'dcolombo_muat');
 //         $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+        =========================================*/
+        include ('../../configs/db.php');
+        $dbname = $_SESSION['client'];
+        include('../../configs/db_connect.php');
         
         // Check connection
         $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
@@ -178,45 +219,6 @@
         $connection->close();
         return $returnValue;
     }
-//     function getGhostInfo(){
-//         /* ===========================================================
-//          * this function gets the Nobody, N/A value from the people 
-//          * table and stores it in the mtrAOS objects...
-//          *      ghostID
-//          *      ghostLabel
-//          ============================================================*/
-//         mysqli_report(MYSQLI_REPORT_STRICT);
-        
-//         define('DB_HOST', 'localhost');
-//         define('DB_USER', 'dcolombo_muat');
-//         define('DB_PASSWORD', 'MR0mans1212!');
-//         define('DB_NAME', 'dcolombo_muat');
-//         $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-        
-//         // Check connection
-//         if ($connection->connect_error) {
-//             die("Connection failed: " . $connection->connect_error);
-//         }
-//         $config = "GhostID";
-//         $query = $connection->prepare("SELECT Setting FROM Meeter WHERE Config = ?");
-//         $query->bind_param("s", $config);
-//         $query->execute();
-//         $query->bind_result($Setting);
-//         while($query->fetch()){
-//             $aosConfig->setGhostID($Setting);
-//         }
-//         $query->close();
-//         $config = "GhostLabel";
-//         $query = $connection->prepare("SELECT Setting FROM Meeter WHERE Config = ?");
-//         $query->bind_param("s", $config);
-//         $query->execute();
-//         $query->bind_result($Setting);
-//         while($query->fetch()){
-//             $aosConfig->setGhostLabel($Setting);
-//         }
-//         $query->close();
-//         $connection->close();
-//     }
     /*-----------------------------------------------------------------------
      * getCandidates($cat)
      * ----------------------------------------------------------------------
@@ -229,6 +231,11 @@
         // we will load array and return
         $peeps = array();
         // going to query database for the category (service) passed in and load array
+       
+        /* =======================================
+         * old meeter 1.0 connection
+         * 
+        
         mysqli_report(MYSQLI_REPORT_STRICT);
         
         define('DB_HOST', 'localhost');
@@ -236,7 +243,12 @@
         define('DB_PASSWORD', 'MR0mans1212!');
         define('DB_NAME', 'dcolombo_muat');
         $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-        
+        =========================================*/
+       
+        include ('../../configs/db.php');
+        $dbname = $_SESSION['client'];
+        include('../../configs/db_connect.php');
+         
         // Check connection
         if ($connection->connect_error) {
             die("Connection failed: " . $connection->connect_error);
@@ -258,13 +270,23 @@
         // this returns an array with the ID and name for each Host listed in Meeter HostSet
         $hosts = array();
         $hostString;
-        mysqli_report(MYSQLI_REPORT_STRICT);
+        /* =======================================
+         * old meeter 1.0 connection
+         * 
+//          mysqli_report(MYSQLI_REPORT_STRICT);
         
 //         define('DB_HOST', 'localhost');
 //         define('DB_USER', 'dcolombo_muat');
 //         define('DB_PASSWORD', 'MR0mans1212!');
 //         define('DB_NAME', 'dcolombo_muat');
         $connection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+        
+        =========================================*/
+       
+        include ('../../configs/db.php');
+        $dbname = $_SESSION['client'];
+        include('../../configs/db_connect.php');
+         
         if ($connection->connect_error) {
             die("Connection failed: " . $connection->connect_error);
         }
