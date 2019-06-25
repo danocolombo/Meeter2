@@ -1,10 +1,10 @@
 <?php
 session_start();
-require_once ('../configs/authenticate.php'); /* for security purposes */
-require 'meeter.php';
-require 'mtrAOS.php';
+//require_once ('../configs/authenticate.php'); /* for security purposes */
+//require 'meeter.php';
+//require 'mtrAOS.php';
 //require 'includes/database.inc.php';
-//require 'includes/meeting.inc.php';
+require 'includes/meeting.inc.php';
 // require 'peopleAOS.php';
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
@@ -14,21 +14,43 @@ header("Pragma: no-cache");
 // mtgForm 2.0
 // ---------------------------------------------------
 /*
- * --------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------------------
  * load the system configuration and possible assignees
- * ---------------------------------------------------------
- */
-// $peepConfig = new pConfig();
-// $peepConfig->loadCommitTableWithAllPeople();
-loadCommitTableWithAllPeople();
-$_gid = getGhostID();
-$_glabel = getGhostLabel();
-$_npwid = getNonPersonWorshipID();
-$_npwlabel = getNonPersonWorshipLabel();
-// echo "\nID: " . $_gid . "\tlabel: " . $_glabel . "\n";
-// $aosConfig->setGhostID($_gid);
-// $aosConfig->setGhostLabel($_glabel);
-// echo "ID:$aosConfig->getGhostID \tLabel: $aosConfig->getGhostLabel()\n";
+ * use the mapi api call with client definition
+ * 
+ * http://rogueintel.org/mapi/public/index.php/api/client/getConfig/<client>
+ * ------------------------------------------------------------------------------------------------------------*/
+$url = "http://rogueintel.org/mapi/public/index.php/api/client/getConfig/" . $_SESSION['client'];
+$data = file_get_contents($url); // put the contents of the file into a variable
+$configInfo = json_decode($data); // decode the JSON feed
+
+/* -----------------------------------------------------------------------------------------------
+ *      get the people list
+------------------------------------------------------------------------------------------------ */
+// loadCommitTableWithAllPeople();
+// $_gid = getGhostID();
+// $_glabel = getGhostLabel();
+// $_npwid = getNonPersonWorshipID();
+// $_npwlabel = getNonPersonWorshipLabel();
+
+/* -----------------------------------------------------------------------------------------------------------------
+ *      get the meeting information
+ *      
+ *      useing the mapi api
+ *      http://rogueintel.org/mapi/public/index.php/api/client/getMeeting/<client>?mid=357
+----------------------------------------------------------------------------------------------------------------- */
+$MID = $_GET["ID"];
+$url = "http://rogueintel.org/mapi/public/index.php/api/client/getMeeting/" . $_SESSION['client'] . "?mid=" . $MID;
+$data = file_get_contents($url); // put the contents of the file into a variable
+$mtgDetails = json_decode($data); // decode the JSON feed
+
+echo "##################<br>";
+echo "configInfo...<br>";
+print_r($configInfo);
+echo "<br><br>mtgDetails...<br>";
+print_r($mtgDetails);
+exit;
+
 //
 // get data
 // -----------------------------------------------------
