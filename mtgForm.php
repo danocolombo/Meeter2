@@ -86,17 +86,18 @@ foreach($configs as $x => $x_value) {
  -------------------------------------- */
 
 /* ===================================================================================
- *      get Ghost and NPWID
+ *      get Ghost and NPWID and meeting hosts
  *
- *      http://rogueintel.org/mapi/public/index.php/api/client/getNobodies/<client>
+ *      http://rogueintel.org/mapi/public/index.php/api/client/getMetterInfo/<client>
  ====================================================================================*/
 // set the values, in case they are not configured.
 $_gid = -1;
 $_glabel = "undefined";
 $_npwid = -1;
 $_npwlabel = "undefined";
+$meetingHostString = "";
 
-$url = "http://rogueintel.org/mapi/public/index.php/api/client/getNobodies/" . $_SESSION['client'];
+$url = "http://rogueintel.org/mapi/public/index.php/api/client/getMeeterInfo/" . $_SESSION['client'];
 $data = file_get_contents($url); // put the contents of the file into a variable
 $meeterTable = json_decode($data); // decode the JSON feed
 foreach ($meeterTable as $entry) {
@@ -113,9 +114,27 @@ foreach ($meeterTable as $entry) {
         $_npwlabel = $entry->Setting;
     }
     if(strcmp($entry->Config, "HostSet") == 0){
-        $meetingHosts = $entry->Setting;
+        $meetingHostString = $entry->Setting;
     }
 }
+//echo "<br>meetingHostString: $meetingHostString <br>";
+// now we need to take the $meetingHostString and build the hosts people list
+$hostIDs = explode("|", $meetingHostString);
+foreach($hostIDs as $id){
+    http://rogueintel.org/mapi/public/index.php/api/client/getPerson/ccc?id=1
+    $url = "http://rogueintel.org/mapi/public/index.php/api/client/getPerson/" . $_SESSION['client'] . "?id=" . $id;
+    $data = file_get_contents($url); // put the contents of the file into a variable
+    $userInfo = json_decode($data); // decode the JSON feed
+    $n = array($userInfo[0]->ID, $userInfo[0]->FName,  $userInfo[0]->LName);
+    $hoster[$id] = $n;
+}
+// echo "<br>";
+// now we should have hostDef[] with all hosts...
+// echo "<br> we have " . sizeof($hostDef) . " available hosts<br>";
+// foreach ($hoster as $host){
+//     echo $host[0] . " " . $host[1] . " " .  $host[2] ."<br>";
+// }
+// exit();
 
 // //let's check our values at this point
 // //-------------------------------------
@@ -209,13 +228,15 @@ if(isset($MID)){
 $url = "http://rogueintel.org/mapi/public/index.php/api/client/getCommits/" . $_SESSION['client'];
 $data = file_get_contents($url); // put the contents of the file into a variable
 $serviceCommits = json_decode($data); // decode the JSON feed
-foreach ($serviceCommits as $commit) {
-    echo "<br>$commit->ID ";
-    echo "$commit->Category ";
-    echo "$commit->FName ";
-    echo "$commit->LName";
-}
-exit;
+
+// serviceCommist holds all the volunteers
+// foreach ($serviceCommits as $commit) {
+//     echo "<br>$commit->ID ";
+//     echo "$commit->Category ";
+//     echo "$commit->FName ";
+//     echo "$commit->LName";
+// }
+// exit;
 // load the system configuration settings into object to use.
 
 
@@ -508,18 +529,21 @@ exit;
                 echo "<td><input id=\"mtgTitle\" name=\"mtgTitle\" size=\"40\" style=\"font-size:14pt;\" type=\"text\" value=\"" . $mtgDetails[0]->MtgTitle . "\"/></td>";
                 echo "</tr>";
                 echo "<tr>";
-                echo "<td><div class=\"mtgLabels\" style=\"float:right\">Host:</div></td>";
+                echo "<td><div class=\"mtgLabels\" style=\"float:right\">Host:($mtgFac)</div></td>";
                 echo "<td><select id=\"mtgCoordinator\" name=\"mtgCoordinator\">";
                
                 // need to get the people to display in dropdown... 
                 // we grabbed the hosts ids when we grabbed configs earlier in $meetingHosts
                 // now we need to get names
-                $option = getHostsForMeeting();
-                foreach ($option as $id => $name) {
-                    if ($mtgFac == $id) {
-                        echo "<option value=\"$id\" SELECTED>$name</option>";
+                
+                //$option = getHostsForMeeting();
+                // \$hoster  contains the list of hosts for the client
+                //foreach ($h as $id => $name) {
+                foreach ($hoster as $availableHost){
+                    if ($mtgFac == $availableHost[0]) {
+                        echo "<option value=\"$availableHost[0]\" SELECTED>$availableHost[0] $availableHost[1] $availableHost[2]</option>";
                     } else {
-                        echo "<option value=\"$id\">$name</option>";
+                        echo "<option value=\"$availableHost[0]\">$availableHost[0] $availableHost[1] $availableHost[2]</option>";
                     }
                 }
                 // add the ghost to the bottom
