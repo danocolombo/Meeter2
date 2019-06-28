@@ -62,7 +62,9 @@ foreach($configs as $x => $x_value) {
 // foreach ($configItems as $x => $x_value){
 //     echo $x_value . "<br>";
 // }
-
+// echo "<br>configSwitch[donations]:".  $configSwitch["donations"] . "<br>";
+// echo "configValue[donations]:" .  $configValue["donations"] . "<br>";
+// exit;
 /* ----------------------------
  * print out sample...
  echo "config switches and value: " . sizeof($configValue) . "<br>";
@@ -158,6 +160,7 @@ if(isset($MID)){
      *      useing the mapi api
      *      http://rogueintel.org/mapi/public/index.php/api/client/getMeeting/<client>?mid=357
      ----------------------------------------------------------------------------------------------------------------- */
+    $edit = true;
     $url = "http://rogueintel.org/mapi/public/index.php/api/client/getMeeting/" . $_SESSION['client'] . "?mid=" . $MID;
     $data = file_get_contents($url); // put the contents of the file into a variable
     $mtgDetails = json_decode($data); // decode the JSON feed
@@ -529,7 +532,7 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                 echo "<td><input id=\"mtgTitle\" name=\"mtgTitle\" size=\"40\" style=\"font-size:14pt;\" type=\"text\" value=\"" . $mtgDetails[0]->MtgTitle . "\"/></td>";
                 echo "</tr>";
                 echo "<tr>";
-                echo "<td><div class=\"mtgLabels\" style=\"float:right\">Host:($mtgFac)</div></td>";
+                echo "<td><div class=\"mtgLabels\" style=\"float:right\">Host:</div></td>";
                 echo "<td><select id=\"mtgCoordinator\" name=\"mtgCoordinator\">";
                
                 // need to get the people to display in dropdown... 
@@ -541,9 +544,9 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                 //foreach ($h as $id => $name) {
                 foreach ($hoster as $availableHost){
                     if ($mtgFac == $availableHost[0]) {
-                        echo "<option value=\"$availableHost[0]\" SELECTED>$availableHost[0] $availableHost[1] $availableHost[2]</option>";
+                        echo "<option value=\"$availableHost[0]\" SELECTED>$availableHost[1] $availableHost[2]</option>";
                     } else {
-                        echo "<option value=\"$availableHost[0]\">$availableHost[0] $availableHost[1] $availableHost[2]</option>";
+                        echo "<option value=\"$availableHost[0]\">$availableHost[1] $availableHost[2]</option>";
                     }
                 }
                 // add the ghost to the bottom
@@ -573,7 +576,8 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                 echo "</select>";
                 echo "</td>";
                 echo "</tr>";
-                if ($aosConfig->getConfig("donations") == "true") {
+                
+                if($configSwitch["donations"] == "true"){ 
                     echo "<tr>";
                     echo "<td><div class=\"mtgLabels\" style=\"float:right\">Donations:</div></td>";
                     if (sizeof($mtgDonations) > 0) {
@@ -582,20 +586,33 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                         echo "<td><input id=\"mtgDonations\"  name=\"mtgDonations\" size=\"6\" type=\"text\" placeholder=\"0\"/>";
                     }
                     echo "</td>";
+                    echo "</tr>";
                 }
-                echo "</tr>";
-                if ($aosConfig->getConfig("worship") == "true") {
+               
+                if ($configSwitch["worship"] == "true") {
                     // ================================
                     // WORSHIP IS TRUE = DISPLAY OPTION
                     // ================================
-                    echo "<tr><td><div class=\"mtgLabels\" style=\"float:right\">" . $aosConfig->getDisplayString("worship") . ":</div></td>";
+                    echo "<tr><td><div class=\"mtgLabels\" style=\"float:right\">" . $configValue["worship"] . ":</div></td>";
                     echo "<td><select id=\"mtgWorship\" name=\"mtgWorship\">";
-                    $option = getPeepsForService("worship");
-                    foreach ($option as $id => $name) {
-                        if ($mtgWorship == $id) {
-                            echo "<option value=\"$id\" SELECTED>$name</option>";
+                    
+                    //===========================================
+                    // loop commits identifying worship volunteers
+                    //===========================================
+                    foreach ($serviceCommits as $commit) {
+                        if ($commit->Category == "worship"){
+                            $tmp = $commit->FName . " " . $commit->LName;
+                            $wPeeps = array($commit->ID, $tmp);
+                        }
+                    }
+                    
+                    
+//                     $option = getPeepsForService("worship");
+                    foreach ($wPeeps as $peep) {
+                        if ("worship" == $peep[0]) {
+                            echo "<option value=\"$peep[0]\" SELECTED>$peep[1]</option>";
                         } else {
-                            echo "<option value=\"$id\">$name</option>";
+                            echo "<option value=\"$peep[0]\">$peep[1]</option>";
                         }
                     }
                     // add the ghost AND non-person to the bottom
@@ -611,18 +628,39 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                             echo "<option value=\"$_gid\">$_glabel</option>";
                         }
                     } else {
-                        echo "<option value=\"$_npwid\" SELECTED>$_npwlabel</option>";
+                        //echo "<option value=\"$_npwid\" SELECTED>$_npwlabel</option>";
                         echo "<option value=\"$_gid\" SELECTED>$_glabel</option>";
                     }
                     echo "</select>";
                     echo "<a href=\"#\" title=\"People on Worship team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a></td></tr>";
                 }
-                if ($aosConfig->getConfig("av") == "true") {
+                if ($configSwitch["av"] == "true") {
                     // ================================
                     // AV IS TRUE = DISPLAY OPTION
                     // ================================
-                    echo "<tr><td><div class=\"mtgLabels\" style=\"float:right\">" . $aosConfig->getDisplayString("av") . ":</div></td>";
+                    echo "<tr><td><div class=\"mtgLabels\" style=\"float:right\">" . $configValue["av"] . ":</div></td>";
                     echo "<td><select id=\"mtgAV\" name=\"mtgAV\">";
+                    //===========================================
+                    // loop commits identifying AV volunteers
+                    //===========================================
+                    $dpeeps = null;
+                    foreach ($serviceCommits as $commit) {
+                        if ($commit->Category == "av"){
+                            $tmp = $commit->FName . " " . $commit->LName;
+                            $dpeeps = array($commit->ID, $tmp);
+                        }
+                    }
+                    
+                    
+                    foreach ($dPeeps as $peep) {
+                        if ($mtgAudioVisualFac == $peep[0]) {
+                            echo "<option value=\"$peep[0]\" SELECTED>$peep[1]</option>";
+                        } else {
+                            echo "<option value=\"$peep[0]\">$peep[1]</option>";
+                        }
+                    }
+                    
+                    
                     $option = getPeepsForService("av");
                     foreach ($option as $id => $name) {
                         if ($mtgAudioVisualFac == $id) {
@@ -645,7 +683,7 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                     echo "<a href=\"#\"  title=\"People on A/V team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
-                if ($aosConfig->getConfig("setup") == "true") {
+                if ($configSwitch["setup"] == "true") {
                     // ================================
                     // setup IS TRUE = DISPLAY OPTION
                     // ================================
@@ -673,7 +711,7 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                     echo "<a href=\"#\" title=\"People on setup team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
-                if ($aosConfig->getConfig("transportation") == "true") {
+                if ($configSwitch["transportation"] == "true") {
                     // ================================
                     // transportation IS TRUE = DISPLAY OPTION
                     // ================================
@@ -701,7 +739,7 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                     echo "<a href=\"#\" title=\"People on transportation team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
-                if ($aosConfig->getConfig("greeter") == "true") {
+                if ($configSwitch["greeter"] == "true") {
                     // ================================
                     // GREETER IS TRUE = DISPLAY OPTION
                     // ======================================
@@ -750,7 +788,7 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                     echo "<a href=\"#\" title=\"People on Greeting team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
-                if ($aosConfig->getConfig("resources") == "true") {
+                if ($configSwitch["resources"] == "true") {
                     // ================================
                     // resources IS TRUE = DISPLAY OPTION
                     // ================================
@@ -785,13 +823,13 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                 // END OF TABLE 1
                 
                 // BEGINNING of TABLE 2 (DINNER)
-                if ($aosConfig->getConfig("meal") == "true") {
+                if ($configSwitch["meal"] == "true") {
                     // the configuration is to manage/track the meal
                     // echo "<table><tr><td width=\"100px;\">&nbsp;</td><td>";
                     echo "<table><tr><td>";
                     echo "<fieldset><legend>Meal</legend>";
                     echo "<table>";
-                    if ($aosConfig->getConfig("menu") == "true") {
+                    if ($configSwitch["menu"] == "true") {
                         echo "<tr><td colspan=4><div class=\"mtgLabels\" style=\"float:left\">Menu:&nbsp;";
                         echo "<input id=\"mtgMenu\" name=\"mtgMenu\" size=\"32\" maxlength=\"30\" style=\"font-size:14pt;\" type=\"text\" value=\"" . $mtgMenu . "\"/></div></td></tr>";
                     }
@@ -806,7 +844,7 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                     }
                     echo "</select>";
                     echo "</td>";
-                    if ($aosConfig->getConfig("mealFac") == "true") {
+                    if ($configSwitch["mealFac"] == "true") {
                         echo "<td>" . $aosConfig->getDisplayString("mealFac") . "&nbsp;<select id=\"mtgMealFac\" name=\"mtgMealFac\">";
                         $option = getPeepsForService("mealFac");
                         foreach ($option as $id => $name) {
@@ -839,7 +877,7 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                 echo "<table>";
                 echo "<tr>";
                 echo "<td>";
-                if ($aosConfig->getConfig("reader") == "true") {
+                if ($configSwitch["reader"] == "true") {
                     // ================================
                     // READERS IS TRUE = DISPLAY OPTION
                     // ======================================
@@ -887,7 +925,7 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                     echo "<a href=\"#\" title=\"People on Reader team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
-                if ($aosConfig->getConfig("announcements") == "true") {
+                if ($configSwitch["announcements"] == "true") {
                     // ================================
                     // ANNOUNCEMENTS IS TRUE = DISPLAY OPTION
                     // ======================================
@@ -918,7 +956,7 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                     echo "</td></tr>";
                 }
                 if ($mtgType == "Lesson") {
-                    if ($aosConfig->getConfig("teaching") == "true") {
+                    if ($configSwitch["teaching"] == "true") {
                         // ================================
                         // TEACHING IS TRUE = DISPLAY OPTION
                         // ======================================
@@ -949,7 +987,7 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                         echo "</td></tr>";
                     }
                 }
-                if ($aosConfig->getConfig("chips") == "true") {
+                if ($configSwitch["chips"] == "true") {
                     // ================================
                     // CHIPS IS TRUE = DISPLAY OPTION
                     // ======================================
@@ -998,7 +1036,7 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                     echo "<a href=\"#\" title=\"People on Chips team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
-                if ($aosConfig->getConfig("newcomers") == "true") {
+                if ($configSwitch["newcomers"] == "true") {
                     // ================================
                     // NEWCOMERS (101) IS TRUE = DISPLAY OPTION
                     // ======================================
@@ -1047,7 +1085,7 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                     echo "<a href=\"#\" title=\"People on Newcomers (101) team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
-                if ($aosConfig->getConfig("serenity") == "true") {
+                if ($configSwitch["serenity"] == "true") {
                     // ================================
                     // SERENITY IS TRUE = DISPLAY OPTION
                     // ======================================
@@ -1081,13 +1119,13 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                 echo "</table>";
                 
                 // BEGINNING of TABLE 4 (GENERATIONS)
-                if ($aosConfig->getConfig("youth") == "true" || $aosConfig->getConfig("children") == "true" || $aosConfig->getConfig("nursery") == "true") {
+                if ($configSwitch["youth"] == "true" || $configSwitch["children"] == "true" || $configSwitch["nursery"] == "true") {
                     // if any of the generations is enabled, display the table
                     
                     echo "<table><tr><td>";
                     echo "<fieldset><legend>Generations</legend>";
                     echo "<table>";
-                    if ($aosConfig->getConfig("nursery") == "true") {
+                    if ($configSwitch["nursery"] == "true") {
                         echo "<tr><td><div class=\"mtgLabels\" style=\"float:right\">Nursery:&nbsp;</div></td>";
                         echo "<td><select id=\"mtgNursery\" name=\"mtgNursery\">";
                         for ($a = 0; $a < 201; $a ++) {
@@ -1099,8 +1137,8 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                         }
                         echo "</select>";
                         echo "</td>";
-                        if ($aosConfig->getConfig("nurseryFac") == "true") {
-                            echo "<td>" . $aosConfig->getDisplayString("nurseryFac") . "</td><td><select id=\"mtgNurseryFac\" name=\"mtgNurseryFac\">";
+                        if ($configSwitch["nurseryFac"] == "true") {
+                            echo "<td>" . $configSwitch["nurseryFac"] . "</td><td><select id=\"mtgNurseryFac\" name=\"mtgNurseryFac\">";
                             $option = getPeepsForService("nurseryFac");
                             foreach ($option as $id => $name) {
                                 if ($mtgNurseryFac == $id) {
@@ -1123,7 +1161,7 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                         }
                         echo "</tr>";
                     }
-                    if ($aosConfig->getConfig("children") == "true") {
+                    if ($configSwitch["children"] == "true") {
                         echo "<tr><td><div class=\"mtgLabels\" style=\"float:right\">Children:&nbsp;</div></td>";
                         echo "<td><select id=\"mtgChildren\" name=\"mtgChildren\">";
                         for ($a = 0; $a < 201; $a ++) {
@@ -1135,7 +1173,7 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                         }
                         echo "</select>";
                         echo "</td>";
-                        if ($aosConfig->getConfig("childrenFac") == "true") {
+                        if ($configSwitch["childrenFac"] == "true") {
                             echo "<td>" . $aosConfig->getDisplayString("childrenFac") . "</td><td><select id=\"mtgChildrenFac\" name=\"mtgChildrenFac\">";
                             $option = getPeepsForService("childrenFac");
                             foreach ($option as $id => $name) {
@@ -1159,7 +1197,7 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                         }
                         echo "</tr>";
                     }
-                    if ($aosConfig->getConfig("youth") == "true") {
+                    if ($configSwitch["youth"] == "true") {
                         echo "<tr><td><div class=\"mtgLabels\" style=\"float:right\">Youth:&nbsp;</div></td>";
                         echo "<td><select id=\"mtgYouth\" name=\"mtgYouth\">";
                         for ($a = 0; $a < 201; $a ++) {
@@ -1171,7 +1209,7 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                         }
                         echo "</select>";
                         echo "</td>";
-                        if ($aosConfig->getConfig("youthFac") == "true") {
+                        if ($configSwitch["youthFac"] == "true") {
                             echo "<td>" . $aosConfig->getDisplayString("youthFac") . "</td><td><select id=\"mtgYouthFac\" name=\"mtgYouthFac\">";
                             $option = getPeepsForService("youthFac");
                             foreach ($option as $id => $name) {
@@ -1203,7 +1241,7 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                 echo "<table>";
                 echo "<tr>";
                 echo "<td>";
-                if ($aosConfig->getConfig("cafe") == "true") {
+                if ($configSwitch["cafe"] == "true") {
                     // ================================
                     // CAFE IS TRUE = DISPLAY OPTION
                     // ======================================
@@ -1233,7 +1271,7 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                     echo "<a href=\"#\" title=\"People on Cafe team\"><img style=\"width:15px;height:15px;\" src=\"images/toolTipQM.png\" alt=\"( &#x26A0; )\"/></a>";
                     echo "</td></tr>";
                 }
-                if ($aosConfig->getConfig("teardown") == "true") {
+                if ($configSwitch["teardown"] == "true") {
                     // ================================
                     // TEARDOWN IS TRUE = DISPLAY OPTION
                     // ======================================
@@ -1264,7 +1302,7 @@ $serviceCommits = json_decode($data); // decode the JSON feed
                     echo "</td></tr>";
                 }
                 
-                if ($aosConfig->getConfig("security") == "true") {
+                if ($configSwitch["security"] == "true") {
                     // ================================
                     // SECURITY IS TRUE = DISPLAY OPTION
                     // ======================================
