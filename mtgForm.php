@@ -4,7 +4,7 @@ session_start();
 //require 'meeter.php';
 //require 'mtrAOS.php';
 //require 'includes/database.inc.php';
-require 'includes/meeting.inc.php';
+//require 'includes/meeting.inc.php';
 // require 'peopleAOS.php';
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
@@ -21,36 +21,25 @@ header("Pragma: no-cache");
  * ------------------------------------------------------------------------------------------------------------
  * load the system configuration and possible assignees
  * use the mapi api call with client definition
- * 
+ *
  * http://rogueintel.org/mapi/public/index.php/api/client/getConfig/<client>
  * ------------------------------------------------------------------------------------------------------------*/
 $url = "http://rogueintel.org/mapi/public/index.php/api/client/getConfig/" . $_SESSION['client'];
 $data = file_get_contents($url); // put the contents of the file into a variable
 $configInfo = json_decode($data); // decode the JSON feed
 
-/* -----------------------------------------------------------------------------------------------------------------
- *      get the meeting information
- *
- *      useing the mapi api
- *      http://rogueintel.org/mapi/public/index.php/api/client/getMeeting/<client>?mid=357
- ----------------------------------------------------------------------------------------------------------------- */
-$MID = $_GET["ID"];
-$url = "http://rogueintel.org/mapi/public/index.php/api/client/getMeeting/" . $_SESSION['client'] . "?mid=" . $MID;
-$data = file_get_contents($url); // put the contents of the file into a variable
-$mtgDetails = json_decode($data); // decode the JSON feed
-
 // echo "config size:" . sizeof($configInfo) . "<br>";
 foreach($configInfo as $x => $x_value) {
-//     echo "Key=" . $x . ", Value=" . $x_value;
-//     echo "<br>";
+    //     echo "Key=" . $x . ", Value=" . $x_value;
+    //     echo "<br>";
     $tmp = explode(":", $x_value);
     //store the boolean of the value
     $configs[$tmp[0]] = $tmp[1];
 }
 // echo "<br><br>configs:<br>";
 foreach($configs as $x => $x_value) {
-//     echo "Key=" . $x . ", Value=" . $x_value;
-//     echo "<br>";
+    //     echo "Key=" . $x . ", Value=" . $x_value;
+    //     echo "<br>";
     $v = explode("#", $x_value);
     $configItems[] = $x;
     $configValue[$x] = $v[1];
@@ -76,162 +65,163 @@ foreach($configs as $x => $x_value) {
 
 /* ----------------------------
  * print out sample...
-echo "config switches and value: " . sizeof($configValue) . "<br>";
-echo "<br>youthFac display:";
-echo $configSwitch['youthFac'];
-echo "     value:";
-echo $configValue['youthFac'];
+ echo "config switches and value: " . sizeof($configValue) . "<br>";
+ echo "<br>youthFac display:";
+ echo $configSwitch['youthFac'];
+ echo "     value:";
+ echo $configValue['youthFac'];
+ 
+ 
+ //echo $configs['youthFac'];
+ 
+ //print_r($configs);
+ //echo "##################<br>";
+ //echo "configInfo...<br>";
+ //print_r($configInfo);
+ //echo "<br><br>mtgDetails...<br>";
+ //print_r($mtgDetails);
+ exit;
+ 
+ 
+ -------------------------------------- */
 
+/* ===================================================================================
+ *      get Ghost and NPWID
+ *
+ *      http://rogueintel.org/mapi/public/index.php/api/client/getNobodies/<client>
+ ====================================================================================*/
+// set the values, in case they are not configured.
+$_gid = -1;
+$_glabel = "undefined";
+$_npwid = -1;
+$_npwlabel = "undefined";
 
-//echo $configs['youthFac'];
+$url = "http://rogueintel.org/mapi/public/index.php/api/client/getNobodies/" . $_SESSION['client'];
+$data = file_get_contents($url); // put the contents of the file into a variable
+$meeterTable = json_decode($data); // decode the JSON feed
+foreach ($meeterTable as $entry) {
+    if(strcmp($entry->Config, "GhostID") == 0){
+        $_gid = $entry->Setting;
+    }
+    if(strcmp($entry->Config, "GhostLabel") == 0){
+        $_glabel = $entry->Setting;
+    }
+    if(strcmp($entry->Config, "NonPersonWorshipID") == 0){
+        $_npwid = $entry->Setting;
+    }
+    if(strcmp($entry->Config, "NonPersonWorshipLabel") == 0){
+        $_npwlabel = $entry->Setting;
+    }
+    if(strcmp($entry->Config, "HostSet") == 0){
+        $meetingHosts = $entry->Setting;
+    }
+}
 
-//print_r($configs);
-//echo "##################<br>";
-//echo "configInfo...<br>";
-//print_r($configInfo);
-//echo "<br><br>mtgDetails...<br>";
-//print_r($mtgDetails);
-exit;
+// //let's check our values at this point
+// //-------------------------------------
+// echo "<br>gid: $_gid <br>";
+// echo "glabel: $_glabel <br>";
+// echo "npwid: $_npwid <br>";
+// echo "npwlabel: $_npwlabel <br>";
+// exit;
 
-
--------------------------------------- */
-
-
-
-/* -----------------------------------------------------------------------------------------------
- *      get the people list
------------------------------------------------------------------------------------------------- */
-loadCommitTableWithAllPeople();
-$_gid = getGhostID();
-$_glabel = getGhostLabel();
-$_npwid = getNonPersonWorshipID();
-$_npwlabel = getNonPersonWorshipLabel();
-
-echo "OKAY TO GO!!<br/>";
-exit;
 /* -----------------------------------------------------------------------------------------------------------------
  *      get the meeting information
- *      
+ *
  *      useing the mapi api
  *      http://rogueintel.org/mapi/public/index.php/api/client/getMeeting/<client>?mid=357
------------------------------------------------------------------------------------------------------------------ */
+ ----------------------------------------------------------------------------------------------------------------- */
 $MID = $_GET["ID"];
-$url = "http://rogueintel.org/mapi/public/index.php/api/client/getMeeting/" . $_SESSION['client'] . "?mid=" . $MID;
-$data = file_get_contents($url); // put the contents of the file into a variable
-$mtgDetails = json_decode($data); // decode the JSON feed
-
-echo "##################<br>";
-echo "configInfo...<br>";
-print_r($configInfo);
-echo "<br><br>mtgDetails...<br>";
-print_r($mtgDetails);
-exit;
-
-//
-// get data
-// -----------------------------------------------------
-$edit = FALSE;
-$CID="UAT";
-$MID = $_GET["ID"];
-if ($MID > 0) {
-    $edit = TRUE;
-    // $theMeeting->getMeeting($MID);
-    
-    if (mysqli_connect_errno()) {
-        die("Database connection failed: " . mysqli_connect_error() . " (" . mysqli_connect_error() . ")");
-    }
-    $sql = "select * from meetings where ID = $MID";
-    
-    $mtg = array();
-    
-    $result = $mysqli->query($sql);
-    
-    while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-        $mtg[] = array(
-            $row['ID'],
-            $row['MtgDate'],
-            $row['MtgType'],
-            $row['MtgTitle'],
-            $row['MtgFac'],
-            $row['MtgAttendance'],
-            $row['MtgWorship'],
-            $row['Menu'],
-            $row['MealCnt'],
-            $row['NurseryCnt'],
-            $row['ChildrenCnt'],
-            $row['YouthCnt'],
-            $row['MtgNotes'],
-            $row['Donations'],
-            $row['Newcomers1Fac'],
-            $row['Newcomers2Fac'],
-            $row['Reader1Fac'],
-            $row['Reader2Fac'],
-            $row['NurseryFac'],
-            $row['ChildrenFac'],
-            $row['YouthFac'],
-            $row['MealFac'],
-            $row['CafeFac'],
-            $row['TransportationFac'],
-            $row['SetupFac'],
-            $row['TearDownFac'],
-            $row['Greeter1Fac'],
-            $row['Greeter2Fac'],
-            $row['Chips1Fac'],
-            $row['Chips2Fac'],
-            $row['ResourcesFac'],
-            $row['TeachingFac'],
-            $row['SerenityFac'],
-            $row['AudioVisualFac'],
-            $row['AnnouncementsFac'],
-            $row['SecurityFac']
-        );
-    }
-}
-if ($edit) {
+if(isset($MID)){
+    /* -----------------------------------------------------------------------------------------------------------------
+     *      get the meeting information if ID is provided in URL
+     *
+     *      useing the mapi api
+     *      http://rogueintel.org/mapi/public/index.php/api/client/getMeeting/<client>?mid=357
+     ----------------------------------------------------------------------------------------------------------------- */
+    $url = "http://rogueintel.org/mapi/public/index.php/api/client/getMeeting/" . $_SESSION['client'] . "?mid=" . $MID;
+    $data = file_get_contents($url); // put the contents of the file into a variable
+    $mtgDetails = json_decode($data); // decode the JSON feed
     $mtgID = $MID;
-    $mtgDate = $mtg[0][1];
-    $mtgType = $mtg[0][2];
-    $mtgTitle = $mtg[0][3];
-    $mtgFac = $mtg[0][4];
-    $mtgAttendance = $mtg[0][5];
-    $mtgWorship = $mtg[0][6];
-    $mtgMenu = $mtg[0][7];
-    $mtgMealCnt = $mtg[0][8];
-    $mtgNurseryCnt = $mtg[0][9];
-    $mtgChildrenCnt = $mtg[0][10];
-    $mtgYouthCnt = $mtg[0][11];
-    $mtgNotes = $mtg[0][12];
-    $mtgDonations = $mtg[0][13];
-    $mtgNewcomers1Fac = $mtg[0][14];
-    $mtgNewcomers2Fac = $mtg[0][15];
-    $mtgReader1Fac = $mtg[0][16];
-    $mtgReader2Fac = $mtg[0][17];
-    $mtgNurseryFac = $mtg[0][18];
-    $mtgChildrenFac = $mtg[0][19];
-    $mtgYouthFac = $mtg[0][20];
-    $mtgMealFac = $mtg[0][21];
-    $mtgCafeFac = $mtg[0][22];
-    $mtgTransportationFac = $mtg[0][23];
-    $mtgSetupFac = $mtg[0][24];
-    $mtgTearDownFac = $mtg[0][25];
-    $mtgGreeter1Fac = $mtg[0][26];
-    $mtgGreeter2Fac = $mtg[0][27];
-    $mtgChips1Fac = $mtg[0][28];
-    $mtgChips2Fac = $mtg[0][29];
-    $mtgResourcesFac = $mtg[0][30];
-    $mtgTeachingFac = $mtg[0][31];
-    $mtgSerenityFac = $mtg[0][32];
-    $mtgAudioVisualFac = $mtg[0][33];
-    $mtgAnnouncementsFac = $mtg[0][34];
-    $mtgSecurityFac = $mtg[0][35];
-    
-//     echo "\$mtgTitle: $mtgTitle<br/>";
-//     echo "\$mtgMenu: $mtgMenu<br/>";
-//     echo "\$mtgNotes: $mtgNotes<br/>";
-//     exit();
+    $mtgDate = $mtgDetails[0]->MtgDate;
+    $mtgType = $mtgDetails[0]->MtgType;
+    $mtgTitle = $mtgDetails[0]->MtgTitle;
+    $mtgFac = $mtgDetails[0]->MtgFac;
+    $mtgAttendance = $mtgDetails[0]->MtgAttendance;
+    $mtgWorship = $mtgDetails[0]->MtgWorship;
+    $mtgMenu = $mtgDetails[0]->Meal;
+    $mtgMealCnt = $mtgDetails[0]->MealCnt;
+    $mtgNurseryCnt = $mtgDetails[0]->NurseryCnt;
+    $mtgChildrenCnt = $mtgDetails[0]->ChildrenCnt;
+    $mtgYouthCnt = $mtgDetails[0]->YouthCnt;
+    $mtgNotes = $mtgDetails[0]->MtgNotes;
+    $mtgDonations = $mtgDetails[0]->Donations;
+    $mtgNewcomers1Fac = $mtgDetails[0]->Newcomers1Fac;
+    $mtgNewcomers2Fac = $mtgDetails[0]->Newcomers2Fac;
+    $mtgReader1Fac = $mtgDetails[0]->Reader1Fac;
+    $mtgReader2Fac = $mtgDetails[0]->Reader2Fac;
+    $mtgNurseryFac = $mtgDetails[0]->NurseryFac;
+    $mtgChildrenFac = $mtgDetails[0]->ChildrenFac;
+    $mtgYouthFac = $mtgDetails[0]->YouthFac;
+    $mtgMealFac = $mtgDetails[0]->MealFac;
+    $mtgCafeFac = $mtgDetails[0]->CafeFac;
+    $mtgTransportationFac = $mtgDetails[0]->TransportationFac;
+    $mtgSetupFac = $mtgDetails[0]->SetupFac;
+    $mtgTearDownFac = $mtgDetails[0]->TearDownFac;
+    $mtgGreeter1Fac = $mtgDetails[0]->Greeter1Fac;
+    $mtgGreeter2Fac = $mtgDetails[0]->Greeter2Fac;
+    $mtgChips1Fac = $mtgDetails[0]->Chips1Fac;
+    $mtgChips2Fac = $mtgDetails[0]->Chips2Fac;
+    $mtgResourcesFac = $mtgDetails[0]->ResourcesFac;
+    $mtgTeachingFac = $mtgDetails[0]->TeachingFac;
+    $mtgSerenityFac = $mtgDetails[0]->SerenityFac;
+    $mtgAudioVisualFac = $mtgDetails[0]->AudioVisualFac;
+    $mtgAnnouncementsFac = $mtgDetails[0]->AnnouncementsFac;
+    $mtgSecurityFac = $mtgDetails[0]->SecurityFac;
 }
+/* -----------------------------------------------------------------------------------------------
+ *      get the people list
+ ------------------------------------------------------------------------------------------------ */
+//loadCommitTableWithAllPeople();
+// $_gid = getGhostID();
+// $_glabel = getGhostLabel();
+// $_npwid = getNonPersonWorshipID();
+// $_npwlabel = getNonPersonWorshipLabel();
+
+
+// echo "configInfo...<br>";
+// print_r($configInfo);
+// echo "<br><br>mtgDetails...<br>";
+// print_r($mtgDetails);
+// exit;
+
+//echo "<br>ALRIGHT, MOVING FORWARD<br>";
+//--------------------------------------------------------
+// need to put system AOS into aos object
+//--------------------------------------------------------
+
+//--------------------------------------------------------
+// get the list of people that are committed to serving
+//
+//      http://rogueintel.org/mapi/public/index.php/api/client/getCommits/ccc
+//
+//------------------------------------------------------------------------------
+$url = "http://rogueintel.org/mapi/public/index.php/api/client/getCommits/" . $_SESSION['client'];
+$data = file_get_contents($url); // put the contents of the file into a variable
+$serviceCommits = json_decode($data); // decode the JSON feed
+foreach ($serviceCommits as $commit) {
+    echo "<br>$commit->ID ";
+    echo "$commit->Category ";
+    echo "$commit->FName ";
+    echo "$commit->LName";
+}
+exit;
 // load the system configuration settings into object to use.
-$aosConfig->loadConfigFromDB();
+
+
+
+
+//$aosConfig->loadConfigFromDB();
 
 // #############################################
 // END OF PRE-CONDITIONING
@@ -268,6 +258,7 @@ $aosConfig->loadConfigFromDB();
  -->
 <!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -479,7 +470,7 @@ $aosConfig->loadConfigFromDB();
 										<legend>Meeting Type</legend>
 										<label for="rdoLesson">Lesson</label>
                                           <?php
-                                        if ($mtgType == "Lesson") {
+                                        if ($mtgDetails[0]->MtgType == "Lesson") {
                                             echo "<input type=\"radio\" name=\"rdoMtgType\" id=\"rdoLesson\" value=\"Lesson\" checked=\"checked\">";
                                         } else {
                                             echo "<input type=\"radio\" name=\"rdoMtgType\" id=\"rdoLesson\" value=\"Lesson\" >";
@@ -487,7 +478,7 @@ $aosConfig->loadConfigFromDB();
                                         ?>                             
                                           <label for="rdoTestimony">Testimony</label>
                                           <?php
-                                        if ($mtgType == "Testimony") {
+                                        if ($mtgDetails[0]->MtgType == "Testimony") {
                                             echo "<input type=\"radio\" name=\"rdoMtgType\" id=\"rdoTestimony\" value=\"Testimony\" checked=\"checked\">";
                                         } else {
                                             echo "<input type=\"radio\" name=\"rdoMtgType\" id=\"rdoTestimony\" value=\"Testimony\" >";
@@ -495,7 +486,7 @@ $aosConfig->loadConfigFromDB();
                                         ?>
                                           <label for="rdoSpecial">Special</label>
                                           <?php
-                                        if ($mtgType == "Special") {
+                                        if ($mtgDetails[0]->MtgType == "Special") {
                                             echo "<input type=\"radio\" name=\"rdoMtgType\" id=\"rdoSpecial\" value=\"Special\" checked=\"checked\">";
                                         } else {
                                             echo "<input type=\"radio\" name=\"rdoMtgType\" id=\"rdoSpecial\" value=\"Special\" >";
@@ -514,11 +505,15 @@ $aosConfig->loadConfigFromDB();
                 echo "<table>";
                 echo "<tr>";
                 echo "<td><div class=\"mtgLabels\" style=\"float:right\">Title:&nbsp;</div></td>";
-                echo "<td><input id=\"mtgTitle\" name=\"mtgTitle\" size=\"40\" style=\"font-size:14pt;\" type=\"text\" value=\"$mtgTitle\"/></td>";
+                echo "<td><input id=\"mtgTitle\" name=\"mtgTitle\" size=\"40\" style=\"font-size:14pt;\" type=\"text\" value=\"" . $mtgDetails[0]->MtgTitle . "\"/></td>";
                 echo "</tr>";
                 echo "<tr>";
                 echo "<td><div class=\"mtgLabels\" style=\"float:right\">Host:</div></td>";
                 echo "<td><select id=\"mtgCoordinator\" name=\"mtgCoordinator\">";
+               
+                // need to get the people to display in dropdown... 
+                // we grabbed the hosts ids when we grabbed configs earlier in $meetingHosts
+                // now we need to get names
                 $option = getHostsForMeeting();
                 foreach ($option as $id => $name) {
                     if ($mtgFac == $id) {
