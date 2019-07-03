@@ -2,6 +2,7 @@
 if (session_status() == PHP_SESSION_NONE){
     session_start();
 }
+$_SESSION['adminFlag'] = true;
 // $url = "http://100.25.128.0/mapi/public/index.php/api/user/authenticate/". $_SESSION['userid'];
 // $data = file_get_contents($url); // put the contents of the file into a variable
 // $authResponse = json_decode($data); // decode the JSON feed

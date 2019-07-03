@@ -1,10 +1,10 @@
 <?php
-require_once('authenticate.php'); /* used for security purposes */
-include 'database.php';
+// require_once('authenticate.php'); /* used for security purposes */
+// include 'database.php';
 include 'meeter.php';
-include 'peopleAOS.php';
-include 'mtrAOS.php';
-include 'includes/people.inc.php';
+// include 'peopleAOS.php';
+// include 'mtrAOS.php';
+// include 'includes/people.inc.php';
 
 global $person;
 $person = new MeeterPeep();     //meeter.php
@@ -27,11 +27,12 @@ header("Pragma: no-cache");
  * $page = new Page();
  * print $page->getTop();
  *******************************************/
-$Action = $_GET["Action"];
-$Destination = $_GET["Destination"];
-$Origin = $_GET["Origin"];
-$ID = $_GET["ID"];
-$PID = $_GET["PID"];
+echo "here we are ....";
+// $Action = $_GET["Action"];
+// $Destination = $_GET["Destination"];
+// $Origin = $_GET["Origin"];
+// $ID = $_GET["ID"];
+// $PID = $_GET["PID"];
 /*************************************************
  * if new or edit a person we need the following
  * loaded for use. It is up here because we need
@@ -258,6 +259,7 @@ switch ("$Action"){
         break;
     
     default:
+        echo "DEFAULT";
         showPeopleList();
         break;
 }
