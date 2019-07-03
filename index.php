@@ -58,21 +58,10 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 		<header>
 			<div id="hero"></div>
 			<a class="logo" title="home" href="/meeter/index.php"><span></span></a>
-		</header>
-		<div id="navBar"></div>
+		</header><div id="navBar"></div>
 		<script>
-			<?php 
-// 			$_SESSION["adminFlag"] = FALSE;
-// 			if(!isset($_SESSION["adminFlag"])){
-    			if($_SESSION["adminFlag"] == "true"){
-    			    echo "$( \"#navBar\" ).load( \"navbarA.php\" );";
-    			}else{
-    			    echo "$( \"#navBar\" ).load( \"navbar.php\" );";
-    			}
-// 			}
-			?>
-			
-		</script>
+		$( "#navBar" ).load( "navbarA.php" );		</script>
+		
 		<article>
 			<img src='images/cr_splash_590x250.jpg'></img><br />
 			
