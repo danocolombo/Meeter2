@@ -20,6 +20,9 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     header("location: login.php");
     exit;
 }
+if(isset($_SESSION["client"])){
+    $insertCall = "navbarA.php?client=" .$_SESSION["client"];
+}
 // require_once ('../../configs/authenticate.php'); /* this is used for security purposes */
 // echo "after authenticate";
 // exit;
@@ -60,7 +63,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 			<a class="logo" title="home" href="/meeter/index.php"><span></span></a>
 		</header><div id="navBar"></div>
 		<script>
-		$( "#navBar" ).load( "navbarA.php" );		</script>
+		var targetURL = "<?php echo $insertCall ?>";
+		$( "#navBar" ).load( targetURL );		</script>
 		
 		<article>
 			<img src='images/cr_splash_590x250.jpg'></img><br />

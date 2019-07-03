@@ -11,7 +11,9 @@ if(isset($_GET['PAST'])){
 }else{
     $meeting_view = "FUTURE";
 }
-
+if(isset($_SESSION["client"])){
+    $insertCall = "navbarA.php?client=" .$_SESSION["client"];
+}
 /*
  * meetings.php
  * ======================================================
@@ -51,10 +53,12 @@ if(isset($_GET['PAST'])){
 			<div id="navBar"></div>
 		<script>
 		<?php 
+        		echo "var targetURL = \"" . $insertCall . "\";";
+        		
 				if($_SESSION["adminFlag"] == "1"){
-				    echo "$( \"#navBar\" ).load( \"navbarA.php\" );";
+				    echo "$( \"#navBar\" ).load( targetURL );";
 				}else{
-				    echo "$( \"#navBar\" ).load( \"navbar.php\" );";
+				    echo "$( \"#navBar\" ).load( targetURL );";
 				}
 				?>
 		</script>
