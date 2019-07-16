@@ -1,0 +1,8 @@
+{
+  "name": "meeter",
+  "version": "2.1.0",
+  "description": "A web application to manage meetings",
+  "keywords":["meeter", "meetings"],
+  "homepage": "http://rogueintel.org",
+  "author": "Dano <danocolombo@gmail.com> (http://rogueintel.org/)"
+ }
